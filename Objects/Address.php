@@ -1,29 +1,24 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace Splash\Sylius\Objects;
 
-use Sylius\Component\Core\Model\Address as SyliusAddress;
-
-use Doctrine\ORM\Mapping as ORM;
 use Splash\Bundle\Annotation as SPL;
 
 /**
  * @abstract    Description of Address
  *
  * @author B. Paquier <contact@splashsync.com>
- * @ORM\Entity()
- * @ORM\Table(name="sylius_address")
  * @SPL\Object( type            =   "Address",
  *              disabled        =   false,
  *              name            =   "Sylius Address",
  *              description     =   "Sylius Address Object",
- *              icon            =   "fa fa-enveloppe",
+ *              icon            =   "fa fa-envelope",
  *              enable_push_created=    false,
- *              realClass       =   "Sylius\Component\Core\Model\Address"
+ *              target           =   "Sylius\Component\Core\Model\Address"
  * )
  * 
  */
-class Address extends SyliusAddress {
+class Address {
     
     /**
      * @SPL\Field(  
@@ -55,6 +50,7 @@ class Address extends SyliusAddress {
      *          type    =   "varchar",
      *          name    =   "Last Name",
      *          itemtype=   "http://schema.org/Person", itemprop="givenName",
+     *          inlist  =   true,
      *          required=   true,
      * )
      */
@@ -62,7 +58,7 @@ class Address extends SyliusAddress {
 
     /**
      * @SPL\Field(  
-     *          id      =   "phone",
+     *          id      =   "phoneNumber",
      *          type    =   "phone",
      *          name    =   "Phone Number",
      *          itemtype=   "http://schema.org/PostalAddress", itemprop="telephone",
@@ -108,6 +104,7 @@ class Address extends SyliusAddress {
      *          type    =   "varchar",
      *          name    =   "Zip/Postal Code",
      *          itemtype=   "http://schema.org/PostalAddress", itemprop="postalCode",
+     *          inlist  =   true,
      *          required=   true,
      * )
      */
@@ -119,6 +116,7 @@ class Address extends SyliusAddress {
      *          type    =   "country",
      *          name    =   "Country Code",
      *          itemtype=   "http://schema.org/PostalAddress", itemprop="addressCountry",
+     *          inlist  =   true,
      *          required=   true,
      * )
      */

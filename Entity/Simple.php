@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace Splash\Sylius\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Splash\Bundle\Annotation as SPL;

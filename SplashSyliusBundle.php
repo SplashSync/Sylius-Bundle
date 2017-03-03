@@ -1,6 +1,6 @@
 <?php
 
-namespace Splash\Sylius\Bundle;
+namespace Splash\Sylius;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

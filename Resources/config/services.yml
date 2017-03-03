@@ -1,1 +1,24 @@
-services: ~
+services: 
+    
+    ########################################################################
+    # Sylius Object Data Transformer
+    # Convert In/Out Doctrine Objects Fields to Splash Standard Format
+    Splash.Sylius.Transformer:
+        class:      Splash\Sylius\Services\ObjectsTransformer
+        arguments:  ["@translator"]
+        
+    ########################################################################
+    # Sylius Products Data Transformer
+    # Convert In/Out Sylius Products Objects Fields to Splash Standard Format
+    Splash.Sylius.Products.Transformer:
+        class:      Splash\Sylius\Services\ProductTransformer
+        arguments:  
+         - "@translator"
+         - "@router"
+         - "@sylius.factory.product"
+         - "@sylius.manager.product"
+         - "@sylius.repository.channel"
+         - "%splash_sylius%"     
+        
+        
+        

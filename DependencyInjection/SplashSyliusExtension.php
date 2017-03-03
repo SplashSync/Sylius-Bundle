@@ -16,5 +16,17 @@ class SplashSyliusExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        
+        $container->setParameter('splash_sylius',    $config);
+        
+        //====================================================================//
+        // Add Bundle Objects to Splash Parameters
+        $SplashObjects  =   $container->getParameter('splash');
+        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Address";
+        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Customer";
+        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Product";
+//        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Order";
+        $container->setParameter('splash',$SplashObjects);
+
     }
 }

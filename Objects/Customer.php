@@ -1,36 +1,25 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace Splash\Sylius\Objects;
 
-namespace AppBundle\Entity;
-
-use Sylius\Component\Core\Model\Customer as SyliusCustomer;
-use Sylius\Component\Customer\Model\CustomerInterface;
-
-use Doctrine\ORM\Mapping as ORM;
 use Splash\Bundle\Annotation as SPL;
 
 /**
  * @abstract    Description of Customer
  *
  * @author B. Paquier <contact@splashsync.com>
- * @ORM\Entity()
- * @ORM\Table(name="sylius_customer")
- * @SPL\Object( type            =   "ThirdParty",
- *              disabled        =   false,
- *              name            =   "Sylius Customer",
- *              description     =   "Sylius Customer Object",
- *              icon            =   "fa fa-user",
- *              enable_push_created=    false,
- *              realClass       =   "Sylius\Component\Core\Model\Customer"
+ * @SPL\Object( type                    =   "ThirdParty",
+ *              disabled                =   false,
+ *              name                    =   "Sylius Customer",
+ *              description             =   "Sylius Customer Object",
+ *              icon                    =   "fa fa-user",
+ *              enable_push_created     =    false,
+ *              target                  =   "Sylius\Component\Core\Model\Customer",
+ *              transformer_service     =   "Splash.Sylius.Transformer"
  * )
  * 
  */
-class Customer extends SyliusCustomer {
+class Customer {
     
     /**
      * @SPL\Field(  
@@ -43,12 +32,6 @@ class Customer extends SyliusCustomer {
      * )
      */
     protected $email;
-    
-    public function setEmail($email)
-    {
-        $this->email            = $email;
-        $this->emailCanonical   = strtolower($email);
-    }
 
     /**
      * @SPL\Field(  
@@ -77,16 +60,15 @@ class Customer extends SyliusCustomer {
      *          type    =   "varchar",
      *          name    =   "Social Title",
      *          itemtype=   "http://schema.org/Person", itemprop="honorificPrefix",
-     *          read    =   true,
-     *          notest  =   true,
+     *          write   =   false,
      *          choices =   { "u" : "Unknown", "m" : "Male" , "f" : "Femele" },
      * )
      */
-    protected $gender  = CustomerInterface::UNKNOWN_GENDER;
+    protected $gender;
 
     /**
      * @SPL\Field(  
-     *          id      =   "gender_type",
+     *          id      =   "genderType",
      *          type    =   "int",
      *          name    =   "Social Title (ID)",
      *          itemtype=   "http://schema.org/Person", itemprop="gender",
@@ -96,43 +78,6 @@ class Customer extends SyliusCustomer {
      */
     protected $genderType;
     
-    /**
-     * @abstract Convert Splash Standard Gender Type to Sylius Type
-     */
-    public function getGenderType()
-    {
-        switch ($this->gender) 
-        {
-            case CustomerInterface::MALE_GENDER:
-                return 0;
-            case CustomerInterface::FEMALE_GENDER:
-                return 1;
-            default:    
-            case CustomerInterface::UNKNOWN_GENDER:
-                return 2;
-        }
-    }
-
-    /**
-     * @abstract Convert Sylius Gender Type to Splash Standard Type
-     */
-    public function setGenderType($gender)
-    {
-        switch ($gender) 
-        {
-            case 0:
-                $this->gender   =   CustomerInterface::MALE_GENDER;
-                break;
-            case 1:
-                $this->gender   =   CustomerInterface::FEMALE_GENDER;
-                break;
-            default:    
-            case 2:
-                $this->gender   =   CustomerInterface::FEMALE_GENDER;
-                break;
-        }
-    }    
-
     /**
      * @SPL\Field(  
      *          id      =   "birthday",
@@ -145,7 +90,7 @@ class Customer extends SyliusCustomer {
 
     /**
      * @SPL\Field(  
-     *          id      =   "phone",
+     *          id      =   "phoneNumber",
      *          type    =   "phone",
      *          name    =   "Phone Number",
      *          itemtype=   "http://schema.org/PostalAddress", itemprop="telephone",
@@ -156,7 +101,7 @@ class Customer extends SyliusCustomer {
     
     /**
      * @SPL\Field(  
-     *          id      =   "newsletter",
+     *          id      =   "subscribedToNewsletter",
      *          type    =   "bool",
      *          name    =   "Newletter",
      *          itemtype=   "http://schema.org/Organization", itemprop="newsletter",
@@ -164,11 +109,5 @@ class Customer extends SyliusCustomer {
      */
     protected $subscribedToNewsletter = false;
     
-    public function getSubscribedToNewsletter()
-    {
-        $this->isSubscribedToNewsletter();
-    }    
-
-
     
 }

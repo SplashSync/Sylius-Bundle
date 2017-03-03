@@ -12,6 +12,23 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('app');
 
+        $rootNode
+            ->children()
+                //====================================================================//
+                // COMMON Parameters
+                //====================================================================//
+                ->scalarNode('default_channel')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                    ->info('Default Channel for association with new Products.')
+                ->end()   
+                ->scalarNode('images_folder')
+                    ->cannotBeEmpty()
+                     ->defaultValue("%kernel.root_dir%/../web/media/image")               
+                    ->info('Default Channel for association with new Products.')
+                ->end()                  
+            ->end()
+        ;
         return $treeBuilder;
     }
 }
