@@ -21,12 +21,20 @@ class SplashSyliusExtension extends Extension
         
         //====================================================================//
         // Add Bundle Objects to Splash Parameters
-        $SplashObjects  =   $container->getParameter('splash');
-        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Address";
-        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Customer";
-        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Product";
+        $Splash                 =   $container->getParameter('splash');
+        $Splash["objects"][]    =   "Splash\Sylius\Objects\Address";
+        $Splash["objects"][]    =   "Splash\Sylius\Objects\Customer";
+        $Splash["objects"][]    =   "Splash\Sylius\Objects\Product";
 //        $SplashObjects["objects"][]  =   "Splash\Sylius\Objects\Order";
-        $container->setParameter('splash',$SplashObjects);
 
+        //====================================================================//
+        // Add Bundle Widgets to Splash Parameters
+        $Splash["widgets"][]    =   "Splash\Local\Widgets\DefaultWidget";
+        $Splash["widgets"][]    =   "Splash\Local\Widgets\SelfTest";
+        
+        //====================================================================//
+        // Update Splash Bundle Parameters
+        $container->setParameter('splash',$Splash);
+        
     }
 }
