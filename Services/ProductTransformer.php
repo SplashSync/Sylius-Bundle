@@ -260,16 +260,7 @@ class ProductTransformer extends Transformer {
     {
         return $this->setTranslated($Variant, $Data, __FUNCTION__);
     }
-    
-    public function getSlug($Variant)
-    {
-        return $this->getTranslated($Variant, __FUNCTION__);
-    } 
-    
-    public function setSlug($Variant, $Data)
-    {
-        return $this->setTranslated($Variant, $Data, __FUNCTION__);
-    }
+
     
     public function getMetaDescription($Variant)
     {
@@ -298,15 +289,57 @@ class ProductTransformer extends Transformer {
                 //====================================================================//
                 // Add Translation
                 $Translation = new \Sylius\Component\Core\Model\ProductTranslation();
-                $this->manager->persist($Translation);
                 $Translation->setLocale($LanguageCode);
                 $Translation->setTranslatable($Variant->getProduct());
-                $Translation->setSlug($Variant->getId() . "-" . count($Translations) );
+                $Translation->setSlug($Translation->getId() . "-" . $Variant->getCode() );
                 $Translations[$LanguageCode] = $Translation;
             }
             $Translations[$LanguageCode]->$Function($Value);
         }
     }      
+    
+    //====================================================================//
+    // MANAGE UNIQUE PRODUCT SLUGS
+    //====================================================================//
+    
+    
+    public function getSlug($Variant)
+    {
+        $Response = array();
+        foreach ($Variant->getProduct()->getTranslations() as $LanguageCode => $Translation) {
+            $Value = $Translation->getSlug();
+            //====================================================================//
+            // Detect Encoded Value
+            $DecodedValue = Null;
+            sscanf($Value, $Translation->getId() . "-%s" , $DecodedValue);
+            if ($DecodedValue) {
+                $Value = $DecodedValue;
+            }
+            $Response[$LanguageCode] = $Value;
+        }
+        return $Response;
+    } 
+    
+    public function setSlug($Variant, $Data)
+    {
+        $Translations   =   $Variant->getProduct()->getTranslations();
+        foreach ($Data as $LanguageCode => $Value) {
+            if (!isset($Translations[$LanguageCode])) {
+                //====================================================================//
+                // Add Translation
+                $Translation = new \Sylius\Component\Core\Model\ProductTranslation();
+                $Translation->setLocale($LanguageCode);
+                $Translation->setTranslatable($Variant->getProduct());
+                $Translations[$LanguageCode] = $Translation;
+            }
+            //====================================================================//
+            // Encode Value if Modified
+            if ( $Translations[$LanguageCode]->getSlug() !== $Value) {
+                $Value = $Translations[$LanguageCode]->getId() . "-" . $Value;
+            }
+            $Translations[$LanguageCode]->setSlug($Value);
+        }
+    }
     
     //====================================================================//
     // PRODUCT IMAGES
@@ -321,7 +354,9 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // Setup New Product Image
         $Image->setOwner($Variant->getProduct());
-        $Image->setCode("newImage");
+        $ImageCode  = $Variant->getCode() ? $Variant->getCode() : $Variant->getProduct()->getCode();
+        $ImageCode .= "-" . uniqid();
+        $Image->setCode($ImageCode);
         //====================================================================//
         // Add to Product Images
         $Variant->getProduct()->getImages()->add($Image);
@@ -332,7 +367,7 @@ class ProductTransformer extends Transformer {
     {
         //====================================================================//
         // Remove From Product Images
-        $Variant->getProduct()->getImages()->removeItem($Image);
+        $Variant->getProduct()->getImages()->remove($Image);
         //====================================================================//
         // DeleteProduct Image
         $this->manager->remove($Image);
@@ -368,10 +403,7 @@ class ProductTransformer extends Transformer {
     {
         //====================================================================//
         // Generate Images Base Path
-        $BasePath   = $this->parameters["images_folder"] . "/";
-        //====================================================================//
-        // Update Image Code
-        $Image->setCode($Data["name"]);
+        $BasePath   = realpath($this->parameters["images_folder"]) . "/";
         
         //====================================================================//
         // Check if Image Needs to Be Updated
@@ -390,11 +422,11 @@ class ProductTransformer extends Transformer {
             }
             //====================================================================//
             // Delete Outdated Image
-            Splash::File()->DeleteFile($BasePath,$Image->getPath());
+            Splash::File()->DeleteFile($BasePath . $Image->getPath(), $Data["md5"]);
         }
         //====================================================================//
         // DownLoad Image from Splash Server
-        $NewImageFile    =   Splash::File()->getFile($Data["filename"],$Data["md5"]);
+        $NewImageFile    =   Splash::File()->getFile($Data["file"],$Data["md5"]);
         //====================================================================//
         // File Not Imported => Exit
         if ( $NewImageFile == False ) {
@@ -404,7 +436,7 @@ class ProductTransformer extends Transformer {
         // Generate Image Encoded Path
         do {
             $hash = md5(uniqid(mt_rand(), true));
-            $ImagePath = $this->expandPath($hash.'.'.pathinfo($Data["filename"], PATHINFO_EXTENSION));
+            $ImagePath = $this->expandPath($hash.'.'.pathinfo($Data["file"], PATHINFO_EXTENSION));
         } while (is_file($BasePath . $ImagePath));
         //====================================================================//
         // Check if folder exists or create it
