@@ -16,7 +16,7 @@ use Splash\Bundle\Annotation as SPL;
  *              allow_push_created      =   false,
  *              enable_push_created     =   false,
  *              target                  =   "Sylius\Component\Core\Model\Order",
- *              transformer_service     =   "Splash.Sylius.Transformer"
+ *              transformer_service     =   "Splash.Sylius.Orders.Transformer"
  * )
  * 
  */
@@ -41,7 +41,7 @@ class Order {
     /**
      * @SPL\Field(  
      *          id      =   "number",
-     *          type    =   "number",
+     *          type    =   "varchar",
      *          name    =   "Order Reference",
      *          itemtype=   "http://schema.org/Order", itemprop="orderNumber",
      *          inlist  =   true,
@@ -67,6 +67,11 @@ class Order {
     // CORE INFORMATIONS
     //====================================================================//
 
+    //====================================================================//
+    // ADDRESS
+    //====================================================================//
+
+    
     /**
      * @SPL\Field(  
      *          id      =   "shippingAddress",
@@ -90,6 +95,22 @@ class Order {
      * )
      */
     protected $billingAddress;        
+    
+    //====================================================================//
+    // PRICES INFORMATIONS
+    //====================================================================//
+          
+    /**
+     * @SPL\Field(  
+     *          id      =   "total",
+     *          type    =   "double",
+     *          name    =   "Total",
+     *          itemtype=   "http://schema.org/Invoice", itemprop="totalPaymentDueTaxIncluded",
+     *          inlist  =   true,
+     *          write   =   false,
+     * )
+     */
+    protected $total;      
     
 //
 //    /**

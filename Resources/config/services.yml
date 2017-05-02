@@ -19,6 +19,20 @@ services:
          - "@sylius.manager.product"
          - "@sylius.repository.channel"
          - "%splash_sylius%"     
+         
+         
+    ########################################################################
+    # Sylius Orders Data Transformer
+    # Convert In/Out Sylius Orders Objects Fields to Splash Standard Format
+    Splash.Sylius.Orders.Transformer:
+        class:      Splash\Sylius\Services\OrdersTransformer
+        arguments:  
+         - "@translator"
+#         - "@router"
+#         - "@sylius.factory.product"
+#         - "@sylius.manager.product"
+#         - "@sylius.repository.channel"
+#         - "%splash_sylius%"            
         
         
         
