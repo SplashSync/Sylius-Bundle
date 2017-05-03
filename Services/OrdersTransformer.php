@@ -21,13 +21,10 @@
 namespace   Splash\Sylius\Services;
 
 use Splash\Local\Objects\Transformer;
-use Splash\Models\ObjectBase;
-use Splash\Core\SplashCore as Splash;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
-use Sylius\Component\Core\Model\ProductImage;
-use Sylius\Component\Core\Model\ChannelPricing;
+use Splash\Sylius\Objects\Traits\OrderItemsTrait;
+use Splash\Sylius\Objects\Traits\OrderMetadataTrait;
+use Splash\Sylius\Objects\Traits\OrderPricesTrait;
 
 /**
  * Description of OrderTransformer
@@ -36,38 +33,23 @@ use Sylius\Component\Core\Model\ChannelPricing;
  */
 class OrdersTransformer extends Transformer {
     
+    
+    //====================================================================//
+    // STATUS INFORMATIONS
+    //====================================================================//
 
+    use OrderMetadataTrait;
+    
+    //====================================================================//
+    // ORDER ITEMS
+    //====================================================================//
+    
+    use OrderItemsTrait;
+  
     //====================================================================//
     // PRICES INFORMATIONS
     //====================================================================//
-
-    public function getTotal($Order)
-    {
-        return doubleval($Order->getTotal() / 100);
-    }    
-
-    
-//    public function getTotal($Order)
-//    {
-//        //====================================================================//
-//        // Retreive Price Currency
-//        $Currency       =   $Order->getChannel()->getBaseCurrency();
-//        //====================================================================//
-//        // Retreive Price TAX Percentile
-////        if ($Order->getTaxCategory()) {
-////            $TaxRate = $Order->getTaxCategory()->getRates()->first()->getAmount() * 100;
-////        } else {
-//            $TaxRate = 0.0;
-////        }
-//        
-//        return ObjectBase::Price_Encode(
-//                doubleval($Order->getTotal() / 100),            // No TAX Price 
-//                $TaxRate,                                          // TAX Percent
-//                Null, 
-//                $Currency->getCode(),
-//                $Currency->getCode(),
-//                $Currency->getName());
-//    }    
-    
-    
+          
+    use OrderPricesTrait;
+         
 }

@@ -4,6 +4,10 @@ namespace Splash\Sylius\Objects;
 
 use Splash\Bundle\Annotation as SPL;
 
+use Splash\Sylius\Objects\Traits\ProductSlugTrait;
+
+
+
 /**
  * @abstract    Description of Customer
  *
@@ -21,6 +25,8 @@ use Splash\Bundle\Annotation as SPL;
  */
 class Product {
 
+    use ProductSlugTrait;
+    
     //====================================================================//
     // CORE FIELDS
     //====================================================================//
@@ -96,17 +102,7 @@ class Product {
      */
     protected $description;   
     
-    /**
-     * @SPL\Field(  
-     *          id      =   "slug",
-     *          type    =   "mvarchar",
-     *          name    =   "Slug (Url)",
-     *          itemtype=   "http://schema.org/Product", itemprop="urlRewrite",
-     *          group   =   "SEO",
-     *          asso    =   { "name" },
-     * )
-     */
-    protected $slug;  
+
     
     /**
      * @SPL\Field(  
