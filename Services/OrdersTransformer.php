@@ -25,6 +25,8 @@ use Splash\Local\Objects\Transformer;
 use Splash\Sylius\Objects\Traits\OrderItemsTrait;
 use Splash\Sylius\Objects\Traits\OrderMetadataTrait;
 use Splash\Sylius\Objects\Traits\OrderPricesTrait;
+use Splash\Sylius\Objects\Traits\OrderPaymentsTrait;
+
 
 /**
  * Description of OrderTransformer
@@ -132,5 +134,6 @@ class OrdersTransformer extends Transformer {
     //====================================================================//
           
     use OrderPricesTrait;
-         
+    use OrderPaymentsTrait;
+    
 }
