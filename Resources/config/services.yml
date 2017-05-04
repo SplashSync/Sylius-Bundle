@@ -27,12 +27,12 @@ services:
     Splash.Sylius.Orders.Transformer:
         class:      Splash\Sylius\Services\OrdersTransformer
         arguments:  
-         - "@translator"
+#         - "@translator"
 #         - "@router"
 #         - "@sylius.factory.product"
-#         - "@sylius.manager.product"
-#         - "@sylius.repository.channel"
-#         - "%splash_sylius%"            
+         - "@sylius.manager.order"
+         - "@sylius.repository.channel"
+         - "%splash_sylius%"            
         
         
         

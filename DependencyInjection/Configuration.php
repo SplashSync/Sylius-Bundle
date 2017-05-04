@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('images_folder')
                     ->cannotBeEmpty()
                      ->defaultValue("%kernel.root_dir%/../web/media/image")               
-                    ->info('Default Channel for association with new Products.')
+                    ->info('Default Folder for Storage of new Images.')
                 ->end()                  
             ->end()
         ;

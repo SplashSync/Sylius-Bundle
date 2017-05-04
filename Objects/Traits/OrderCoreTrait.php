@@ -38,7 +38,6 @@ trait OrderCoreTrait {
      *          name    =   "Order Date",
      *          itemtype=   "http://schema.org/Order", itemprop="orderDate",
      *          inlist  =   true,
-     *          required=   true,
      * )
      */
     protected $checkoutCompletedAt;
@@ -55,7 +54,7 @@ trait OrderCoreTrait {
      *          name    =   "Shipping Address",
      *          itemtype=   "http://schema.org/Organization", itemprop="ID",
      *          inlist  =   false,
-     *          required=   true,
+     *          write   =   false,
      * )
      */
     protected $shippingAddress;
@@ -67,7 +66,7 @@ trait OrderCoreTrait {
      *          name    =   "Billing Address",
      *          itemtype=   "http://schema.org/Organization", itemprop="ID",
      *          inlist  =   false,
-     *          required=   true,
+     *          write   =   false,
      * )
      */
     protected $billingAddress;    

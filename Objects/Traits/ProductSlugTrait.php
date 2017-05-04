@@ -49,7 +49,7 @@ trait ProductSlugTrait {
             }
             //====================================================================//
             // Encode Value if Modified
-            if ( $Translations[$LanguageCode]->getSlug() !== $Value) {
+            if ( $Translations[$LanguageCode]->getId() && ($Translations[$LanguageCode]->getSlug() !== $Value) ) {
                 $Value = $Translations[$LanguageCode]->getId() . "-" . $Value;
             }
             $Translations[$LanguageCode]->setSlug($Value);

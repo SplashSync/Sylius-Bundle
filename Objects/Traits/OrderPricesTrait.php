@@ -12,7 +12,7 @@ trait OrderPricesTrait {
      *          type    =   "currency",
      *          name    =   "Currency Code",
      *          itemtype=   "hhttps://schema.org/PriceSpecification", itemprop="priceCurrency",
-     *          write   =   false,
+     *          required=   true,
      * )
      */
     protected $currencyCode;  
