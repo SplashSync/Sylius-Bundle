@@ -10,7 +10,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('app');
+        $rootNode = $treeBuilder->root('splash_sylius');
 
         $rootNode
             ->children()
@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_channel')
                     ->isRequired()
                     ->cannotBeEmpty()
+                    ->defaultValue("default")               
                     ->info('Default Channel for association with new Products.')
                 ->end()   
                 ->scalarNode('images_folder')

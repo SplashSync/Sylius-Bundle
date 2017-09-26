@@ -93,7 +93,7 @@ class Product {
     /**
      * @SPL\Field(  
      *          id      =   "description",
-     *          type    =   "mvarchar",
+     *          type    =   "mtext",
      *          name    =   "Long Description",
      *          itemtype=   "http://schema.org/Article", itemprop="articleBody",
      *          group   =   "Translations",
