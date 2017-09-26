@@ -296,7 +296,7 @@ class ProductTransformer extends Transformer {
                 $Translation = new \Sylius\Component\Core\Model\ProductTranslation();
                 $Translation->setLocale($LanguageCode);
                 $Translation->setTranslatable($Variant->getProduct());
-                $Translation->setSlug($Translation->getId() . "-" . $Variant->getCode() );
+                $Translation->setSlug( uniqid($Variant->getCode()) );
                 $Translations[$LanguageCode] = $Translation;
             }
             $Translations[$LanguageCode]->$Function($Value);
