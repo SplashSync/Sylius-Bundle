@@ -61,7 +61,7 @@ install:
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - cp ../build/phpunit.xml.dist phpunit.xml.dist
     - cp ../build/AppKernel.php app/AppKernel.php
-    - cat ../build/config_splash.yml >> app/config.yml
+    - cat ../build/config_splash.yml >> app/config/config.yml
     
     - echo "Install Sylius"
     - php bin/console sylius:install --env=test --no-interaction
