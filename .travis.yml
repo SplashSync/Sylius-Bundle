@@ -37,7 +37,9 @@ before-install:
 # Update composer
   - composer self-update
 # Install Yarn
-  - yarn install
+  - yarn 
+# Increase memory limit to 4GB  
+  - echo \"memory_limit=4096M\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini 
 
 # Install composer dependencies,
 # Create database, schema and fixtures
