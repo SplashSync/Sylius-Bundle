@@ -45,7 +45,7 @@ install:
     - composer create-project sylius/sylius-standard sylius
     - cd sylius
     - composer install --no-interaction --no-scripts --prefer-dist
-    - composer require splash/sylius-bundle --no-interaction --no-scripts --prefer-dist
+    - composer require splash/sylius-bundle:dev-master --no-interaction --no-scripts --prefer-dist
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - php bin/console doctrine:database:create --env=test
     - php bin/console doctrine:schema:create --env=test
