@@ -3,7 +3,7 @@ language: php
 
 # Allows use container-based infrastructure
 sudo: required
-dist: trusty
+#dist: trusty
 
 # Start mysql service
 services:
@@ -43,10 +43,13 @@ before-install:
   - phpenv config-rm xdebug.ini
   - phpenv config-add build/x_memory.ini
   - php -m
+  - php -ini | grep memory_limit  
 
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:
+    - php --version
+    - php -ini | grep memory_limit      
     - composer create-project sylius/sylius-standard sylius --prefer-dist
     - cd sylius
 #    - composer install --no-interaction --no-scripts --prefer-dist
