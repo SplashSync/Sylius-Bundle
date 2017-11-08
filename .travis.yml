@@ -34,7 +34,7 @@ matrix:
 #env:
 #  - SYMFONY_VERSION="3.0.*" DB=mysql
 
-before-install:
+before_install:
 # Update composer
   - composer self-update
 # Install Yarn
