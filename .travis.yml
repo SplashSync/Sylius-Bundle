@@ -54,18 +54,16 @@ install:
 #    - composer require splash/phpcore:dev-master --no-interaction --no-scripts --prefer-dist
 #    - composer require splash/php-bundle:dev-master  --no-interaction --no-scripts --prefer-dist
 #    - composer require splash/sylius-bundle:dev-master --no-interaction --no-scripts --prefer-dist
+    - echo "Install Splash Bundles"
     - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --no-scripts --prefer-dist
     
     - echo "Configuring Splash Bundles"
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - cp ../build/phpunit.xml.dist phpunit.xml.dist
     - cp ../build/AppKernel.php app/AppKernel.php
-    - echo "imports:" > app/config.yml
-    - echo "   - resource: config_splash.yml " > app/config.yml
+    - cat ../build/config_splash.yml >> app/config.yml
     
-#    - php bin/console doctrine:database:create --env=test
-#    - php bin/console doctrine:schema:create --env=test
-#  - php bin/console doctrine:fixtures:load -n --env=test
+    - echo "Install Sylius"
     - php bin/console sylius:install --env=test --no-interaction
     - php bin/console server:start --env=test
 
