@@ -2,7 +2,8 @@
 language: php
 
 # Allows use container-based infrastructure
-sudo: false
+sudo: required
+dist: trusty
 
 # Start mysql service
 services:
@@ -49,9 +50,9 @@ install:
     - composer create-project sylius/sylius-standard sylius --prefer-dist
     - cd sylius
 #    - composer install --no-interaction --no-scripts --prefer-dist
-    - php -dmemory_limit=4G /usr/local/bin/composer require splash/phpcore:dev-master --no-interaction --no-scripts --prefer-dist
-    - php -dmemory_limit=4G /usr/local/bin/composer require splash/php-bundle:dev-master  --no-interaction --no-scripts --prefer-dist
-    - php -dmemory_limit=4G /usr/local/bin/composer require splash/sylius-bundle:dev-master --no-interaction --no-scripts --prefer-dist
+    - composer require splash/phpcore:dev-master --no-interaction --no-scripts --prefer-dist
+    - composer require splash/php-bundle:dev-master  --no-interaction --no-scripts --prefer-dist
+    - composer require splash/sylius-bundle:dev-master --no-interaction --no-scripts --prefer-dist
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - php bin/console doctrine:database:create --env=test
     - php bin/console doctrine:schema:create --env=test
