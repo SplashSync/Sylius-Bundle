@@ -60,7 +60,8 @@ install:
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - cp ../build/phpunit.xml.dist phpunit.xml.dist
     - cp ../build/AppKernel.php app/AppKernel.php
-    - echo "imports: [ resource: 'config_splash.yml' ] " > app/config.yml
+    - echo "imports:" > app/config.yml
+    - echo "   - resource: config_splash.yml " > app/config.yml
     
 #    - php bin/console doctrine:database:create --env=test
 #    - php bin/console doctrine:schema:create --env=test
