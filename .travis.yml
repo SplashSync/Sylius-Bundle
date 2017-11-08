@@ -59,7 +59,7 @@ install:
 #    - php bin/console doctrine:database:create --env=test
 #    - php bin/console doctrine:schema:create --env=test
 #  - php bin/console doctrine:fixtures:load -n --env=test
-    - php bin/console sylius:install --env=test
+    - php bin/console sylius:install --env=test --no-interaction
     - php bin/console server:start --env=test
 
 # Run script
