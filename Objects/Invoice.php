@@ -14,13 +14,14 @@ use Splash\Sylius\Objects\Traits\OrderPricesTrait;
  * @abstract    Description of Invoice
  *
  * @author B. Paquier <contact@splashsync.com>
- * @SPL\Object( type                    =   "Order",
+ * @SPL\Object( type                    =   "Invoice",
  *              disabled                =   false,
- *              name                    =   "Customer Order",
+ *              name                    =   "Customer Invoice",
  *              description             =   "Sylius Order Object",
- *              icon                    =   "fa fa-shopping-cart",
- *              allow_push_created      =   true,
- *              allow_push_deleted      =   true,
+ *              icon                    =   "fa fa-money",
+ *              allow_push_created      =   false,
+ *              allow_push_updated      =   false,
+ *              allow_push_deleted      =   false,
  *              enable_push_created     =   false,
  *              enable_push_deleted     =   false,
  *              target                  =   "Sylius\Component\Core\Model\Order",
@@ -28,7 +29,7 @@ use Splash\Sylius\Objects\Traits\OrderPricesTrait;
  * )
  * 
  */
-class Order {
+class Invoice {
     
     //====================================================================//
     // CORE INFORMATIONS

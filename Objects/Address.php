@@ -10,11 +10,12 @@ use Splash\Bundle\Annotation as SPL;
  * @author B. Paquier <contact@splashsync.com>
  * @SPL\Object( type            =   "Address",
  *              disabled        =   false,
- *              name            =   "Sylius Address",
+ *              name            =   "Customer Address",
  *              description     =   "Sylius Address Object",
  *              icon            =   "fa fa-envelope",
  *              enable_push_created=    false,
- *              target           =   "Sylius\Component\Core\Model\Address"
+ *              target           =   "Sylius\Component\Core\Model\Address",
+ *              transformer_service     =   "Splash.Sylius.Transformer"
  * )
  * 
  */
@@ -121,6 +122,27 @@ class Address {
      * )
      */
     protected $countrycode;
+    
+    /**
+     * @SPL\Field(  
+     *          id      =   "provinceCode",
+     *          type    =   "state",
+     *          name    =   "Province Code",
+     *          itemtype=   "http://schema.org/PostalAddress", itemprop="addressRegion",
+     *          write   =   false,
+     * )
+     */
+    protected $provincecode;
+    
+    /**
+     * @SPL\Field(  
+     *          id      =   "provinceName",
+     *          type    =   "varchar",
+     *          name    =   "Province Name",
+     *          write   =   false,
+     * )
+     */
+    protected $provincename;
     
 //        <field name="provinceCode" column="province_code" type="string" nullable="true" />
 //        <field name="provinceName" column="province_name" type="string" nullable="true" />

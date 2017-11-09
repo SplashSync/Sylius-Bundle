@@ -38,7 +38,15 @@ class ObjectsTransformer extends Transformer {
         return;
     }
 
-        /**
+    /**
+     * @abstract Create Virtual UserName used As Customer Company NAme
+     */
+    public function getUserId($Customer)
+    {
+        return "Sylius" . $Customer->getId();
+    }
+    
+    /**
      * @abstract Override Sylius Customer Setter. Also Set Canonical Email
      */
     public function setEmail($Customer, $email)
@@ -107,4 +115,16 @@ class ObjectsTransformer extends Transformer {
         return $Customer->isSubscribedToNewsletter();
     }     
 
+    /**
+     * @abstract Format Customer Address Province Code
+     */
+    public function getProvinceCode($Address)
+    {
+        if (null === $Address->getCountryCode()) {
+            return $Address->getProvinceCode();
+        }
+        
+        return substr($Address->getProvinceCode(), strlen($Address->getCountryCode()) + 1 );
+    }
+    
 }

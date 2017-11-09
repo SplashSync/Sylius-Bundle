@@ -13,7 +13,7 @@ use Splash\Sylius\Objects\Traits\ProductSlugTrait;
  *
  * @author B. Paquier <contact@splashsync.com>
  * @SPL\Object( type                    =   "Product",
- *              name                    =   "Sylius Product",
+ *              name                    =   "Product",
  *              description             =   "Sylius Product Object",
  *              icon                    =   "fa fa-product-hunt",
  *              enable_push_created     =    false,
@@ -58,7 +58,7 @@ class Product {
      *          id      =   "enabled",
      *          type    =   "bool",
      *          name    =   "Active",
-     *          itemtype=   "http://schema.org/Product", itemprop="active",
+     *          itemtype=   "http://schema.org/Product", itemprop="offered",
      * )
      */
     protected $enabled;    

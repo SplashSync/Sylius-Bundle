@@ -37,9 +37,7 @@ trait ProductSlugTrait {
     
     public function setSlug($Variant, $Data)
     {
-        var_dump($Data);
         $Translations   =   $Variant->getProduct()->getTranslations();
-//        dump($Translations);
         foreach ($Data as $LanguageCode => $Value) {
             if (!isset($Translations[$LanguageCode])) {
                 //====================================================================//

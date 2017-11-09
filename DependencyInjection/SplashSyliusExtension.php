@@ -26,6 +26,7 @@ class SplashSyliusExtension extends Extension
         $Splash["objects"][]    =   "Splash\Sylius\Objects\Customer";
         $Splash["objects"][]    =   "Splash\Sylius\Objects\Product";
         $Splash["objects"][]    =   "Splash\Sylius\Objects\Order";
+        $Splash["objects"][]    =   "Splash\Sylius\Objects\Invoice";
 
         //====================================================================//
         // Add Bundle Widgets to Splash Parameters

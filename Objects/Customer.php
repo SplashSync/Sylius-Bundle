@@ -10,7 +10,7 @@ use Splash\Bundle\Annotation as SPL;
  * @author B. Paquier <contact@splashsync.com>
  * @SPL\Object( type                    =   "ThirdParty",
  *              disabled                =   false,
- *              name                    =   "Sylius Customer",
+ *              name                    =   "Customer",
  *              description             =   "Sylius Customer Object",
  *              icon                    =   "fa fa-user",
  *              enable_push_created     =    false,
@@ -20,6 +20,18 @@ use Splash\Bundle\Annotation as SPL;
  * 
  */
 class Customer {
+    
+    /**
+     * @SPL\Field(  
+     *          id      =   "UserId",
+     *          type    =   "varchar",
+     *          name    =   "User Id",
+     *          itemtype=   "http://schema.org/Organization", itemprop="legalName",
+     *          write   =   false,
+     * )
+     */
+    protected $user_id;    
+
     
     /**
      * @SPL\Field(  
@@ -108,6 +120,5 @@ class Customer {
      * )
      */
     protected $subscribedToNewsletter = false;
-    
-    
+        
 }
