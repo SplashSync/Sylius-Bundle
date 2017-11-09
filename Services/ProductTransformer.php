@@ -166,8 +166,12 @@ class ProductTransformer extends Transformer {
         $this->manager->persist($ChannelPricing);
         //====================================================================//
         // Identify Default ChannelPricing in Parameters
-//        $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
-        $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
+        if (method_exists($ChannelPricing,'setChannel')) {
+            $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
+            $ChannelPricing->setChannel($Channel);
+        } else {
+            $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
+        }
         $ChannelPricing->setProductVariant($Variant);
         
         //====================================================================//
@@ -187,7 +191,11 @@ class ProductTransformer extends Transformer {
         $ChannelPrice   = $this->getDefaultChannelPricing($Variant);
         //====================================================================//
         // Retreive Price Currency
-        $Currency       =   $ChannelPrice->getChannel()->getBaseCurrency();
+        if (method_exists($ChannelPrice,'getChannel')) {
+            $Currency       =   $ChannelPrice->getChannel()->getBaseCurrency();
+        } else {
+            $Currency       =   $this->channels->findOneByCode($ChannelPrice->getChannelCode())->getBaseCurrency();
+        }
         //====================================================================//
         // TODO : Select Default TaxZone in Parameters
         // Retreive Price TAX Percentile
