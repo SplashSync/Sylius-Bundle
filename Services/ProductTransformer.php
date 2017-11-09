@@ -166,8 +166,8 @@ class ProductTransformer extends Transformer {
         $this->manager->persist($ChannelPricing);
         //====================================================================//
         // Identify Default ChannelPricing in Parameters
-        $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
-        $ChannelPricing->setChannel($Channel);
+//        $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
+        $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
         $ChannelPricing->setProductVariant($Variant);
         
         //====================================================================//
