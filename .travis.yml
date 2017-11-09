@@ -67,6 +67,7 @@ install:
     
     - echo "Install Sylius"
     - php bin/console sylius:install --env=test --no-interaction
+    - php bin/console sylius:install:sample-data --env=test --no-interaction
     - php bin/console server:start --env=test
 #    - chmod -R 777 app/autoload.php
     
