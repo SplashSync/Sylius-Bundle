@@ -43,7 +43,7 @@ before_install:
 # Increase memory limit to 4GB  
   - phpenv config-rm xdebug.ini
   - phpenv config-add build/x_memory.ini
-  - phpenv config-add build/x_errors.ini
+#  - phpenv config-add build/x_errors.ini
   - php -ini | grep memory_limit  
 
 # Install composer dependencies,
@@ -67,8 +67,8 @@ install:
     - cat ../build/routing_splash.yml   >> app/config/routing.yml
     
     - echo "Install Sylius"
-    - php bin/console sylius:install --env=test --no-interaction
-    - php bin/console sylius:fixtures:load --env=test --no-interaction
+    - php bin/console sylius:install --env=test --no-interaction --no-debug
+    - php bin/console sylius:fixtures:load --env=test --no-interaction --no-debug
     - php bin/console server:start --env=test
 #    - chmod -R 777 app/autoload.php
     
