@@ -67,13 +67,14 @@ install:
     
     - echo "Install Sylius"
     - php bin/console sylius:install --env=test --no-interaction
-    - php bin/console sylius:fixtures:load --env=test --no-interaction
+#    - php bin/console sylius:fixtures:load --env=test --no-interaction
     - php bin/console server:start --env=test
 #    - chmod -R 777 app/autoload.php
     
 
 # Run script
 script:
+  - phpunit
   - phpunit
 
 # After a build, send email notification with the build results
