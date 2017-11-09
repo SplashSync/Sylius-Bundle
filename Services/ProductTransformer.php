@@ -156,9 +156,10 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // Identify Default ChannelPricing
         foreach ($Variant->getChannelPricings() as $ChannelPricing) {
-            if ( $ChannelPricing->getChannel()->getCode() == $this->parameters["default_channel"]) {
+            $Code = method_exists($ChannelPricing,'getChannel') ? $ChannelPricing->getChannel()->getCode() : $ChannelPricing->getChannelCode();
+            if ( $Code == $this->parameters["default_channel"]) {
                 return $ChannelPricing;
-            }
+            }            
         }
         //====================================================================//
         // Create Channel Price if Needed
