@@ -62,8 +62,6 @@ install:
     - cp ../build/parameters.yml.dist app/config/parameters.yml
     - cp ../build/phpunit.xml.dist phpunit.xml.dist
     - cp ../build/autoload.php app/autoload.php
-    - cat ../build/config_splash.yml    >> app/config/config.yml
-    - cat ../build/routing_splash.yml   >> app/config/routing.yml
     
     - echo "Install Sylius"
     - php bin/console sylius:install --env=test --no-interaction --no-debug
@@ -72,6 +70,8 @@ install:
 
     - echo "Enable Splash Bundles"
     - cp ../build/AppKernel.php app/AppKernel.php
+    - cat ../build/config_splash.yml    >> app/config/config.yml
+    - cat ../build/routing_splash.yml   >> app/config/routing.yml
     
     - echo "Start Web Srever"
     - php bin/console server:start --env=test
