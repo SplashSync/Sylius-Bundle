@@ -40,7 +40,7 @@ php:
     
 # Define an environment variable
 env:
-  - SYLIUS_VERSION="master"
+  - SYLIUS_VERSION=""
   - SYLIUS_VERSION="1.0"
 
 before_install:
