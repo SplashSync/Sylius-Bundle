@@ -23,6 +23,7 @@ namespace   Splash\Sylius\Services;
 use Splash\Local\Objects\Transformer;
 
 use Splash\Sylius\Objects\Traits\OrderItemsTrait;
+use Splash\Sylius\Objects\Traits\OrderStatusTrait;
 use Splash\Sylius\Objects\Traits\OrderMetadataTrait;
 use Splash\Sylius\Objects\Traits\OrderPricesTrait;
 use Splash\Sylius\Objects\Traits\OrderPaymentsTrait;
@@ -121,6 +122,7 @@ class OrdersTransformer extends Transformer {
     // STATUS INFORMATIONS
     //====================================================================//
 
+    use OrderStatusTrait;
     use OrderMetadataTrait;
     
     //====================================================================//

@@ -115,7 +115,7 @@ trait OrderItemsTrait {
      *          id      =   "price@items",
      *          type    =   "price@list",
      *          name    =   "Price",
-     *          itemtype=   "http://schema.org/QuantitativeValue", itemprop="value",
+     *          itemtype=   "http://schema.org/PriceSpecification", itemprop="price",
      *          write   = false,
      * )
      */

@@ -11,8 +11,8 @@ trait OrderPaymentsTrait {
     public function getPayments($Order)
     {
         $CompletedStates = array(
+//            PaymentInterface::STATE_AUTHORIZED,
             PaymentInterface::STATE_COMPLETED,
-            PaymentInterface::STATE_PAYEDOUT,
         );
         //====================================================================//
         // Fetch Order Commons Infos
@@ -27,7 +27,6 @@ trait OrderPaymentsTrait {
             }
             $CompletedPayments[]    =   $Payment;
         }
-//dump($CompletedPayments);
         //====================================================================//
         // Return Completed Order Payments
         return $CompletedPayments;
@@ -71,7 +70,7 @@ trait OrderPaymentsTrait {
     public function getMethod(PaymentInterface $Payment)
     {
         if ($Payment->getMethod()) {
-            return $Payment->getMethod()->getGateway();
+            return $Payment->getMethod()->getCode();
         }
         return Null;
     }   

@@ -6,6 +6,7 @@ use Splash\Bundle\Annotation as SPL;
 
 use Splash\Sylius\Objects\Traits\OrderCoreTrait;
 use Splash\Sylius\Objects\Traits\OrderItemsTrait;
+use Splash\Sylius\Objects\Traits\OrderStatusTrait;
 use Splash\Sylius\Objects\Traits\OrderMetadataTrait;
 use Splash\Sylius\Objects\Traits\OrderPaymentsTrait;
 use Splash\Sylius\Objects\Traits\OrderPricesTrait;
@@ -46,6 +47,7 @@ class Order {
     // STATUS INFORMATIONS
     //====================================================================//
     
+    use OrderStatusTrait;
     use OrderMetadataTrait;
 
     //====================================================================//

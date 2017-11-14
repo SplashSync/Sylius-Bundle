@@ -169,9 +169,18 @@ class ProductTransformer extends Transformer {
         // Identify Default ChannelPricing in Parameters
         if (method_exists($ChannelPricing,'setChannel')) {
             $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
+            if( !$Channel ) {
+                $Channel = array_shift($this->channels->findAll());
+                Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
+            } 
             $ChannelPricing->setChannel($Channel);
         } else {
-            $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
+            if( !$this->channels->findOneByCode($this->parameters["default_channel"]) ) {
+                Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
+                $ChannelPricing->setChannelCode(array_shift($this->channels->findAll())->getCode());
+            } else {
+                $ChannelPricing->setChannelCode($this->parameters["default_channel"]);                
+            }
         }
         $ChannelPricing->setProductVariant($Variant);
         
@@ -334,7 +343,7 @@ class ProductTransformer extends Transformer {
         $Image->setOwner($Variant->getProduct());
         $ImageCode  = $Variant->getCode() ? $Variant->getCode() : $Variant->getProduct()->getCode();
         $ImageCode .= "-" . uniqid();
-        $Image->setCode($ImageCode);
+        $Image->setType($ImageCode);
         //====================================================================//
         // Add to Product Images
         $Variant->getProduct()->getImages()->add($Image);
@@ -370,7 +379,7 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // Add Image
         return  ObjectBase::Img_Encode(
-                        $Image->getCode(), 
+                        $Image->getType(), 
                         basename($Image->getPath()), 
                         $BasePath . dirname($Image->getPath()) . "/", 
                         $PublicUrl
