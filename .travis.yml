@@ -32,8 +32,9 @@ matrix:
 #    - php: hhvm
 
 # Define an environment variable
-#env:
-#  - SYMFONY_VERSION="3.0.*" DB=mysql
+env:
+  - SYLIUS_VERSION="master"
+  - SYLIUS_VERSION="1.0"
 
 before_install:
 # Update composer
@@ -49,7 +50,7 @@ before_install:
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:   
-    - composer create-project sylius/sylius-standard sylius --prefer-dist
+    - composer create-project sylius/sylius-standard sylius $WP_VERSION --prefer-dist
     - cd sylius
 #    - composer install --no-interaction --no-scripts --prefer-dist
 #    - composer require splash/phpcore:dev-master --no-interaction --no-scripts --prefer-dist
