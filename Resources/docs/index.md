@@ -1,7 +1,7 @@
 
-[![N|Solid](https://github.com/SplashSync/Php-Core/blob/master/Resources/img/fake-image2.jpg)](http://www.splashsync.com)
+[![N|Solid](https://github.com/SplashSync/Php-Core/raw/master/Resources/img/fake-image2.jpg)](http://www.splashsync.com)
 
-# Splash Sync Bundle for Sylius E-Commerce
+# Splash Bundle for Sylius
 
 Welcome to the Sylius Bundle's Documentation!
 
