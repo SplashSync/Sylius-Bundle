@@ -2,7 +2,7 @@
 # Main Configuration
 ###########################################################
 site_name: Sylius Splash Bundle 
-
+site_dir: "../../docs"
 theme: readthedocs
 
 ###########################################################
