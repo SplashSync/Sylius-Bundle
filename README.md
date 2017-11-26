@@ -13,13 +13,7 @@ This module implement Splash Sync connector for Sylius, the E-Commerce Solution 
 [![Total Downloads](https://poser.pugx.org/splash/sylius-bundle/downloads)](https://packagist.org/packages/splash/sylius-bundle)
 [![License](https://poser.pugx.org/splash/sylius-bundle/license)](https://packagist.org/packages/splash/sylius-bundle)
 
-## Installation
-
-* Download latest stable version here : [Splash Modules](http://www.splashsync.com/en/modules/)
-* Copy module contents on Wordpress plugin folder (wp-content/plugins/splash) 
-* Enable & Configure the module
-
-### Composer
+## Installation via Composer
 
 Download Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:
 
@@ -70,7 +64,7 @@ Here is the default configuration for Splash bundles:
 
 ## Documentation
 
-For the configuration guide and reference, see: [Sylius Bundle Wiki](https://github.com/SplashSync/Silius/wiki)
+For the configuration guide and reference, see: [Sylius Bundle Docs](https://splashsync.github.io/Sylius-Bundle/)
 
 ## Contributing
 
