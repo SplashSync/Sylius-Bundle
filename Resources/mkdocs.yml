@@ -7,9 +7,16 @@ theme: readthedocs
 
 repo_url: https://github.com/mkdocs/mkdocs/
 
+copyright:  <i class="fa fa-copyright" aria-hidden="true"></i> Copyright Splash Sync 2017 
+
 ###########################################################
 # Site Contents
 ###########################################################
 pages:
     - Home: index.md
+    - Features: features.md
+    - Installation: install.md
+    - Configuration Reference: configuration.md
+#    - Français :
+#        - Accueil : fr/index.md
 #    - About: about.md
