@@ -1,5 +1,5 @@
 
-[![N|Solid](/img/splash-logo.jpg)](http://www.splashsync.com)
+[![N|Solid](https://splashsync.github.io/Sylius-Bundle/img/splash-logo.jpg)](http://www.splashsync.com)
 
 # Splash Bundle for Sylius
 
