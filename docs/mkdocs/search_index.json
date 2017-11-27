@@ -47,7 +47,7 @@
         },
         {
             "location": "/install/",
-            "text": "Install via Composer\n\n\nDownload Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:\n\n\n$ php composer.phar require splash/sylius-bundle\n\n\n\n\nComposer will install the bundle to \nvendor/splash\n directory.\n\n\nAdding bundle to your application kernel\n\n\n\n// app/AppKernel.php\n\npublic function registerBundles()\n{\n    $bundles = array(\n        // ...\n            new \\Splash\\Bundle\\SplashBundle(),          // Splash Sync Core PHP Bundle \n            new \\Splash\\Sylius\\SplashSyliusBundle(),    // Splash Bundle for Sylius\n        // ...\n    );\n}\n\n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n >> \nAdd a Server\n and note your id & encryption keys. \n\n\n\n\u0000\n\n\nConfigure Splash Bundles\n\n\nHere is the default configuration for Splash bundles:\n\n\n\n    splash:\n        id:             812b124aa746e04c                                        # Your Splash Server Id\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      # Your Server Secret Encryption Key\n\n    splash_sylius:\n        default_channel:    US_WEB      # Select here you shop's default channel\n\n\n\n\n\nConfigure Splash Routes\n\n\nAdd Splash Bundle routes to your configuration:\n\n\n\n    splash_ws:\n        resource: \"@SplashBundle/Resources/config/routing.yml\"\n        prefix: /ws\n\n\n\n\n\nTest & Connect your server\n\n\nOnce your server is created in your account, you need to declare it. To do so, open you browser and touch \"/ws/soap-test\" url.\n\n\n\n\u0000\n\n\nRequirements\n\n\n\n\nPHP 7.0+\n\n\nSylius 1.0+\n\n\nAn active Splash Sync User Account",
+            "text": "Install via Composer\n\n\nDownload Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:\n\n\n$ php composer.phar require splash/sylius-bundle\n\n\n\n\nComposer will install the bundle to \nvendor/splash\n directory.\n\n\nAdding bundle to your application kernel\n\n\n\n// app/AppKernel.php\n\npublic function registerBundles()\n{\n    $bundles = array(\n        // ...\n            new \\Splash\\Bundle\\SplashBundle(),          // Splash Sync Core PHP Bundle \n            new \\Splash\\Sylius\\SplashSyliusBundle(),    // Splash Bundle for Sylius\n        // ...\n    );\n}\n\n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n >> \nAdd a Server\n and note your id & encryption keys. \n\n\n\n\u0000\n\n\nConfigure Splash Bundles\n\n\nHere is the default configuration for Splash bundles:\n\n\n\n    splash:\n        id:             812b124aa746e04c                                        # Your Splash Server Id\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      # Your Server Secret Encryption Key\n\n    splash_sylius:\n        default_channel:    US_WEB      # Select here you shop's default channel\n\n\n\n\n\nConfigure Splash Routes\n\n\nAdd Splash Bundle routes to your configuration:\n\n\n\n    splash_ws:\n        resource: \"@SplashBundle/Resources/config/routing.yml\"\n        prefix: /ws\n\n\n\n\n\nRequirements\n\n\n\n\nPHP 7.0+\n\n\nSylius 1.0+\n\n\nAn active Splash Sync User Account",
             "title": "Installation"
         },
         {
@@ -76,14 +76,19 @@
             "title": "Configure Splash Routes"
         },
         {
-            "location": "/install/#test-connect-your-server",
-            "text": "Once your server is created in your account, you need to declare it. To do so, open you browser and touch \"/ws/soap-test\" url.  \n\u0000",
-            "title": "Test &amp; Connect your server"
-        },
-        {
             "location": "/install/#requirements",
             "text": "PHP 7.0+  Sylius 1.0+  An active Splash Sync User Account",
             "title": "Requirements"
+        },
+        {
+            "location": "/connect/",
+            "text": "Test & Connect your server\n\n\nOnce your server is created in your account, you need to declare it. \n\n\nTo do so, open your web browser and touch \"http://my.webshop.com/ws/soap-test\" url.",
+            "title": "Test & Connect"
+        },
+        {
+            "location": "/connect/#test-connect-your-server",
+            "text": "Once your server is created in your account, you need to declare it.   To do so, open your web browser and touch \"http://my.webshop.com/ws/soap-test\" url.",
+            "title": "Test &amp; Connect your server"
         },
         {
             "location": "/configuration/",

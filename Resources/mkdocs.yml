@@ -16,6 +16,7 @@ pages:
     - Home: index.md
     - Features: features.md
     - Installation: install.md
+    - Test & Connect: connect.md
     - Configuration Reference: configuration.md
 #    - Français :
 #        - Accueil : fr/index.md
