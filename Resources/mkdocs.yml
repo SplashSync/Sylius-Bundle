@@ -5,7 +5,7 @@ site_name: Sylius Splash Bundle
 site_dir: "../docs"
 theme: readthedocs
 
-repo_url: https://github.com/mkdocs/mkdocs/
+repo_url: https://github.com/SplashSync/Sylius-Bundle
 
 copyright:  <i class="fa fa-copyright" aria-hidden="true"></i> Copyright Splash Sync 2017 
 

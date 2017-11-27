@@ -22,13 +22,63 @@
         },
         {
             "location": "/features/#sylius-the-first-framework-for-tailored-ecommerce-solutions",
-            "text": "Sylius is an eCommerce technology that gives you full freedom to create an exceptional customer experience. It integrates with your existing systems and guarantees fast time to market.  Splash Plugin for Sylius provide access to all E-Commerce data : Customers, Products, Orders & Invoices Data.  Sylius - Share your key E-Commerce data across all your apps  This module was designed to share your financial informations with all your business organization.  Your Symfony based Sylius webshop will become one of your \"sales channels\".    By using Splash for exporting and synchronizing all your sales informations, you can access all you sales in a single place.  Synchronize Sylius Products Stocks  Products stocks are critical for your business! Avoid errors by synchronizing your stocks easily across all your applications.   Merge all your customers data  Once all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. \nThis way, all similar informations will be shared and synchronized anywhere, from CRM (i.e. Wordpress), ERP (i.e. Dolibarr), to other E-Commerce (i.e. WooCommerce, Prestashop).  Consolidate & Simplify your Financial Analytic  Orders and invoices will be automatically exported from Sylius to any other applications you may connect!   Your financial analytics is easier... and with no efforts.",
+            "text": "Sylius is an eCommerce technology that gives you full freedom to create an exceptional customer experience. It integrates with your existing systems and guarantees fast time to market.  Splash Plugin for Sylius provide access to all E-Commerce data : Customers, Products, Orders & Invoices Data.",
             "title": "Sylius, The first framework for tailored eCommerce solutions"
+        },
+        {
+            "location": "/features/#sylius-share-your-key-e-commerce-data-across-all-your-apps",
+            "text": "This module was designed to share your financial informations with all your business organization.  Your Symfony based Sylius webshop will become one of your \"sales channels\".    By using Splash for exporting and synchronizing all your sales informations, you can access all you sales in a single place.",
+            "title": "Sylius - Share your key E-Commerce data across all your apps"
+        },
+        {
+            "location": "/features/#synchronize-sylius-products-stocks",
+            "text": "Products stocks are critical for your business! Avoid errors by synchronizing your stocks easily across all your applications.",
+            "title": "Synchronize Sylius Products Stocks"
+        },
+        {
+            "location": "/features/#merge-all-your-customers-data",
+            "text": "Once all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. \nThis way, all similar informations will be shared and synchronized anywhere, from CRM (i.e. Wordpress), ERP (i.e. Dolibarr), to other E-Commerce (i.e. WooCommerce, Prestashop).",
+            "title": "Merge all your customers data"
+        },
+        {
+            "location": "/features/#consolidate-simplify-your-financial-analytic",
+            "text": "Orders and invoices will be automatically exported from Sylius to any other applications you may connect!   Your financial analytics is easier... and with no efforts.",
+            "title": "Consolidate &amp; Simplify your Financial Analytic"
         },
         {
             "location": "/install/",
             "text": "Install via Composer\n\n\nDownload Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:\n\n\n$ php composer.phar require splash/sylius-bundle\n\n\n\n\nComposer will install the bundle to \nvendor/splash\n directory.\n\n\nAdding bundle to your application kernel\n\n\n\n// app/AppKernel.php\n\npublic function registerBundles()\n{\n    $bundles = array(\n        // ...\n            new \\Splash\\Bundle\\SplashBundle(),          // Splash Sync Core PHP Bundle \n            new \\Splash\\Sylius\\SplashSyliusBundle(),    // Splash Bundle for Sylius\n        // ...\n    );\n}\n\n\n\n\n\nConnect to your Splash Account\n\n\nFirst, you need to create access keys for you module in our website. To do so, on Splash workspace, go to \nServers\n >> \nAdd a Server\n and note your id & encryption keys. \n\n\n\n\u0000\n\n\nConfigure Splash Bundles\n\n\nHere is the default configuration for Splash bundles:\n\n\n\n    splash:\n        id:             812b124aa746e04c                                        # Your Splash Server Id\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      # Your Server Secret Encryption Key\n\n    splash_sylius:\n        default_channel:    US_WEB      # Select here you shop's default channel\n\n\n\n\n\nConfigure Splash Routes\n\n\nAdd Splash Bundle routes to your configuration:\n\n\n\n    splash_ws:\n        resource: \"@SplashBundle/Resources/config/routing.yml\"\n        prefix: /ws\n\n\n\n\n\nTest & Connect your server\n\n\nOnce your server is created in your account, you need to declare it. To do so, open you browser and touch \"/ws/soap-test\" url.\n\n\n\n\u0000\n\n\nRequirements\n\n\n\n\nPHP 7.0+\n\n\nSylius 1.0+\n\n\nAn active Splash Sync User Account",
             "title": "Installation"
+        },
+        {
+            "location": "/install/#install-via-composer",
+            "text": "Download Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:  $ php composer.phar require splash/sylius-bundle  Composer will install the bundle to  vendor/splash  directory.",
+            "title": "Install via Composer"
+        },
+        {
+            "location": "/install/#adding-bundle-to-your-application-kernel",
+            "text": "// app/AppKernel.php\n\npublic function registerBundles()\n{\n    $bundles = array(\n        // ...\n            new \\Splash\\Bundle\\SplashBundle(),          // Splash Sync Core PHP Bundle \n            new \\Splash\\Sylius\\SplashSyliusBundle(),    // Splash Bundle for Sylius\n        // ...\n    );\n}",
+            "title": "Adding bundle to your application kernel"
+        },
+        {
+            "location": "/install/#connect-to-your-splash-account",
+            "text": "First, you need to create access keys for you module in our website. To do so, on Splash workspace, go to  Servers  >>  Add a Server  and note your id & encryption keys.   \n\u0000",
+            "title": "Connect to your Splash Account"
+        },
+        {
+            "location": "/install/#configure-splash-bundles",
+            "text": "Here is the default configuration for Splash bundles:  \n    splash:\n        id:             812b124aa746e04c                                        # Your Splash Server Id\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      # Your Server Secret Encryption Key\n\n    splash_sylius:\n        default_channel:    US_WEB      # Select here you shop's default channel",
+            "title": "Configure Splash Bundles"
+        },
+        {
+            "location": "/install/#configure-splash-routes",
+            "text": "Add Splash Bundle routes to your configuration:  \n    splash_ws:\n        resource: \"@SplashBundle/Resources/config/routing.yml\"\n        prefix: /ws",
+            "title": "Configure Splash Routes"
+        },
+        {
+            "location": "/install/#test-connect-your-server",
+            "text": "Once your server is created in your account, you need to declare it. To do so, open you browser and touch \"/ws/soap-test\" url.  \n\u0000",
+            "title": "Test &amp; Connect your server"
         },
         {
             "location": "/install/#requirements",
@@ -39,6 +89,11 @@
             "location": "/configuration/",
             "text": "Sylius Bundles Config. reference\n\n\nHere is the reference configuration for Splash Sylius bundles:\n\n\n\n    splash:\n        # Your Splash Server Id\n        id:             812b124aa746e04c                                        \n        # Your Server Secret Encryption Key\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      \n        # Expert Mode. Set this url to route to your didicated server.\n        host:           https://www.splashsync.com/ws/soap\n        # Enable Doctrine ORM Entity Mapping\n        use_doctrine:   true\n        # Enable Doctrine MongoDB Documents Mapping\n        use_doctrine_mongodb\n\n        # Server Page Informations (Optionnal)\n        infos:\n            company:    My Company Name\n            address:    Postal Address\n            zip:        Address Post Code\n            town:       Address Town\n            www:        Server Url\n            email:      Company Email\n            phone:      Company Phone\n            logo:       Company Logo Public Url\n\n    splash_sylius:\n        # Select here you shop's default channel\n        default_channel:    US_WEB      \n        # Default Folder for Storage of new Images.\n        images_folder:      \"%kernel.root_dir%/../web/media/image\"",
             "title": "Configuration Reference"
+        },
+        {
+            "location": "/configuration/#sylius-bundles-config-reference",
+            "text": "Here is the reference configuration for Splash Sylius bundles:  \n    splash:\n        # Your Splash Server Id\n        id:             812b124aa746e04c                                        \n        # Your Server Secret Encryption Key\n        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      \n        # Expert Mode. Set this url to route to your didicated server.\n        host:           https://www.splashsync.com/ws/soap\n        # Enable Doctrine ORM Entity Mapping\n        use_doctrine:   true\n        # Enable Doctrine MongoDB Documents Mapping\n        use_doctrine_mongodb\n\n        # Server Page Informations (Optionnal)\n        infos:\n            company:    My Company Name\n            address:    Postal Address\n            zip:        Address Post Code\n            town:       Address Town\n            www:        Server Url\n            email:      Company Email\n            phone:      Company Phone\n            logo:       Company Logo Public Url\n\n    splash_sylius:\n        # Select here you shop's default channel\n        default_channel:    US_WEB      \n        # Default Folder for Storage of new Images.\n        images_folder:      \"%kernel.root_dir%/../web/media/image\"",
+            "title": "Sylius Bundles Config. reference"
         }
     ]
 }
