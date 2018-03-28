@@ -17,12 +17,13 @@ use Splash\Bundle\Annotation as SPL;
  *              target                  =   "Sylius\Component\Core\Model\Customer",
  *              transformer_service     =   "Splash.Sylius.Transformer"
  * )
- * 
+ *
  */
-class Customer {
+class Customer
+{
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "UserId",
      *          type    =   "varchar",
      *          name    =   "User Id",
@@ -30,11 +31,11 @@ class Customer {
      *          write   =   false,
      * )
      */
-    protected $user_id;    
+    protected $user_id;
 
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "email",
      *          type    =   "email",
      *          name    =   "Email",
@@ -46,7 +47,7 @@ class Customer {
     protected $email;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "firstName",
      *          type    =   "varchar",
      *          name    =   "First Name",
@@ -57,7 +58,7 @@ class Customer {
     protected $firstName;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "lastName",
      *          type    =   "varchar",
      *          name    =   "Last Name",
@@ -67,7 +68,7 @@ class Customer {
     protected $lastName;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "gender",
      *          type    =   "varchar",
      *          name    =   "Social Title",
@@ -79,7 +80,7 @@ class Customer {
     protected $gender;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "genderType",
      *          type    =   "int",
      *          name    =   "Social Title (ID)",
@@ -91,7 +92,7 @@ class Customer {
     protected $genderType;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "birthday",
      *          type    =   "date",
      *          name    =   "Birthday",
@@ -101,7 +102,7 @@ class Customer {
     protected $birthday;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "phoneNumber",
      *          type    =   "phone",
      *          name    =   "Phone Number",
@@ -112,7 +113,7 @@ class Customer {
     
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "subscribedToNewsletter",
      *          type    =   "bool",
      *          name    =   "Newletter",
@@ -120,5 +121,4 @@ class Customer {
      * )
      */
     protected $subscribedToNewsletter = false;
-        
 }

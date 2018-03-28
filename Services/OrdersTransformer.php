@@ -28,24 +28,24 @@ use Splash\Sylius\Objects\Traits\OrderMetadataTrait;
 use Splash\Sylius\Objects\Traits\OrderPricesTrait;
 use Splash\Sylius\Objects\Traits\OrderPaymentsTrait;
 
-
 /**
  * Description of OrderTransformer
  *
  * @author nanard33
  */
-class OrdersTransformer extends Transformer {
-    
-    public function __construct($Manager, $ChannelsRepository, $Parameters) {
+class OrdersTransformer extends Transformer
+{
+    public function __construct($Manager, $ChannelsRepository, $Parameters)
+    {
 
         //====================================================================//
-        // Sylius Order Manager         
+        // Sylius Order Manager
         $this->manager      = $Manager;
         //====================================================================//
-        // Sylius Product Manager         
+        // Sylius Product Manager
         $this->channels     = $ChannelsRepository;
         //====================================================================//
-        // Sylius Bundle Parameters 
+        // Sylius Bundle Parameters
         $this->parameters   = $Parameters;
         
         return;
@@ -57,20 +57,21 @@ class OrdersTransformer extends Transformer {
     
     /**
      *  @abstract       Create a New Object
-     * 
+     *
      *  @param  mixed   $Manager        Local Object Entity/Document Manager
      *  @param  string  $Target         Local Object Class Name
-     * 
+     *
      *  @return         mixed
      */
-    public function create($Manager, $Target) {
+    public function create($Manager, $Target)
+    {
         
         //====================================================================//
         // Load Default Channel
         $DefaultChannel    =    $this->channels
                 ->findOneByCode($this->parameters["default_channel"]);
         if (!$DefaultChannel) {
-            return Null;
+            return null;
         }
         //====================================================================//
         // Create a New Object
@@ -80,8 +81,8 @@ class OrdersTransformer extends Transformer {
         $Order->setCurrencyCode($DefaultChannel->getBaseCurrency()->getCode());
 
         //====================================================================//
-        // Persist New Object        
-        $Manager->persist($Order); 
+        // Persist New Object
+        $Manager->persist($Order);
         //====================================================================//
         // Return a New Object
         return  $Order;
@@ -89,17 +90,17 @@ class OrdersTransformer extends Transformer {
 
 //    /**
 //     *  @abstract       Create a New Object
-//     * 
+//     *
 //     *  @param  mixed   $Manager        Local Object Entity/Document Manager
 //     *  @param  string  $Object         Local Object
-//     * 
+//     *
 //     *  @return         mixed
 //     */
 //    public function delete($Manager, $Object) {
 //        //====================================================================//
 //        // Saftey Check
-//        if ( !$Object ) { 
-//            return False; 
+//        if ( !$Object ) {
+//            return False;
 //        }
 //        //====================================================================//
 //        // Load Product from Variant
@@ -112,11 +113,11 @@ class OrdersTransformer extends Transformer {
 //        if ( $Product->getVariants()->count() == 0 ) {
 //            //====================================================================//
 //            // Delete Product
-//            $this->manager->remove($Product);    
+//            $this->manager->remove($Product);
 //        }
-//        $this->manager->flush();           
+//        $this->manager->flush();
 //        return True;
-//    }    
+//    }
         
     //====================================================================//
     // STATUS INFORMATIONS
@@ -137,5 +138,4 @@ class OrdersTransformer extends Transformer {
           
     use OrderPricesTrait;
     use OrderPaymentsTrait;
-    
 }

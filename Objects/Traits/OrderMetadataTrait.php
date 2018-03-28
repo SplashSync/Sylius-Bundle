@@ -8,10 +8,11 @@ use Sylius\Component\Core\OrderCheckoutStates;
 use Sylius\Component\Core\OrderPaymentStates;
 use Sylius\Component\Core\OrderShippingStates;
 
-trait OrderMetadataTrait {
+trait OrderMetadataTrait
+{
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "isDraft",
      *          type    =   "bool",
      *          name    =   "Draft",
@@ -20,15 +21,15 @@ trait OrderMetadataTrait {
      *          group   =   "Meta",
      * )
      */
-    protected $isDraft; 
+    protected $isDraft;
     
     public function getIsDraft($Order)
     {
         return !$this->getIsValidated($Order);
-    }    
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "isValidated",
      *          type    =   "bool",
      *          name    =   "Checkout Completed",
@@ -37,15 +38,15 @@ trait OrderMetadataTrait {
      *          group   =   "Meta",
      * )
      */
-    protected $isValidated; 
+    protected $isValidated;
     
     public function getIsValidated($Order)
     {
-        return ($Order->getCheckoutState() === OrderCheckoutStates::STATE_COMPLETED ) ? True : False;
-    }    
+        return ($Order->getCheckoutState() === OrderCheckoutStates::STATE_COMPLETED) ? true : false;
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "isShipped",
      *          type    =   "bool",
      *          name    =   "Shipping Completed",
@@ -54,18 +55,18 @@ trait OrderMetadataTrait {
      *          group   =   "Meta",
      * )
      */
-    protected $isShipped;   
+    protected $isShipped;
     
     public function getIsShipped($Order)
     {
-        if ( in_array($Order->getShippingState(), [OrderShippingStates::STATE_PARTIALLY_SHIPPED, OrderShippingStates::STATE_SHIPPED]) ) {
-            return True;
+        if (in_array($Order->getShippingState(), [OrderShippingStates::STATE_PARTIALLY_SHIPPED, OrderShippingStates::STATE_SHIPPED])) {
+            return true;
         }
-        return False;
-    }    
+        return false;
+    }
      
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "isPaid",
      *          type    =   "bool",
      *          name    =   "Payment Completed",
@@ -78,10 +79,9 @@ trait OrderMetadataTrait {
    
     public function getIsPaid($Order)
     {
-        if ( in_array($Order->getPaymentState(), [OrderPaymentStates::STATE_PAID, OrderPaymentStates::STATE_PARTIALLY_REFUNDED, OrderPaymentStates::STATE_REFUNDED]) ) {
-            return True;
+        if (in_array($Order->getPaymentState(), [OrderPaymentStates::STATE_PAID, OrderPaymentStates::STATE_PARTIALLY_REFUNDED, OrderPaymentStates::STATE_REFUNDED])) {
+            return true;
         }
-        return False;
-    }        
-    
+        return false;
+    }
 }

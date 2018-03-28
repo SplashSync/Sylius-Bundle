@@ -37,29 +37,30 @@ use Splash\Sylius\Objects\Traits\ProductSlugTrait;
  *
  * @author nanard33
  */
-class ProductTransformer extends Transformer {
-    
+class ProductTransformer extends Transformer
+{
     use ProductSlugTrait;
     
-    public function __construct($Translator, $Router, $Factory, $Manager, $ChannelsRepository, $Parameters) {
+    public function __construct($Translator, $Router, $Factory, $Manager, $ChannelsRepository, $Parameters)
+    {
 
         //====================================================================//
-        // Symfony Translator         
+        // Symfony Translator
         $this->translator   = $Translator;
         //====================================================================//
-        // Symfony Router        
+        // Symfony Router
         $this->router       = $Router;
         //====================================================================//
-        // Sylius Product Factory         
+        // Sylius Product Factory
         $this->factory      = $Factory;
         //====================================================================//
-        // Sylius Product Manager         
+        // Sylius Product Manager
         $this->manager      = $Manager;
         //====================================================================//
-        // Sylius Product Manager         
+        // Sylius Product Manager
         $this->channels     = $ChannelsRepository;
         //====================================================================//
-        // Sylius Bundle Parameters 
+        // Sylius Bundle Parameters
         $this->parameters   = $Parameters;
         
         return;
@@ -71,19 +72,20 @@ class ProductTransformer extends Transformer {
     
     /**
      *  @abstract       Create a New Object
-     * 
+     *
      *  @param  mixed   $Manager        Local Object Entity/Document Manager
      *  @param  string  $Target         Local Object Class Name
-     * 
+     *
      *  @return         mixed
      */
-    public function create($Manager, $Target) {
+    public function create($Manager, $Target)
+    {
         //====================================================================//
         // Create a New Object
-        $Product = $this->factory->createWithVariant();       
+        $Product = $this->factory->createWithVariant();
         //====================================================================//
-        // Persist New Object        
-        $this->manager->persist($Product);            
+        // Persist New Object
+        $this->manager->persist($Product);
         //====================================================================//
         // Return a New Object
         return  $Product->getVariants()->first();
@@ -91,17 +93,18 @@ class ProductTransformer extends Transformer {
 
     /**
      *  @abstract       Create a New Object
-     * 
+     *
      *  @param  mixed   $Manager        Local Object Entity/Document Manager
      *  @param  string  $Object         Local Object
-     * 
+     *
      *  @return         mixed
      */
-    public function delete($Manager, $Object) {
+    public function delete($Manager, $Object)
+    {
         //====================================================================//
         // Saftey Check
-        if ( !$Object ) { 
-            return False; 
+        if (!$Object) {
+            return false;
         }
         //====================================================================//
         // Load Product from Variant
@@ -111,31 +114,32 @@ class ProductTransformer extends Transformer {
         $Product->removeVariant($Object);
         //====================================================================//
         // If Product has no more Variant
-        if ( $Product->getVariants()->count() == 0 ) {
+        if ($Product->getVariants()->count() == 0) {
             //====================================================================//
             // Delete Product
-            $this->manager->remove($Product);    
+            $this->manager->remove($Product);
         }
-        $this->manager->flush();           
-        return True;
-    }    
+        $this->manager->flush();
+        return true;
+    }
     
     
     //====================================================================//
     // CORE FIELDS
     //====================================================================//
         
-    public function getProductCode($Variant){
-        
+    public function getProductCode($Variant)
+    {
         return $Variant->getCode();
     }
     
-    public function setProductCode($Variant, $Data){
-        if ( !$Variant->getProduct()->getCode() ) {
+    public function setProductCode($Variant, $Data)
+    {
+        if (!$Variant->getProduct()->getCode()) {
             $Variant->getProduct()->setCode($Data);
-        } 
+        }
         return $Variant->setCode($Data);
-    }    
+    }
             
     public function getEnabled($Variant)
     {
@@ -145,7 +149,7 @@ class ProductTransformer extends Transformer {
     public function setEnabled($Variant, $Data)
     {
         return $Variant->getProduct()->setEnabled($Data);
-    }         
+    }
     
     //====================================================================//
     // PRICES INFORMATIONS
@@ -156,10 +160,10 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // Identify Default ChannelPricing
         foreach ($Variant->getChannelPricings() as $ChannelPricing) {
-            $Code = method_exists($ChannelPricing,'getChannel') ? $ChannelPricing->getChannel()->getCode() : $ChannelPricing->getChannelCode();
-            if ( $Code == $this->parameters["default_channel"]) {
+            $Code = method_exists($ChannelPricing, 'getChannel') ? $ChannelPricing->getChannel()->getCode() : $ChannelPricing->getChannelCode();
+            if ($Code == $this->parameters["default_channel"]) {
                 return $ChannelPricing;
-            }            
+            }
         }
         //====================================================================//
         // Create Channel Price if Needed
@@ -167,19 +171,19 @@ class ProductTransformer extends Transformer {
         $this->manager->persist($ChannelPricing);
         //====================================================================//
         // Identify Default ChannelPricing in Parameters
-        if (method_exists($ChannelPricing,'setChannel')) {
+        if (method_exists($ChannelPricing, 'setChannel')) {
             $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
-            if( !$Channel ) {
+            if (!$Channel) {
                 $Channel = array_shift($this->channels->findAll());
                 Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
-            } 
+            }
             $ChannelPricing->setChannel($Channel);
         } else {
-            if( !$this->channels->findOneByCode($this->parameters["default_channel"]) ) {
+            if (!$this->channels->findOneByCode($this->parameters["default_channel"])) {
                 Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
                 $ChannelPricing->setChannelCode(array_shift($this->channels->findAll())->getCode());
             } else {
-                $ChannelPricing->setChannelCode($this->parameters["default_channel"]);                
+                $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
             }
         }
         $ChannelPricing->setProductVariant($Variant);
@@ -189,8 +193,8 @@ class ProductTransformer extends Transformer {
         $Variant->getChannelPricings()->add($ChannelPricing);
         //====================================================================//
         // Return New Channel Pricing
-        return $ChannelPricing; 
-    }   
+        return $ChannelPricing;
+    }
     
     public function getPrice($Variant)
     {
@@ -201,7 +205,7 @@ class ProductTransformer extends Transformer {
         $ChannelPrice   = $this->getDefaultChannelPricing($Variant);
         //====================================================================//
         // Retreive Price Currency
-        if (method_exists($ChannelPrice,'getChannel')) {
+        if (method_exists($ChannelPrice, 'getChannel')) {
             $Currency       =   $ChannelPrice->getChannel()->getBaseCurrency();
         } else {
             $Currency       =   $this->channels->findOneByCode($ChannelPrice->getChannelCode())->getBaseCurrency();
@@ -216,17 +220,19 @@ class ProductTransformer extends Transformer {
         }
         
         return ObjectBase::Price_Encode(
-                doubleval($ChannelPrice->getPrice() / 100),            // No TAX Price 
+                doubleval($ChannelPrice->getPrice() / 100), // No TAX Price
                 $TaxRate,                                          // TAX Percent
-                Null, 
+                null,
                 $Currency->getCode(),
                 $Currency->getCode(),
-                $Currency->getName());
-    }   
+                $Currency->getName()
+        
+        );
+    }
     
     public function setPrice($Variant, $Data)
     {
-        if ( !isset($Data["ht"]) ) {
+        if (!isset($Data["ht"])) {
             return;
         }
         //====================================================================//
@@ -236,7 +242,7 @@ class ProductTransformer extends Transformer {
         // Update Product Price
         $ChannelPrice->setPrice($Data["ht"] * 100);
         return ;
-    }      
+    }
     
     //====================================================================//
     // PRODUCT STOCKS
@@ -245,10 +251,10 @@ class ProductTransformer extends Transformer {
     public function getOutOfStock($Variant)
     {
         if ($Variant->isTracked()) {
-            return ($Variant->getOnHand() > 0 ) ? False : True;
-        } 
-        return False;
-    }    
+            return ($Variant->getOnHand() > 0) ? false : true;
+        }
+        return false;
+    }
 
     //====================================================================//
     // PRODUCT DESCRIPTIONS
@@ -257,27 +263,27 @@ class ProductTransformer extends Transformer {
     public function getName($Variant)
     {
         return $this->getTranslated($Variant, __FUNCTION__);
-    } 
+    }
     
     public function setName($Variant, $Data)
     {
         return $this->setTranslated($Variant, $Data, __FUNCTION__);
-    } 
+    }
     
     public function getShortDescription($Variant)
     {
         return $this->getTranslated($Variant, __FUNCTION__);
-    } 
+    }
     
     public function setShortDescription($Variant, $Data)
     {
         return $this->setTranslated($Variant, $Data, __FUNCTION__);
-    } 
+    }
     
     public function getDescription($Variant)
     {
         return $this->getTranslated($Variant, __FUNCTION__);
-    } 
+    }
     
     public function setDescription($Variant, $Data)
     {
@@ -288,21 +294,21 @@ class ProductTransformer extends Transformer {
     public function getMetaDescription($Variant)
     {
         return $this->getTranslated($Variant, __FUNCTION__);
-    } 
+    }
     
     public function setMetaDescription($Variant, $Data)
     {
         return $this->setTranslated($Variant, $Data, __FUNCTION__);
     }
     
-    public function getTranslated($Variant,$Function)
+    public function getTranslated($Variant, $Function)
     {
         $Response = array();
         foreach ($Variant->getProduct()->getTranslations() as $LanguageCode => $Translation) {
             $Response[$LanguageCode] = $Translation->$Function();
         }
         return $Response;
-    }     
+    }
     
     public function setTranslated($Variant, $Data, $Function)
     {
@@ -314,12 +320,12 @@ class ProductTransformer extends Transformer {
                 $Translation = new \Sylius\Component\Core\Model\ProductTranslation();
                 $Translation->setLocale($LanguageCode);
                 $Translation->setTranslatable($Variant->getProduct());
-                $Translation->setSlug( uniqid($Variant->getCode()) );
+                $Translation->setSlug(uniqid($Variant->getCode()));
                 $Translations[$LanguageCode] = $Translation;
             }
             $Translations[$LanguageCode]->$Function($Value);
         }
-    }      
+    }
     
     //====================================================================//
     // MANAGE UNIQUE PRODUCT SLUGS
@@ -348,7 +354,7 @@ class ProductTransformer extends Transformer {
         // Add to Product Images
         $Variant->getProduct()->getImages()->add($Image);
         return $Image;
-    }    
+    }
     
     public function removeImages($Variant, $Image)
     {
@@ -358,7 +364,7 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // DeleteProduct Image
         $this->manager->remove($Image);
-    }    
+    }
     
     public function getImages($Variant)
     {
@@ -373,18 +379,19 @@ class ProductTransformer extends Transformer {
         //====================================================================//
         // Generate Public Url
         $PublicUrl = $this->router->generate(
-                "liip_imagine_filter", 
-                array("filter" => "sylius_large", "path" => $Image->getPath()) , 
-                UrlGeneratorInterface::ABSOLUTE_URL );
+                "liip_imagine_filter",
+                array("filter" => "sylius_large", "path" => $Image->getPath()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+        );
         //====================================================================//
         // Add Image
         return  ObjectBase::Img_Encode(
-                        $Image->getType(), 
-                        basename($Image->getPath()), 
-                        $BasePath . dirname($Image->getPath()) . "/", 
+                        $Image->getType(),
+                        basename($Image->getPath()),
+                        $BasePath . dirname($Image->getPath()) . "/",
                         $PublicUrl
                     );
-    }     
+    }
     
     public function setImage($Image, $Data)
     {
@@ -405,7 +412,7 @@ class ProductTransformer extends Transformer {
             //====================================================================//
             // Compare Image CheckSum
             if ($Md5 === $Data["md5"]) {
-                return True;
+                return true;
             }
             //====================================================================//
             // Delete Outdated Image
@@ -413,12 +420,12 @@ class ProductTransformer extends Transformer {
         }
         //====================================================================//
         // DownLoad Image from Splash Server
-        $NewImageFile    =   Splash::File()->getFile($Data["file"],$Data["md5"]);
+        $NewImageFile    =   Splash::File()->getFile($Data["file"], $Data["md5"]);
         //====================================================================//
         // File Not Imported => Exit
-        if ( $NewImageFile == False ) {
-            return False;
-        }            
+        if ($NewImageFile == false) {
+            return false;
+        }
         //====================================================================//
         // Generate Image Encoded Path
         do {
@@ -427,20 +434,20 @@ class ProductTransformer extends Transformer {
         } while (is_file($BasePath . $ImagePath));
         //====================================================================//
         // Check if folder exists or create it
-        if (!is_dir(dirname(dirname($BasePath . $ImagePath)))) {    
-            mkdir(dirname(dirname($BasePath . $ImagePath)),0775,TRUE);    
+        if (!is_dir(dirname(dirname($BasePath . $ImagePath)))) {
+            mkdir(dirname(dirname($BasePath . $ImagePath)), 0775, true);
         }
-        if (!is_dir(dirname($BasePath . $ImagePath))) {    
-            mkdir(dirname($BasePath . $ImagePath),0775,TRUE);    
+        if (!is_dir(dirname($BasePath . $ImagePath))) {
+            mkdir(dirname($BasePath . $ImagePath), 0775, true);
         }
         //====================================================================//
         // Write Image On Folder
-        Splash::File()->WriteFile($BasePath,$ImagePath,$NewImageFile["md5"],$NewImageFile["raw"]);
+        Splash::File()->WriteFile($BasePath, $ImagePath, $NewImageFile["md5"], $NewImageFile["raw"]);
         //====================================================================//
         // Setup Image Path
         $Image->setPath($ImagePath);
-        return True;
-    }      
+        return true;
+    }
     
     /**
      * @param string $path
@@ -455,6 +462,5 @@ class ProductTransformer extends Transformer {
             substr($path, 2, 2),
             substr($path, 4)
         );
-    }    
-    
+    }
 }

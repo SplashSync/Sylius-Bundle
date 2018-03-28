@@ -6,8 +6,6 @@ use Splash\Bundle\Annotation as SPL;
 
 use Splash\Sylius\Objects\Traits\ProductSlugTrait;
 
-
-
 /**
  * @abstract    Description of Customer
  *
@@ -21,10 +19,10 @@ use Splash\Sylius\Objects\Traits\ProductSlugTrait;
  *              repository_service      =   "sylius.repository.product_variant",
  *              transformer_service     =   "Splash.Sylius.Products.Transformer"
  * )
- * 
+ *
  */
-class Product {
-
+class Product
+{
     use ProductSlugTrait;
     
     //====================================================================//
@@ -32,7 +30,7 @@ class Product {
     //====================================================================//
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "productCode",
      *          type    =   "varchar",
      *          name    =   "Reference",
@@ -44,7 +42,7 @@ class Product {
     protected $productCode;
     
 //    /**
-//     * @SPL\Field(  
+//     * @SPL\Field(
 //     *          id      =   "code",
 //     *          type    =   "varchar",
 //     *          name    =   "Variant Code",
@@ -54,21 +52,21 @@ class Product {
 //    protected $code;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "enabled",
      *          type    =   "bool",
      *          name    =   "Active",
      *          itemtype=   "http://schema.org/Product", itemprop="offered",
      * )
      */
-    protected $enabled;    
+    protected $enabled;
     
     //====================================================================//
     // PRODUCT DESCRIPTIONS
     //====================================================================//
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "name",
      *          type    =   "mvarchar",
      *          name    =   "Name",
@@ -76,10 +74,10 @@ class Product {
      *          group   =   "Translations",
      * )
      */
-    protected $name;    
+    protected $name;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "shortDescription",
      *          type    =   "mvarchar",
      *          name    =   "Short Description",
@@ -88,10 +86,10 @@ class Product {
      *          asso    =   { "name" },
      * )
      */
-    protected $shortDescription;        
+    protected $shortDescription;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "description",
      *          type    =   "mtext",
      *          name    =   "Long Description",
@@ -100,12 +98,12 @@ class Product {
      *          asso    =   { "name" },
      * )
      */
-    protected $description;   
+    protected $description;
     
 
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "metaDescription",
      *          type    =   "mvarchar",
      *          name    =   "Meta Desription",
@@ -114,14 +112,14 @@ class Product {
      *          asso    =   { "name" },
      * )
      */
-    protected $metaDescription;  
+    protected $metaDescription;
     
     //====================================================================//
     // PRODUCT SPECIFICATIONS
     //====================================================================//
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "weight",
      *          type    =   "double",
      *          name    =   "Weight",
@@ -129,10 +127,10 @@ class Product {
      *          group   =   "Specifications",
      * )
      */
-    protected $weight;    
+    protected $weight;
    
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "height",
      *          type    =   "double",
      *          name    =   "Height",
@@ -140,10 +138,10 @@ class Product {
      *          group   =   "Specifications",
      * )
      */
-    protected $height; 
+    protected $height;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "width",
      *          type    =   "double",
      *          name    =   "Width",
@@ -151,10 +149,10 @@ class Product {
      *          group   =   "Specifications",
      * )
      */
-    protected $width;     
+    protected $width;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "depth",
      *          type    =   "double",
      *          name    =   "Depth",
@@ -162,38 +160,38 @@ class Product {
      *          group   =   "Specifications",
      * )
      */
-    protected $depth;  
+    protected $depth;
     
     //====================================================================//
     // PRICES INFORMATIONS
     //====================================================================//
             
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "price",
      *          type    =   "price",
      *          name    =   "Price",
      *          itemtype=   "http://schema.org/Product", itemprop="price",
      * )
      */
-    protected $price;  
+    protected $price;
     
     //====================================================================//
     // PRODUCT STOCKS
     //====================================================================//
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "onHand",
      *          type    =   "int",
      *          name    =   "On Hand (Stock)",
      *          itemtype=   "http://schema.org/Offer", itemprop="inventoryLevel",
      * )
      */
-    protected $onHand;  
+    protected $onHand;
             
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "outofstock",
      *          type    =   "bool",
      *          name    =   "Out of Stock",
@@ -201,24 +199,24 @@ class Product {
      *          write   =   false,
      * )
      */
-    protected $outOfStock;  
+    protected $outOfStock;
     
     //====================================================================//
     // PRODUCT IMAGES
     //====================================================================//
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "image@images",
      *          type    =   "image@list",
      *          name    =   "Images",
      *          itemtype=   "http://schema.org/Product", itemprop="image",
      * )
      */
-    protected $images;  
+    protected $images;
     
 //    /**
-//     * @SPL\Field(  
+//     * @SPL\Field(
 //     *          id      =   "code@images",
 //     *          type    =   "varchar@list",
 //     *          name    =   "Images Codes",
@@ -226,5 +224,5 @@ class Product {
 //     *          write   =   false,
 //     * )
 //     */
-//    protected $imagesCodes;     
+//    protected $imagesCodes;
 }

@@ -4,10 +4,11 @@ namespace Splash\Sylius\Objects\Traits;
 
 use Splash\Bundle\Annotation as SPL;
 
-trait OrderCoreTrait {
+trait OrderCoreTrait
+{
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "customer",
      *          type    =   "objectid::ThirdParty",
      *          name    =   "Customer",
@@ -19,7 +20,7 @@ trait OrderCoreTrait {
     protected $customer;
         
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "number",
      *          type    =   "varchar",
      *          name    =   "Order Reference",
@@ -32,7 +33,7 @@ trait OrderCoreTrait {
     
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "checkoutCompletedAt",
      *          type    =   "date",
      *          name    =   "Order Date",
@@ -48,7 +49,7 @@ trait OrderCoreTrait {
 
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "shippingAddress",
      *          type    =   "objectid::Address",
      *          name    =   "Shipping Address",
@@ -60,7 +61,7 @@ trait OrderCoreTrait {
     protected $shippingAddress;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "billingAddress",
      *          type    =   "objectid::Address",
      *          name    =   "Billing Address",
@@ -69,20 +70,19 @@ trait OrderCoreTrait {
      *          write   =   false,
      * )
      */
-    protected $billingAddress;    
+    protected $billingAddress;
     
     //====================================================================//
     // OTHER INFORMATIONS
     //====================================================================//
               
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "notes",
      *          type    =   "text",
      *          name    =   "Note",
      *          itemtype=   "http://schema.org/Order", itemprop="description",
      * )
      */
-    protected $notes; 
-    
+    protected $notes;
 }

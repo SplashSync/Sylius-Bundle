@@ -6,8 +6,8 @@ use Splash\Bundle\Annotation as SPL;
 
 use Sylius\Component\Payment\Model\PaymentInterface;
 
-trait OrderPaymentsTrait {
-
+trait OrderPaymentsTrait
+{
     public function getPayments($Order)
     {
         $CompletedStates = array(
@@ -17,12 +17,12 @@ trait OrderPaymentsTrait {
         //====================================================================//
         // Fetch Order Commons Infos
         $this->Order        = $Order;
-        $this->Currency     = $Order->getChannel()->getBaseCurrency();     
+        $this->Currency     = $Order->getChannel()->getBaseCurrency();
         //====================================================================//
         // Fetch Order Completed Payments
         $CompletedPayments = array();
-        foreach($Order->getPayments() as $Payment) {
-            if ( !in_array($Payment->getState(), $CompletedStates) ) {
+        foreach ($Order->getPayments() as $Payment) {
+            if (!in_array($Payment->getState(), $CompletedStates)) {
                 continue;
             }
             $CompletedPayments[]    =   $Payment;
@@ -30,10 +30,10 @@ trait OrderPaymentsTrait {
         //====================================================================//
         // Return Completed Order Payments
         return $CompletedPayments;
-    }    
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "createdAt@payments",
      *          type    =   "date@list",
      *          name    =   "Payment Date",
@@ -41,11 +41,11 @@ trait OrderPaymentsTrait {
      *          write   =   false,
      * )
      */
-    protected $paymentsDate; 
+    protected $paymentsDate;
  
      
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "id@payments",
      *          type    =   "varchar@list",
      *          name    =   "Payment Number",
@@ -53,10 +53,10 @@ trait OrderPaymentsTrait {
      *          write   =   false,
      * )
      */
-    protected $paymentsNumber;    
+    protected $paymentsNumber;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "method@payments",
      *          type    =   "varchar@list",
      *          name    =   "Payment Method",
@@ -64,7 +64,7 @@ trait OrderPaymentsTrait {
      *          write   =   false,
      * )
      */
-    protected $paymentsMethod;    
+    protected $paymentsMethod;
     
     
     public function getMethod(PaymentInterface $Payment)
@@ -72,11 +72,11 @@ trait OrderPaymentsTrait {
         if ($Payment->getMethod()) {
             return $Payment->getMethod()->getCode();
         }
-        return Null;
-    }   
+        return null;
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "amount@payments",
      *          type    =   "double@list",
      *          name    =   "Payment Amount",
@@ -84,15 +84,15 @@ trait OrderPaymentsTrait {
      *          write   =   false,
      * )
      */
-    protected $paymentsAmount;      
+    protected $paymentsAmount;
     
     public function getAmount(PaymentInterface $Payment)
     {
         return doubleval($Payment->getAmount() / 100);
-    }  
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "currencyCode@payments",
      *          type    =   "currency@list",
      *          name    =   "Payment Currency",
@@ -100,6 +100,5 @@ trait OrderPaymentsTrait {
      *          write   =   false,
      * )
      */
-    protected $paymentsCurrency;      
-    
+    protected $paymentsCurrency;
 }

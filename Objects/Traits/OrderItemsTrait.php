@@ -9,24 +9,24 @@ use Sylius\Component\Core\Model\OrderItem;
 use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 
-trait OrderItemsTrait {
-
+trait OrderItemsTrait
+{
     public function getItems($Order)
     {
         //====================================================================//
         // Fetch Order Commons Infos
         $this->Order        = $Order;
-        $this->Currency     = $Order->getChannel()->getBaseCurrency();        
+        $this->Currency     = $Order->getChannel()->getBaseCurrency();
         //====================================================================//
         // Return Order Items
-        return array_merge (
+        return array_merge(
                 $Order->getItems()->toArray(),
                 $Order->getAdjustments()->toArray()
                 );
     }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "sku@items",
      *          type    =   "varchar@list",
      *          name    =   "Sku",
@@ -38,16 +38,16 @@ trait OrderItemsTrait {
     
     public function getSku($OrderItem)
     {
-        if ( $OrderItem instanceof OrderItem) {
+        if ($OrderItem instanceof OrderItem) {
             return $OrderItem->getVariant()->getCode();
-        } elseif ( $OrderItem instanceof Adjustment) {
+        } elseif ($OrderItem instanceof Adjustment) {
             return $OrderItem->getType();
         }
     }
     
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "name@items",
      *          type    =   "varchar@list",
      *          name    =   "Name",
@@ -55,23 +55,23 @@ trait OrderItemsTrait {
      *          write   = false,
      * )
      */
-    protected $ItemsName;    
+    protected $ItemsName;
     
     public function getName($OrderItem)
     {
-        if ( $OrderItem instanceof OrderItem) {
+        if ($OrderItem instanceof OrderItem) {
             $LocalCode = $OrderItem->getOrder()->getLocaleCode();
             return $OrderItem->getVariant()->getProduct()
                     ->getTranslations()->get($LocalCode)
                     ->getName();
-        } elseif ( $OrderItem instanceof Adjustment) {
+        } elseif ($OrderItem instanceof Adjustment) {
             return $OrderItem->getLabel();
         }
     }
     
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "product@items",
      *          type    =   "objectid::Product@list",
      *          name    =   "Product",
@@ -79,19 +79,19 @@ trait OrderItemsTrait {
      *          write   = false,
      * )
      */
-    protected $ItemsProductId; 
+    protected $ItemsProductId;
     
     public function getProduct($OrderItem)
     {
-        if ( $OrderItem instanceof OrderItem) {
+        if ($OrderItem instanceof OrderItem) {
             return $OrderItem->getVariant();
-        } elseif ( $OrderItem instanceof Adjustment) {
-            return Null;
+        } elseif ($OrderItem instanceof Adjustment) {
+            return null;
         }
     }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "qty@items",
      *          type    =   "int@list",
      *          name    =   "Quantity",
@@ -99,19 +99,19 @@ trait OrderItemsTrait {
      *          write   = false,
      * )
      */
-    protected $ItemsQty; 
+    protected $ItemsQty;
     
     public function getQty($OrderItem)
     {
-        if ( $OrderItem instanceof OrderItem) {
+        if ($OrderItem instanceof OrderItem) {
             return $OrderItem->getQuantity();
-        } elseif ( $OrderItem instanceof Adjustment) {
+        } elseif ($OrderItem instanceof Adjustment) {
             return 1;
         }
     }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "price@items",
      *          type    =   "price@list",
      *          name    =   "Price",
@@ -119,36 +119,34 @@ trait OrderItemsTrait {
      *          write   = false,
      * )
      */
-    protected $ItemsUnitPrice; 
+    protected $ItemsUnitPrice;
     
     public function getPrice($OrderItem)
     {
         $TaxRate    = 0.0;
         $UnitPrice  = 0.0;
-        if ( $OrderItem instanceof OrderItem) {
-            
+        if ($OrderItem instanceof OrderItem) {
             if ($OrderItem->getVariant()->getTaxCategory()) {
                 $TaxRate = $OrderItem->getVariant()->getTaxCategory()->getRates()->first()->getAmount() * 100;
             }
             $UnitPrice  = $OrderItem->getUnitPrice();
-
-        } elseif ( $OrderItem instanceof Adjustment) {
-            
+        } elseif ($OrderItem instanceof Adjustment) {
             $UnitPrice  = $OrderItem->getAmount();
-            
         }
         
         return ObjectBase::Price_Encode(
-                doubleval($UnitPrice / 100),        // No TAX Price 
+                doubleval($UnitPrice / 100), // No TAX Price
                 $TaxRate,                           // TAX Percent
-                Null, 
+                null,
                 $this->Currency->getCode(),
                 $this->Currency->getCode(),
-                $this->Currency->getName());
-    }  
+                $this->Currency->getName()
+        
+        );
+    }
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "discount@items",
      *          type    =   "double@list",
      *          name    =   "Discount %",
@@ -156,13 +154,12 @@ trait OrderItemsTrait {
      *          write   = false,
      * )
      */
-    protected $ItemsDiscount; 
+    protected $ItemsDiscount;
     
     public function getDiscount($OrderItem)
     {
         $DiscountPercent = 0;
-        if ( $OrderItem instanceof OrderItem) {
-            
+        if ($OrderItem instanceof OrderItem) {
             if ($OrderItem->getUnits()->isEmpty()) {
                 return 0;
             }
@@ -174,11 +171,9 @@ trait OrderItemsTrait {
             $Discount += $FirtsUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
             
             
-            $DiscountPercent = doubleval( round ( -100 * $Discount / $OrderItem->getUnitPrice(), 1));
-            
+            $DiscountPercent = doubleval(round(-100 * $Discount / $OrderItem->getUnitPrice(), 1));
         }
         
         return $DiscountPercent;
     }
-    
 }

@@ -4,10 +4,11 @@ namespace Splash\Sylius\Objects\Traits;
 
 use Splash\Bundle\Annotation as SPL;
 
-trait OrderStatusTrait {
+trait OrderStatusTrait
+{
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "Status",
      *          type    =   "varchar",
      *          name    =   "Status",
@@ -16,28 +17,26 @@ trait OrderStatusTrait {
      *          group   =   "Meta",
      * )
      */
-    protected $status; 
+    protected $status;
     
     public function getStatus($Order)
     {
-        if ( $this->getIsDraft($Order) ) {
+        if ($this->getIsDraft($Order)) {
             return "OrderDraft";
         }
         
-        if ( $this->getIsValidated($Order) && $this->getIsShipped($Order) && $this->getIsPaid($Order) ) {
+        if ($this->getIsValidated($Order) && $this->getIsShipped($Order) && $this->getIsPaid($Order)) {
             return "OrderDelivered";
         }
         
-        if ( $this->getIsValidated($Order) && $this->getIsPaid($Order) ) {
+        if ($this->getIsValidated($Order) && $this->getIsPaid($Order)) {
             return "OrderInTransit";
         }
         
-        if ( $this->getIsValidated($Order) ) {
+        if ($this->getIsValidated($Order)) {
             return "OrderProcessing";
         }
         
-        return "Unknown";        
-    }    
-    
-    
+        return "Unknown";
+    }
 }

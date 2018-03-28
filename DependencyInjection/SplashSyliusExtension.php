@@ -17,7 +17,7 @@ class SplashSyliusExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         
-        $container->setParameter('splash_sylius',    $config);
+        $container->setParameter('splash_sylius', $config);
         
         //====================================================================//
         // Add Bundle Objects to Splash Parameters
@@ -35,7 +35,6 @@ class SplashSyliusExtension extends Extension
         
         //====================================================================//
         // Update Splash Bundle Parameters
-        $container->setParameter('splash',$Splash);
-        
+        $container->setParameter('splash', $Splash);
     }
 }

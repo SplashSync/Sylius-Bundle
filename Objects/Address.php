@@ -17,12 +17,13 @@ use Splash\Bundle\Annotation as SPL;
  *              target           =   "Sylius\Component\Core\Model\Address",
  *              transformer_service     =   "Splash.Sylius.Transformer"
  * )
- * 
+ *
  */
-class Address {
+class Address
+{
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "customer",
      *          type    =   "objectid::ThirdParty",
      *          name    =   "Customer",
@@ -34,7 +35,7 @@ class Address {
     protected $customer;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "firstName",
      *          type    =   "varchar",
      *          name    =   "First Name",
@@ -46,7 +47,7 @@ class Address {
     protected $firstName;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "lastName",
      *          type    =   "varchar",
      *          name    =   "Last Name",
@@ -58,7 +59,7 @@ class Address {
     protected $lastName;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "phoneNumber",
      *          type    =   "phone",
      *          name    =   "Phone Number",
@@ -68,7 +69,7 @@ class Address {
     protected $phoneNumber;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "street",
      *          type    =   "varchar",
      *          name    =   "Street",
@@ -79,7 +80,7 @@ class Address {
     protected $street;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "company",
      *          type    =   "varchar",
      *          name    =   "Company Name",
@@ -89,7 +90,7 @@ class Address {
     protected $company;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "city",
      *          type    =   "varchar",
      *          name    =   "City Name",
@@ -100,7 +101,7 @@ class Address {
     protected $city;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "postcode",
      *          type    =   "varchar",
      *          name    =   "Zip/Postal Code",
@@ -112,7 +113,7 @@ class Address {
     protected $postcode;
 
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "countrycode",
      *          type    =   "country",
      *          name    =   "Country Code",
@@ -124,7 +125,7 @@ class Address {
     protected $countrycode;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "provinceCode",
      *          type    =   "state",
      *          name    =   "Province Code",
@@ -135,7 +136,7 @@ class Address {
     protected $provincecode;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "provinceName",
      *          type    =   "varchar",
      *          name    =   "Province Name",
@@ -146,6 +147,4 @@ class Address {
     
 //        <field name="provinceCode" column="province_code" type="string" nullable="true" />
 //        <field name="provinceName" column="province_name" type="string" nullable="true" />
-    
-    
 }
