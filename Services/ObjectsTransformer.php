@@ -29,10 +29,10 @@ use Sylius\Component\Customer\Model\CustomerInterface;
  *
  * @author nanard33
  */
-class ObjectsTransformer extends Transformer {
-    
-    public function __construct($Translator) {
-        
+class ObjectsTransformer extends Transformer
+{
+    public function __construct($Translator)
+    {
         $this->translator = $Translator;
         
         return;
@@ -60,16 +60,15 @@ class ObjectsTransformer extends Transformer {
      */
     public function getGender($Customer)
     {
-        switch ($Customer->getGender()) 
-        {
+        switch ($Customer->getGender()) {
             case CustomerInterface::MALE_GENDER:
-                return $this->translator->Trans("sylius.gender.male",[],"messages");
+                return $this->translator->Trans("sylius.gender.male", [], "messages");
             case CustomerInterface::FEMALE_GENDER:
-                return $this->translator->Trans("sylius.gender.female",[],"messages");
+                return $this->translator->Trans("sylius.gender.female", [], "messages");
             case CustomerInterface::UNKNOWN_GENDER:
-                return $this->translator->Trans("sylius.gender.unknown",[],"messages");
-            default:    
-                return $this->translator->Trans("sylius.gender.unknown",[],"messages");
+                return $this->translator->Trans("sylius.gender.unknown", [], "messages");
+            default:
+                return $this->translator->Trans("sylius.gender.unknown", [], "messages");
         }
     }
     
@@ -78,13 +77,12 @@ class ObjectsTransformer extends Transformer {
      */
     public function getGenderType($Customer)
     {
-        switch ($Customer->getGender()) 
-        {
+        switch ($Customer->getGender()) {
             case CustomerInterface::MALE_GENDER:
                 return 0;
             case CustomerInterface::FEMALE_GENDER:
                 return 1;
-            default:    
+            default:
             case CustomerInterface::UNKNOWN_GENDER:
                 return 2;
         }
@@ -95,25 +93,24 @@ class ObjectsTransformer extends Transformer {
      */
     public function setGenderType($Customer, $gender)
     {
-        switch ($gender) 
-        {
+        switch ($gender) {
             case 0:
                 $Customer->setGender(CustomerInterface::MALE_GENDER);
                 break;
             case 1:
                 $Customer->setGender(CustomerInterface::FEMALE_GENDER);
                 break;
-            default:    
+            default:
             case 2:
                 $Customer->setGender(CustomerInterface::UNKNOWN_GENDER);
                 break;
         }
-    } 
+    }
     
     public function getSubscribedToNewsletter($Customer)
     {
         return $Customer->isSubscribedToNewsletter();
-    }     
+    }
 
     /**
      * @abstract Format Customer Address Province Code
@@ -124,7 +121,6 @@ class ObjectsTransformer extends Transformer {
             return $Address->getProvinceCode();
         }
         
-        return substr($Address->getProvinceCode(), strlen($Address->getCountryCode()) + 1 );
+        return substr($Address->getProvinceCode(), strlen($Address->getCountryCode()) + 1);
     }
-    
 }

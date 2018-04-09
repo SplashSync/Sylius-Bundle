@@ -4,10 +4,11 @@ namespace Splash\Sylius\Objects\Traits;
 
 use Splash\Bundle\Annotation as SPL;
 
-trait OrderPricesTrait {
+trait OrderPricesTrait
+{
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "currencyCode",
      *          type    =   "currency",
      *          name    =   "Currency Code",
@@ -15,10 +16,10 @@ trait OrderPricesTrait {
      *          required=   true,
      * )
      */
-    protected $currencyCode;  
+    protected $currencyCode;
     
     /**
-     * @SPL\Field(  
+     * @SPL\Field(
      *          id      =   "total",
      *          type    =   "double",
      *          name    =   "Total",
@@ -27,11 +28,10 @@ trait OrderPricesTrait {
      *          write   =   false,
      * )
      */
-    protected $total;   
+    protected $total;
     
     public function getTotal($Order)
     {
         return doubleval($Order->getTotal() / 100);
-    }        
-    
+    }
 }

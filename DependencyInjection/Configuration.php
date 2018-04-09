@@ -20,14 +20,14 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_channel')
                     ->isRequired()
                     ->cannotBeEmpty()
-                    ->defaultValue("default")               
+                    ->defaultValue("default")
                     ->info('Default Channel for association with new Products.')
-                ->end()   
+                ->end()
                 ->scalarNode('images_folder')
                     ->cannotBeEmpty()
-                     ->defaultValue("%kernel.root_dir%/../web/media/image")               
+                     ->defaultValue("%kernel.root_dir%/../web/media/image")
                     ->info('Default Folder for Storage of new Images.')
-                ->end()                  
+                ->end()
             ->end()
         ;
         return $treeBuilder;

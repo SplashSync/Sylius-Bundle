@@ -27,9 +27,10 @@ use Splash\Sylius\Objects\Traits\OrderPricesTrait;
  *              target                  =   "Sylius\Component\Core\Model\Order",
  *              transformer_service     =   "Splash.Sylius.Orders.Transformer"
  * )
- * 
+ *
  */
-class Order {
+class Order
+{
     
     //====================================================================//
     // CORE INFORMATIONS
@@ -56,5 +57,4 @@ class Order {
           
     use OrderPricesTrait;
     use OrderPaymentsTrait;
-    
 }
