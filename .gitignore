@@ -1,0 +1,6 @@
+/nbproject/private/
+/vendor/
+/var/
+/tests/config/parameters.yml
+/.directory
+/.php_cs.cache
