@@ -10,7 +10,7 @@
     convertWarningsToExceptions = "true"
     processIsolation            = "true"
     stopOnFailure               = "true"
-    bootstrap                   = "app/autoload.php" 
+    bootstrap                   = "config/bootstrap.php" 
     verbose                     = "false"
     timeoutForLargeTests        = "120"  
 >
@@ -35,7 +35,7 @@
     </logging> 
 
     <php>
-        <server name="KERNEL_DIR" value="app" />
+        <server name="KERNEL_CLASS" value="App\Kernel" />
         <env    name="SYMFONY_DEPRECATION_HELPER" value="disabled" />
         <const  name="SPLASH_DEBUG" value="true" />
         <server name="SPLASH_TRAVIS" value="true" />    

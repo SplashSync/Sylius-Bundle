@@ -54,7 +54,7 @@ trait ObjectListHelperTrait
         // Add List Filters
         if (!empty($filter)) {
         }
-
+        
         //====================================================================//
         // Load Objects List
         $rawData = $queryBuilder->getQuery()->getResult();

@@ -90,6 +90,6 @@ trait DoctrineOrmHelperTrait
             return false;
         }
 
-        return $this->object->getId();
+        return (string) $this->object->getId();
     }
 }
