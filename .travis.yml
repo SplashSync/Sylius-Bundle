@@ -20,8 +20,8 @@ cache:
 # Versions of PHP to test against
 php:
 
-    - "7.1"
-#    - "7.2"
+#    - "7.1"
+    - "7.2"
     
 # Define an environment variable
 env:
@@ -62,6 +62,7 @@ install:
     - cat ../build/routing_splash.yml   >> app/config/routing.yml
     
     - echo "Start Web Srever"
+    - php bin/console server:start
     - php bin/console server:start --env=test
 
 # Run script
