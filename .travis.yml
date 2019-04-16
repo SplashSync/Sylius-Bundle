@@ -70,6 +70,7 @@ install:
     
     - echo "Start Web Srever"
 #    - php bin/console server:start --env=test
+    - php bin/console server:run --env=test
     - php bin/console server:start
 
 # Run script
