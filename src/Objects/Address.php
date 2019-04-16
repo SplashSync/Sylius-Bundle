@@ -1,150 +1,129 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Sylius\Objects;
 
-use Splash\Bundle\Annotation as SPL;
+use Doctrine\ORM\EntityManagerInterface;
+use Splash\Bundle\Models\AbstractStandaloneObject;
+use Splash\Models\Objects\IntelParserTrait;
+use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\SimpleFieldsTrait;
+use Splash\Models\Objects\GenericFieldsTrait;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
+use Sylius\Component\Core\Factory\AddressFactory as Factory;
+use Sylius\Component\Core\Model\AddressInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @abstract    Description of Address
- *
- * @author B. Paquier <contact@splashsync.com>
- * @SPL\Object( type            =   "Address",
- *              disabled        =   false,
- *              name            =   "Customer Address",
- *              description     =   "Sylius Address Object",
- *              icon            =   "fa fa-envelope",
- *              enable_push_created=    false,
- *              target           =   "Sylius\Component\Core\Model\Address",
- *              transformer_service     =   "Splash.Sylius.Transformer"
- * )
- *
+ * Sylius Address Object
  */
-class Address
+class Address extends AbstractStandaloneObject
 {
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "customer",
-     *          type    =   "objectid::ThirdParty",
-     *          name    =   "Customer",
-     *          itemtype=   "http://schema.org/Organization", itemprop="ID",
-     *          inlist  =   false,
-     *          required=   true,
-     * )
-     */
-    protected $customer;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "firstName",
-     *          type    =   "varchar",
-     *          name    =   "First Name",
-     *          itemtype=   "http://schema.org/Person", itemprop="familyName",
-     *          inlist  =   true,
-     *          required=   true,
-     * )
-     */
-    protected $firstName;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "lastName",
-     *          type    =   "varchar",
-     *          name    =   "Last Name",
-     *          itemtype=   "http://schema.org/Person", itemprop="givenName",
-     *          inlist  =   true,
-     *          required=   true,
-     * )
-     */
-    protected $lastName;
+    // Splash Php Core Traits
+    use IntelParserTrait;
+    use SimpleFieldsTrait;
+    use ListsTrait;
+    use GenericFieldsTrait;
+
+    // Sylius Address Traits
+    use Address\CrudTrait;
+    use Address\ObjectsListTrait;
+    use Address\CoreTrait;
+//    use Address\MainTrait;
+
+    //====================================================================//
+    // Object Definition Parameters
+    //====================================================================//
 
     /**
-     * @SPL\Field(
-     *          id      =   "phoneNumber",
-     *          type    =   "phone",
-     *          name    =   "Phone Number",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="telephone",
-     * )
+     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
      */
-    protected $phoneNumber;
+//    protected static    $DISABLED        =  True;
 
     /**
-     * @SPL\Field(
-     *          id      =   "street",
-     *          type    =   "varchar",
-     *          name    =   "Street",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="streetAddress",
-     *          required=   true,
-     * )
+     *  Object Name (Translated by Module)
      */
-    protected $street;
+    protected static $NAME = "Address";
 
     /**
-     * @SPL\Field(
-     *          id      =   "company",
-     *          type    =   "varchar",
-     *          name    =   "Company Name",
-     *          itemtype=   "http://schema.org/Organization", itemprop="legalName",
-     * )
+     *  Object Description (Translated by Module).
      */
-    protected $company;
+    protected static $DESCRIPTION = 'Sylius Address Object';
 
     /**
-     * @SPL\Field(
-     *          id      =   "city",
-     *          type    =   "varchar",
-     *          name    =   "City Name",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="addressLocality",
-     *          required=   true,
-     * )
+     *  Object Icon (FontAwesome or Glyph ico tag).
      */
-    protected $city;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "postcode",
-     *          type    =   "varchar",
-     *          name    =   "Zip/Postal Code",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="postalCode",
-     *          inlist  =   true,
-     *          required=   true,
-     * )
-     */
-    protected $postcode;
+    protected static $ICO = 'fa fa-envelope';
+
+    // Enable Creation Of New Local Objects when Not Existing
+    protected static $ENABLE_PUSH_CREATED = false;
+
+    //====================================================================//
+    // Private variables
+    //====================================================================//
 
     /**
-     * @SPL\Field(
-     *          id      =   "countrycode",
-     *          type    =   "country",
-     *          name    =   "Country Code",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="addressCountry",
-     *          inlist  =   true,
-     *          required=   true,
-     * )
+     * @var AddressInterface
      */
-    protected $countrycode;
-    
+    protected $object;
+
     /**
-     * @SPL\Field(
-     *          id      =   "provinceCode",
-     *          type    =   "state",
-     *          name    =   "Province Code",
-     *          itemtype=   "http://schema.org/PostalAddress", itemprop="addressRegion",
-     *          write   =   false,
-     * )
+     * @var TranslatorInterface
      */
-    protected $provincecode;
-    
+    protected $translator;
+
     /**
-     * @SPL\Field(
-     *          id      =   "provinceName",
-     *          type    =   "varchar",
-     *          name    =   "Province Name",
-     *          write   =   false,
-     * )
+     * @var CustomerRepository
      */
-    protected $provincename;
-    
-//        <field name="provinceCode" column="province_code" type="string" nullable="true" />
-//        <field name="provinceName" column="province_name" type="string" nullable="true" />
+    protected $customers;
+
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    //====================================================================//
+    // Service Constructor
+    //====================================================================//
+
+    /**
+     * Service Constructor
+     *
+     * @param TranslatorInterface    $trans
+     * @param EntityManagerInterface $manager
+     * @param AddressRepository      $repo
+     * @param Factory                $factory
+     * @param CustomerRepository     $customers
+     */
+    public function __construct(TranslatorInterface $trans, EntityManagerInterface $manager, AddressRepository $repo, Factory $factory, CustomerRepository $customers)
+    {
+        //====================================================================//
+        // Link to Symfony Translator
+        $this->translator = $trans;
+        //====================================================================//
+        // Link to Doctrine Entity Manager Services
+        $this->entityManager = $manager;
+        //====================================================================//
+        // Link to Address Repository
+        $this->repository = $repo;
+        //====================================================================//
+        // Link to Address Factory
+        $this->factory = $factory;
+        //====================================================================//
+        // Link to Customer Repository
+        $this->customers = $customers;
+    }
 }

@@ -21,6 +21,7 @@ use Splash\Bundle\Connectors\Standalone;
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\ChannelPricing;
+use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Core\Model\Product;
 use Sylius\Component\Product\Model\ProductTranslation;
@@ -28,6 +29,7 @@ use Sylius\Component\Product\Model\ProductTranslation;
 class ObjectEventListener
 {
     const MANAGED_ENTITIES = array(
+        "Address" => AddressInterface::class,
         "ThirdParty" => CustomerInterface::class
     );
 
@@ -178,6 +180,11 @@ class ObjectEventListener
             return;
         }
         //====================================================================//
+        // Locked (Just created) => Skip
+        if ((SPL_A_UPDATE == $action) && Splash::Object($objectType)->isLocked()) {
+            return;
+        }        
+        //====================================================================//
         //  Search in Configured Servers using Standalone Connector
         $servers = $this->manager->getConnectorConfigurations(Standalone::NAME);
         //====================================================================//
@@ -204,6 +211,7 @@ class ObjectEventListener
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
+
     }
 
     /**

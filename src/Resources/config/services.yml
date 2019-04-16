@@ -1,11 +1,10 @@
 services: 
     
     ########################################################################
-    # Splash Faker Generic Objects
+    # Sylius Customer Object
     splash.sylius.object.customer:
         class:      Splash\Sylius\Objects\ThirdParty
         public:     true
-        autowire:   true
         arguments:  
             - "@translator"
             - "@sylius.manager.customer"
@@ -15,6 +14,20 @@ services:
             # Register as Standalone Connector Object           
             - { name: "splash.standalone.object", type : "ThirdParty" }  
 
+    ########################################################################
+    # Sylius Address Object
+    splash.sylius.object.address:
+        class:      Splash\Sylius\Objects\Address
+        public:     true
+        arguments:  
+            - "@translator"
+            - "@sylius.manager.address"
+            - "@sylius.repository.address"
+            - "@sylius.factory.address"
+            - "@sylius.repository.customer"
+        tags:
+            # Register as Standalone Connector Object           
+            - { name: "splash.standalone.object", type : "Address" }  
     
 #    ########################################################################
 #    # Sylius Object Data Transformer

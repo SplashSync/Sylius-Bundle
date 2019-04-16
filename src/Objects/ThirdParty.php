@@ -21,6 +21,7 @@ use Splash\Client\Splash;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
+use Splash\Models\Objects\GenericFieldsTrait;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Resource\Factory\Factory;
@@ -35,6 +36,7 @@ class ThirdParty extends AbstractStandaloneObject
     use IntelParserTrait;
     use SimpleFieldsTrait;
     use ListsTrait;
+    use GenericFieldsTrait;
 
     // Faker Traits
     use ThirdParty\CrudTrait;
@@ -79,18 +81,6 @@ class ThirdParty extends AbstractStandaloneObject
      * @var TranslatorInterface
      */
     protected $translator;
-
-    /**
-     * Doctrine Entity Manager
-     *
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var CustomerRepository
-     */
-    protected $repository;
 
     /**
      * @var Factory

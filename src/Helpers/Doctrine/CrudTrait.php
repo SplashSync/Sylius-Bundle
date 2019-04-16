@@ -13,21 +13,35 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Models;
+namespace Splash\Sylius\Helpers;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Splash\Client\Splash;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
  * Generic Doctrine Object Crud Helps
  */
-trait DoctrineOrmHelperTrait
+trait CrudTrait
 {
+    /**
+     * Doctrine Entity Manager
+     *
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var RepositoryInterface
+     */
+    protected $repository;
+
     /**
      * Load Request Object
      *
      * @param string $objectId Object id
      *
-     * @return object|false
+     * @return false|object
      */
     public function load($objectId)
     {

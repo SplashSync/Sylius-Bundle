@@ -13,32 +13,32 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\ThirdParty;
+namespace Splash\Sylius\Objects\Address;
 
-use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Core\Model\AddressInterface;
 
 /**
- * Sylius Customers Objects Lists
+ * Sylius Address Objects Lists
  */
 trait ObjectsListTrait
 {
     use \Splash\Bundle\Helpers\Doctrine\ObjectsListHelperTrait;
 
     /**
-     * Transform Curtsomer To List Array Data
+     * Transform Address To List Array Data
      *
-     * @param CustomerInterface $customer
+     * @param AddressInterface $address
      *
      * @return array
      */
-    protected function getObjectListArray(CustomerInterface $customer): array
+    protected function getObjectListArray(AddressInterface $address): array
     {
         return array(
-            'id' => $customer->getId(),
-            'firstname' => $customer->getFirstName(),
-            'lastname' => $customer->getLastName(),
-            'email' => $customer->getEmail(),
-            'phoneNumber' => $customer->getPhoneNumber(),
+            'id' => $address->getId(),
+            'firstname' => $address->getFirstName(),
+            'lastname' => $address->getLastName(),
+            'phoneNumber' => $address->getPhoneNumber(),
+            'city' => $address->getCity(),
         );
     }
 }

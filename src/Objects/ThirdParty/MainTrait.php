@@ -95,12 +95,11 @@ trait MainTrait
 
                 break;
             case 'birthday':
-                $birthday = $this->object->getBirthday();
-                $this->out[$fieldName] = $birthday ? $birthday->format(SPL_T_DATECAST) : "";
+                $this->getGenericDate($fieldName);
 
                 break;
             case 'SubscribedToNewsletter':
-                $this->out[$fieldName] = $this->object->isSubscribedToNewsletter();
+                $this->getGenericBool($fieldName);
 
                 break;
             default:
@@ -127,18 +126,11 @@ trait MainTrait
 
                 break;
             case 'birthday':
-                $birthday = $this->object->getBirthday();
-                if (empty($birthday) || ($birthday->format(SPL_T_DATECAST) != $fieldData)) {
-                    $this->object->setBirthday($fieldData ? new DateTime($fieldData) : null);
-                    $this->needUpdate();
-                }
+                $this->setGenericDate($fieldName, $fieldData);
 
                 break;
             case 'SubscribedToNewsletter':
-                if ($fieldData != $this->object->isSubscribedToNewsletter()) {
-                    $this->object->setSubscribedToNewsletter($fieldData);
-                    $this->needUpdate();
-                }
+                $this->setGenericBool($fieldName, $fieldData);
 
                 break;
             default:

@@ -15,18 +15,16 @@
 
 namespace Splash\Sylius\Objects\ThirdParty;
 
-use ArrayObject;
 use Splash\Client\Splash;
-use Splash\Connectors\Faker\Entity\FakeObject;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Splash\Sylius\Models\DoctrineOrmHelperTrait;
+
 
 /**
  * Sylius Customers CRUD
  */
 trait CrudTrait
 {
-    use DoctrineOrmHelperTrait;
+    use \Splash\Bundle\Helpers\Doctrine\CrudHelperTrait;
     
     /**
      * Create Request Object
