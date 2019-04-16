@@ -2,6 +2,7 @@
 splash:
     connections:
         sylius:    
+            name:           Sylius for Travis
             id:             ThisIsSyliusWsId
             key:            ThisIsSyliusWsEncryptionKey
             host:           http://dev.splashsync.local/ws/soap
