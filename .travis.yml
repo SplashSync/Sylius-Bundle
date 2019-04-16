@@ -69,7 +69,8 @@ install:
 #    - cp ../build/AppKernel.php app/AppKernel.php
     
     - echo "Start Web Srever"
-    - php bin/console server:start --env=test
+#    - php bin/console server:start --env=test
+    - php bin/console server:start
 
 # Run script
 script:
