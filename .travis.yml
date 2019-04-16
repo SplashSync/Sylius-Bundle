@@ -45,9 +45,7 @@ install:
     - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
     - cd sylius
     - echo "Install Splash Bundles"
-    - cat ../build/config_splash.yml    >> app/config/config.yml
-    - cat ../build/routing_splash.yml   >> app/config/routing.yml
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist --no-scripts
     
     - echo "Configuring Splash Bundles"
     - cp ../build/parameters.yml.dist app/config/parameters.yml
@@ -59,6 +57,8 @@ install:
     - php bin/console sylius:fixtures:load --env=test --no-interaction --no-debug
 
     - echo "Enable Splash Bundles"
+    - cat ../build/config_splash.yml    >> app/config/config.yml
+    - cat ../build/routing_splash.yml   >> app/config/routing.yml
     - cp ../build/AppKernel.php app/AppKernel.php
     
     - echo "Start Web Srever"
