@@ -45,6 +45,8 @@ install:
     - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
     - cd sylius
     - echo "Install Splash Bundles"
+    - cat ../build/config_splash.yml    >> app/config/config.yml
+    - cat ../build/routing_splash.yml   >> app/config/routing.yml
     - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
     
     - echo "Configuring Splash Bundles"
@@ -58,11 +60,8 @@ install:
 
     - echo "Enable Splash Bundles"
     - cp ../build/AppKernel.php app/AppKernel.php
-    - cat ../build/config_splash.yml    >> app/config/config.yml
-    - cat ../build/routing_splash.yml   >> app/config/routing.yml
     
     - echo "Start Web Srever"
-    - php bin/console server:start
     - php bin/console server:start --env=test
 
 # Run script
