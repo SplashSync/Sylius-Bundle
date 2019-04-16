@@ -73,7 +73,7 @@ install:
 
 # Run script
 script:
-  - phpunit
+  - php vendor/bin/phpunit
 
 # After a build, send email notification with the build results
 notifications:
