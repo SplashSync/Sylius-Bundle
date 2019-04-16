@@ -46,7 +46,7 @@ install:
     - cd sylius
     
     - echo "Install Splash Bundles"
-    - cp  ../build/.en.dist ".env" 
+    - cp  ../build/.env.dist ".env" 
     - cat ../build/config_splash.yml    >> config/config.yml
     - cat ../build/routing_splash.yml   >> config/routing.yml
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
