@@ -50,7 +50,7 @@ install:
     - cat ../build/config_splash.yml    >> config/config.yml
     - cat ../build/routing_splash.yml   >> config/routing.yml
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist --no-scripts
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
     
     - echo "Configuring Splash Bundles"
     
@@ -69,9 +69,9 @@ install:
 #    - cp ../build/AppKernel.php app/AppKernel.php
     
     - echo "Start Web Srever"
-#    - php bin/console server:start --env=test
-    - php bin/console server:run --env=test
-    - php bin/console server:start
+    - php bin/console server:start --env=test
+#    - php bin/console server:run --env=test
+#    - php bin/console server:start
 
 # Run script
 script:
