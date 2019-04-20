@@ -1,228 +1,205 @@
 <?php
 
+/*
+ *  This file is part of SplashSync Project.
+ *
+ *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ *  For the full copyright and license information, please view the LICENSE
+ *  file that was distributed with this source code.
+ */
+
 namespace Splash\Sylius\Objects;
 
-use Splash\Bundle\Annotation as SPL;
+use Doctrine\ORM\EntityManagerInterface as Doctrine;
+use Splash\Bundle\Models\AbstractStandaloneObject;
+use Splash\Client\Splash;
+use Splash\Models\Objects\IntelParserTrait;
+use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\SimpleFieldsTrait;
+use Splash\Models\Objects\GenericFieldsTrait;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as PrRepository;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as PrVaRepository;
+use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
+use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Product\Factory\ProductFactory as Factory;
+use Symfony\Component\Translation\TranslatorInterface as Translator;
+use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 
-use Splash\Sylius\Objects\Traits\ProductSlugTrait;
+//use Splash\Sylius\Objects\Traits\ProductSlugTrait;
+use Splash\Sylius\Helpers\ChannelsAwareTrait;
+use Splash\Sylius\Helpers\ProdutsAwareTrait;
+use Splash\Sylius\Services\ProductTranslationsManager as Translations;
+use Splash\Sylius\Services\ProductImagesManager as Images;
+use Splash\Sylius\Services\ProductPricingManager as Pricing;
 
 /**
- * @abstract    Description of Customer
- *
- * @author B. Paquier <contact@splashsync.com>
- * @SPL\Object( type                    =   "Product",
- *              name                    =   "Product",
- *              description             =   "Sylius Product Object",
- *              icon                    =   "fa fa-product-hunt",
- *              enable_push_created     =    false,
- *              target                  =   "Sylius\Component\Core\Model\ProductVariant",
- *              repository_service      =   "sylius.repository.product_variant",
- *              transformer_service     =   "Splash.Sylius.Products.Transformer"
- * )
- *
+ * Sylius Product Object
  */
-class Product
+class Product extends AbstractStandaloneObject
 {
-    use ProductSlugTrait;
-    
-    //====================================================================//
-    // CORE FIELDS
-    //====================================================================//
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "productCode",
-     *          type    =   "varchar",
-     *          name    =   "Reference",
-     *          itemtype=   "http://schema.org/Product", itemprop="model",
-     *          inlist  =   true,
-     *          required=   true,
-     * )
-     */
-    protected $productCode;
-    
-//    /**
-//     * @SPL\Field(
-//     *          id      =   "code",
-//     *          type    =   "varchar",
-//     *          name    =   "Variant Code",
-//     *          itemtype=   "http://schema.org/Product", itemprop="productID",
-//     * )
-//     */
-//    protected $code;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "enabled",
-     *          type    =   "bool",
-     *          name    =   "Active",
-     *          itemtype=   "http://schema.org/Product", itemprop="offered",
-     * )
-     */
-    protected $enabled;
-    
-    //====================================================================//
-    // PRODUCT DESCRIPTIONS
-    //====================================================================//
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "name",
-     *          type    =   "mvarchar",
-     *          name    =   "Name",
-     *          itemtype=   "http://schema.org/Product", itemprop="name",
-     *          group   =   "Translations",
-     * )
-     */
-    protected $name;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "shortDescription",
-     *          type    =   "mvarchar",
-     *          name    =   "Short Description",
-     *          itemtype=   "http://schema.org/Product", itemprop="description",
-     *          group   =   "Translations",
-     *          asso    =   { "name" },
-     * )
-     */
-    protected $shortDescription;
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "description",
-     *          type    =   "mtext",
-     *          name    =   "Long Description",
-     *          itemtype=   "http://schema.org/Article", itemprop="articleBody",
-     *          group   =   "Translations",
-     *          asso    =   { "name" },
-     * )
-     */
-    protected $description;
-    
+    // Splash Php Core Traits
+    use IntelParserTrait;
+    use SimpleFieldsTrait;
+    use ListsTrait;
+    use GenericFieldsTrait;
 
+    // Sylius Main Helpers Traits
+    // 
+//    use ChannelsAwareTrait;
     
-    /**
-     * @SPL\Field(
-     *          id      =   "metaDescription",
-     *          type    =   "mvarchar",
-     *          name    =   "Meta Desription",
-     *          itemtype=   "http://schema.org/Article", itemprop="headline",
-     *          group   =   "SEO",
-     *          asso    =   { "name" },
-     * )
-     */
-    protected $metaDescription;
-    
+    // Product Traits
+    use Product\CrudTrait;
+    use Product\ObjectsListTrait;
+    use Product\CoreTrait;
+    use Product\ShippingTrait;
+    use Product\DescriptionsTrait;
+//    use Product\PricingTrait;
+    use Product\ImagesTrait;
+
     //====================================================================//
-    // PRODUCT SPECIFICATIONS
+    // Object Definition Parameters
     //====================================================================//
 
     /**
-     * @SPL\Field(
-     *          id      =   "weight",
-     *          type    =   "double",
-     *          name    =   "Weight",
-     *          itemtype=   "http://schema.org/Product", itemprop="weight",
-     *          group   =   "Specifications",
-     * )
+     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
      */
-    protected $weight;
-   
+//    protected static    $DISABLED        =  True;
+
     /**
-     * @SPL\Field(
-     *          id      =   "height",
-     *          type    =   "double",
-     *          name    =   "Height",
-     *          itemtype=   "http://schema.org/Product", itemprop="height",
-     *          group   =   "Specifications",
-     * )
+     *  Object Name (Translated by Module)
      */
-    protected $height;
-    
+    protected static $NAME = "Product";
+
     /**
-     * @SPL\Field(
-     *          id      =   "width",
-     *          type    =   "double",
-     *          name    =   "Width",
-     *          itemtype=   "http://schema.org/Product", itemprop="width",
-     *          group   =   "Specifications",
-     * )
+     *  Object Description (Translated by Module).
      */
-    protected $width;
-    
+    protected static $DESCRIPTION = 'Sylius Product Object';
+
     /**
-     * @SPL\Field(
-     *          id      =   "depth",
-     *          type    =   "double",
-     *          name    =   "Depth",
-     *          itemtype=   "http://schema.org/Product", itemprop="depth",
-     *          group   =   "Specifications",
-     * )
+     *  Object Icon (FontAwesome or Glyph ico tag).
      */
-    protected $depth;
-    
+    protected static $ICO = 'fa fa-product-hunt';
+
     //====================================================================//
-    // PRICES INFORMATIONS
-    //====================================================================//
-            
-    /**
-     * @SPL\Field(
-     *          id      =   "price",
-     *          type    =   "price",
-     *          name    =   "Price",
-     *          itemtype=   "http://schema.org/Product", itemprop="price",
-     * )
-     */
-    protected $price;
-    
-    //====================================================================//
-    // PRODUCT STOCKS
-    //====================================================================//
-    
-    /**
-     * @SPL\Field(
-     *          id      =   "onHand",
-     *          type    =   "int",
-     *          name    =   "On Hand (Stock)",
-     *          itemtype=   "http://schema.org/Offer", itemprop="inventoryLevel",
-     * )
-     */
-    protected $onHand;
-            
-    /**
-     * @SPL\Field(
-     *          id      =   "outofstock",
-     *          type    =   "bool",
-     *          name    =   "Out of Stock",
-     *          itemtype=   "http://schema.org/ItemAvailability", itemprop="OutOfStock",
-     *          write   =   false,
-     * )
-     */
-    protected $outOfStock;
-    
-    //====================================================================//
-    // PRODUCT IMAGES
+    // Private variables
     //====================================================================//
 
     /**
-     * @SPL\Field(
-     *          id      =   "image@images",
-     *          type    =   "image@list",
-     *          name    =   "Images",
-     *          itemtype=   "http://schema.org/Product", itemprop="image",
-     * )
+     * @var ProductVariantInterface
+     */
+    protected $object;
+    
+    /**
+     * @var ProductInterface
+     */
+    protected $product;
+
+    /**
+     * @var Translations
+     */
+    protected $translations;
+    
+    /**
+     * @var Images
      */
     protected $images;
+
+    /**
+     * @var Pricing
+     */
+    protected $pricing;
     
+    /**
+     * @var Factory
+     */
+    protected $factory;
+    
+    
+    //====================================================================//
+    // Service Constructor
+    //====================================================================//
+
+    /**
+     * Service Constructor
+     *
+     * @param TranslatorInterface    $translator
+     * @param EntityManagerInterface $entityManager
+     * @param CustomerRepository     $repository
+     * @param Factory                $factory
+     */
+    public function __construct(Doctrine $entityManager, PrRepository $products, PrVaRepository $variants, Translations $translations, Images $images, Pricing $pricing)
+    {
+        //====================================================================//
+        // Link to Doctrine Entity Manager Services
+        $this->entityManager = $entityManager;
+        //====================================================================//§:─ ,nbvcx)àç&  
+        //.
+        // Link to Product Variants Repository
+        $this->repository = $variants;
+        //====================================================================//
+        // Link to Splash Sylius Translations Manager
+        $this->translations = $translations;
+        //====================================================================//
+        // Link to Splash Sylius Images Manager
+        $this->images = $images;
+        //====================================================================//
+        // Link to Splash Sylius Channel Pricing Manager
+        $this->pricing = $pricing;
+    }
+}
+
+//
+///**
+// * @abstract    Description of Customer
+// *
+// * @author B. Paquier <contact@splashsync.com>
+// * @SPL\Object( type                    =   "Product",
+// *              name                    =   "Product",
+// *              description             =   "Sylius Product Object",
+// *              icon                    =   "fa fa-product-hunt",
+// *              enable_push_created     =    false,
+// *              target                  =   "Sylius\Component\Core\Model\ProductVariant",
+// *              repository_service      =   "sylius.repository.product_variant",
+// *              transformer_service     =   "Splash.Sylius.Products.Transformer"
+// * )
+// *
+// */
+//class Product
+//{
+//    use ProductSlugTrait;
+//    
+//    
+
+//    
+//    //====================================================================//
+//    // PRODUCT STOCKS
+//    //====================================================================//
+//    
 //    /**
 //     * @SPL\Field(
-//     *          id      =   "code@images",
-//     *          type    =   "varchar@list",
-//     *          name    =   "Images Codes",
-//     *          itemtype=   "http://schema.org/Product", itemprop="imageName",
+//     *          id      =   "onHand",
+//     *          type    =   "int",
+//     *          name    =   "On Hand (Stock)",
+//     *          itemtype=   "http://schema.org/Offer", itemprop="inventoryLevel",
+//     * )
+//     */
+//    protected $onHand;
+//            
+//    /**
+//     * @SPL\Field(
+//     *          id      =   "outofstock",
+//     *          type    =   "bool",
+//     *          name    =   "Out of Stock",
+//     *          itemtype=   "http://schema.org/ItemAvailability", itemprop="OutOfStock",
 //     *          write   =   false,
 //     * )
 //     */
-//    protected $imagesCodes;
-}
+//    protected $outOfStock;
+
+//}

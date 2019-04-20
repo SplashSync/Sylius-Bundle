@@ -17,6 +17,11 @@ class SplashSyliusExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         
+        // Inject List of Symfony Locales in Bundle Config
+        $config["locale"] = $container->getParameter('locale');
+        // Inject Path for Sylius Images in Bundle Config
+        $config["images_folder"] = $container->getParameter('sylius_core.public_dir') . "/media/image/";
+        
         $container->setParameter('splash_sylius', $config);
     }
 }

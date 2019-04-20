@@ -28,7 +28,56 @@ services:
         tags:
             # Register as Standalone Connector Object           
             - { name: "splash.standalone.object", type : "Address" }  
-    
+
+    ########################################################################
+    # Sylius Product Object
+    splash.sylius.object.product:
+        class:      Splash\Sylius\Objects\Product
+        public:     true
+        arguments:  
+            - "@sylius.manager.product"
+            - "@sylius.repository.product"
+            - "@sylius.repository.product_variant"
+            - "@splash.sylius.product.translations"
+            - "@splash.sylius.product.images"
+            - "@splash.sylius.product.pricing"
+        tags:
+            # Register as Standalone Connector Object           
+            - { name: "splash.standalone.object", type : "Product" }  
+            
+    ########################################################################
+    # Sylius Products Translations Management
+    splash.sylius.product.translations:
+        class:      Splash\Sylius\Services\ProductTranslationsManager
+        public:     false
+        arguments:  
+            - "@sylius.factory.product_translation"
+            - "@=service('sylius.repository.locale').findAll()"
+            - "%splash_sylius%"     
+
+    ########################################################################
+    # Sylius Products Images Management
+    splash.sylius.product.images:
+        class:      Splash\Sylius\Services\ProductImagesManager
+        public:     false
+        arguments:  
+            - "@router"
+            - "@sylius.manager.product_image"            
+            - "@sylius.factory.product_image"
+            - "@liip_imagine.cache.manager"
+            - "%splash_sylius%"     
+
+    ########################################################################
+    # Sylius Products Prices Management
+    splash.sylius.product.pricing:
+        class:      Splash\Sylius\Services\ProductPricingManager
+        public:     false
+        arguments:  
+            - "@sylius.repository.channel"
+            - "@sylius.manager.channel_pricing"            
+            - "@sylius.factory.channel_pricing"
+            - "%splash_sylius%"             
+            
 #    ########################################################################
 #    # Sylius Object Data Transformer
 #    # Convert In/Out Doctrine Objects Fields to Splash Standard Format

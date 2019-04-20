@@ -38,7 +38,7 @@ class ThirdParty extends AbstractStandaloneObject
     use ListsTrait;
     use GenericFieldsTrait;
 
-    // Faker Traits
+    // ThirdParty Traits
     use ThirdParty\CrudTrait;
     use ThirdParty\ObjectsListTrait;
     use ThirdParty\CoreTrait;
