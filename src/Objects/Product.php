@@ -15,28 +15,20 @@
 
 namespace Splash\Sylius\Objects;
 
-use Doctrine\ORM\EntityManagerInterface as Doctrine;
 use Splash\Bundle\Models\AbstractStandaloneObject;
-use Splash\Client\Splash;
+use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
-use Splash\Models\Objects\GenericFieldsTrait;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as PrRepository;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as PrVaRepository;
-use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
-use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Product\Factory\ProductFactory as Factory;
-use Symfony\Component\Translation\TranslatorInterface as Translator;
-use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface;
-
-//use Splash\Sylius\Objects\Traits\ProductSlugTrait;
-use Splash\Sylius\Helpers\ChannelsAwareTrait;
-use Splash\Sylius\Helpers\ProdutsAwareTrait;
-use Splash\Sylius\Services\ProductTranslationsManager as Translations;
+use Splash\Sylius\Services\ProductAttributesManager as Attributes;
+use Splash\Sylius\Services\ProductCrudManager as Crud;
 use Splash\Sylius\Services\ProductImagesManager as Images;
 use Splash\Sylius\Services\ProductPricingManager as Pricing;
+use Splash\Sylius\Services\ProductTranslationsManager as Translations;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
+use Sylius\Component\Product\Model\ProductInterface;
+use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Product\Factory\ProductFactory as Factory;
 
 /**
  * Sylius Product Object
@@ -49,18 +41,19 @@ class Product extends AbstractStandaloneObject
     use ListsTrait;
     use GenericFieldsTrait;
 
-    // Sylius Main Helpers Traits
-    // 
-//    use ChannelsAwareTrait;
-    
     // Product Traits
     use Product\CrudTrait;
     use Product\ObjectsListTrait;
     use Product\CoreTrait;
     use Product\ShippingTrait;
     use Product\DescriptionsTrait;
-//    use Product\PricingTrait;
+    use Product\PricingTrait;
+    use Product\StocksTrait;
     use Product\ImagesTrait;
+
+    // Products Variants Traits
+    use Product\Variants\CoreTrait;
+    use Product\Variants\AttributesTrait;
 
     //====================================================================//
     // Object Definition Parameters
@@ -94,17 +87,22 @@ class Product extends AbstractStandaloneObject
      * @var ProductVariantInterface
      */
     protected $object;
-    
+
     /**
      * @var ProductInterface
      */
     protected $product;
 
     /**
+     * @var Crud
+     */
+    protected $crud;
+
+    /**
      * @var Translations
      */
     protected $translations;
-    
+
     /**
      * @var Images
      */
@@ -114,13 +112,17 @@ class Product extends AbstractStandaloneObject
      * @var Pricing
      */
     protected $pricing;
-    
+
+    /**
+     * @var Attributes
+     */
+    protected $attributes;
+
     /**
      * @var Factory
      */
     protected $factory;
-    
-    
+
     //====================================================================//
     // Service Constructor
     //====================================================================//
@@ -133,15 +135,14 @@ class Product extends AbstractStandaloneObject
      * @param CustomerRepository     $repository
      * @param Factory                $factory
      */
-    public function __construct(Doctrine $entityManager, PrRepository $products, PrVaRepository $variants, Translations $translations, Images $images, Pricing $pricing)
+    public function __construct(Variants $variants, Crud $crudService, Translations $translations, Images $images, Pricing $pricing, Attributes $attributes)
     {
         //====================================================================//
-        // Link to Doctrine Entity Manager Services
-        $this->entityManager = $entityManager;
-        //====================================================================//§:─ ,nbvcx)àç&  
-        //.
         // Link to Product Variants Repository
         $this->repository = $variants;
+        //====================================================================//
+        // Link to Splash Sylius Products Crud Manager
+        $this->crud = $crudService;
         //====================================================================//
         // Link to Splash Sylius Translations Manager
         $this->translations = $translations;
@@ -151,55 +152,8 @@ class Product extends AbstractStandaloneObject
         //====================================================================//
         // Link to Splash Sylius Channel Pricing Manager
         $this->pricing = $pricing;
+        //====================================================================//
+        // Link to Splash Sylius Products Attributes Manager
+        $this->attributes = $attributes;
     }
 }
-
-//
-///**
-// * @abstract    Description of Customer
-// *
-// * @author B. Paquier <contact@splashsync.com>
-// * @SPL\Object( type                    =   "Product",
-// *              name                    =   "Product",
-// *              description             =   "Sylius Product Object",
-// *              icon                    =   "fa fa-product-hunt",
-// *              enable_push_created     =    false,
-// *              target                  =   "Sylius\Component\Core\Model\ProductVariant",
-// *              repository_service      =   "sylius.repository.product_variant",
-// *              transformer_service     =   "Splash.Sylius.Products.Transformer"
-// * )
-// *
-// */
-//class Product
-//{
-//    use ProductSlugTrait;
-//    
-//    
-
-//    
-//    //====================================================================//
-//    // PRODUCT STOCKS
-//    //====================================================================//
-//    
-//    /**
-//     * @SPL\Field(
-//     *          id      =   "onHand",
-//     *          type    =   "int",
-//     *          name    =   "On Hand (Stock)",
-//     *          itemtype=   "http://schema.org/Offer", itemprop="inventoryLevel",
-//     * )
-//     */
-//    protected $onHand;
-//            
-//    /**
-//     * @SPL\Field(
-//     *          id      =   "outofstock",
-//     *          type    =   "bool",
-//     *          name    =   "Out of Stock",
-//     *          itemtype=   "http://schema.org/ItemAvailability", itemprop="OutOfStock",
-//     *          write   =   false,
-//     * )
-//     */
-//    protected $outOfStock;
-
-//}

@@ -35,15 +35,29 @@ services:
         class:      Splash\Sylius\Objects\Product
         public:     true
         arguments:  
-            - "@sylius.manager.product"
-            - "@sylius.repository.product"
             - "@sylius.repository.product_variant"
+            - "@splash.sylius.product.crud"
             - "@splash.sylius.product.translations"
             - "@splash.sylius.product.images"
             - "@splash.sylius.product.pricing"
+            - "@splash.sylius.product.attributes"
         tags:
             # Register as Standalone Connector Object           
             - { name: "splash.standalone.object", type : "Product" }  
+
+    ########################################################################
+    # Sylius Products Crud Management
+    splash.sylius.product.crud:
+        class:      Splash\Sylius\Services\ProductCrudManager
+        public:     false
+        arguments:  
+            - "@sylius.manager.product"
+            - "@sylius.repository.product"
+            - "@sylius.repository.product_variant"
+            - "@sylius.repository.channel"
+            - "@sylius.factory.product"
+            - "@sylius.factory.product_variant"
+            - "%splash_sylius%" 
             
     ########################################################################
     # Sylius Products Translations Management
@@ -52,6 +66,8 @@ services:
         public:     false
         arguments:  
             - "@sylius.factory.product_translation"
+            - "@sylius.factory.product_option_translation"
+            - "@sylius.factory.product_option_value_translation"
             - "@=service('sylius.repository.locale').findAll()"
             - "%splash_sylius%"     
 
@@ -77,42 +93,19 @@ services:
             - "@sylius.manager.channel_pricing"            
             - "@sylius.factory.channel_pricing"
             - "%splash_sylius%"             
-            
-#    ########################################################################
-#    # Sylius Object Data Transformer
-#    # Convert In/Out Doctrine Objects Fields to Splash Standard Format
-#    Splash.Sylius.Transformer:
-#        class:      Splash\Sylius\Services\ObjectsTransformer
-#        arguments:  ["@translator"]
-#        
-#    ########################################################################
-#    # Sylius Products Data Transformer
-#    # Convert In/Out Sylius Products Objects Fields to Splash Standard Format
-#    Splash.Sylius.Products.Transformer:
-#        class:      Splash\Sylius\Services\ProductTransformeruser
-#        arguments:  
-#         - "@translator"
-#         - "@router"
-#         - "@sylius.factory.product"
-#         - "@sylius.manager.product"
-#         - "@sylius.repository.channel"
-#         - "%splash_sylius%"     
-#         
-#         
-#    ########################################################################
-#    # Sylius Orders Data Transformer
-#    # Convert In/Out Sylius Orders Objects Fields to Splash Standard Format
-#    Splash.Sylius.Orders.Transformer:
-#        class:      Splash\Sylius\Services\OrdersTransformer
-#        arguments:  
-##         - "@translator"
-##         - "@router"
-##         - "@sylius.factory.product"
-#         - "@sylius.manager.order"
-#         - "@sylius.repository.channel"
-#         - "%splash_sylius%"            
-        
-        
+          
+    ########################################################################
+    # Sylius Products Attributes Management
+    splash.sylius.product.attributes:
+        class:      Splash\Sylius\Services\ProductAttributesManager
+        public:     false
+        arguments:  
+            - "@sylius.manager.product_option"            
+            - "@sylius.repository.product_option"
+            - "@sylius.factory.product_option"
+            - "@sylius.factory.product_option_value"
+            - "@splash.sylius.product.translations"
+            - "%splash_sylius%" 
         
     ########################################################################
     # Sylius Additionnal Object Event Listener

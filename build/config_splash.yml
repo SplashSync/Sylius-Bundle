@@ -9,7 +9,9 @@ splash:
             config:
                 infos:
                     logo:       http://127.0.0.1:8000/assets/shop/img/logo.png
-            
+    test:
+        VAT:                0
+        
 splash_sylius:
     default_channel:    US_WEB
     

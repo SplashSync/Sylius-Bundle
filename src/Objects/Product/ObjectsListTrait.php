@@ -40,6 +40,7 @@ trait ObjectsListTrait
             'enabled' => $variant->getProduct()->isEnabled(),
             'email' => $variant->getName(),
             'phoneNumber' => $variant->getName(),
+            'onHand' => $variant->getOnHand(),
         );
     }
 }

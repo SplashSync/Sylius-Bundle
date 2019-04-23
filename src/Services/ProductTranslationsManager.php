@@ -15,8 +15,12 @@
 
 namespace   Splash\Sylius\Services;
 
-use Sylius\Component\Core\Model\ProductTranslationInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Product\Model\ProductTranslationInterface;
+use Sylius\Component\Product\Model\ProductOptionTranslationInterface;
+use Sylius\Component\Product\Model\ProductOptionValueTranslationInterface;
+use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Product\Model\ProductOptionInterface;
+use Sylius\Component\Product\Model\ProductOptionValueInterface;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Resource\Factory\Factory;
 
@@ -31,6 +35,16 @@ class ProductTranslationsManager
      */
     protected $factory;
 
+    /**
+     * @var Factory
+     */
+    protected $options;
+
+    /**
+     * @var Factory
+     */
+    protected $values;
+   
     /**
      * @var array
      */
@@ -48,11 +62,17 @@ class ProductTranslationsManager
      * @param array   $locales
      * @param array   $configuration
      */
-    public function __construct(Factory $factory, array $locales, array $configuration)
+    public function __construct(Factory $factory, Factory $options, Factory $values, array $locales, array $configuration)
     {
         //====================================================================//
         // Sylius Translations Factory
         $this->factory = $factory;
+        //====================================================================//
+        // Sylius Options Translations Factory
+        $this->options = $options;
+        //====================================================================//
+        // Sylius Values Translations Factory
+        $this->values = $values;
         //====================================================================//
         // Store List of Locales
         $this->locales = $locales;
@@ -94,6 +114,16 @@ class ProductTranslationsManager
     {
         return $this->config["locale"];
     }
+    
+    /**
+     * Get Locale Field Id Suffix
+     *
+     * @return string
+     */
+    public function getLocaleSuffix(LocaleInterface $locale): string
+    {
+        return $this->isDefaultLocale($locale) ? "" : "_" . $locale->getCode();
+    }    
 
     /**
      * Decode Multilang FieldName with ISO Code
@@ -174,6 +204,74 @@ class ProductTranslationsManager
     }
 
     /**
+     * Set Translated Product Option String
+     *
+     * @param ProductVariantInterface $option
+     * @param LocaleInterface         $locale
+     * @param string                  $baseFieldName
+     * @param string                  $fieldData
+     *
+     * @return bool
+     */
+    public function setOptionTranslation(ProductOptionInterface $option, LocaleInterface $locale, string $fieldData): bool
+    {
+        //====================================================================//
+        // Load Product Translations
+        $isoCode = $locale->getCode();
+        $translations = $option->getTranslations();
+        //====================================================================//
+        // Add Translation if No Exists
+        if (!isset($translations[$isoCode])) {
+            $translations[$isoCode] = $this->createOptionTranslation($option, $locale);
+        }
+        //====================================================================//
+        // Compare Values
+        $current = $translations[$locale->getCode()]->getName();
+        if ($current == $fieldData) {
+            return false;
+        }
+        //====================================================================//
+        // Write Value to Translation
+        $translations[$isoCode]->setName($fieldData);
+
+        return true;
+    }
+    
+    /**
+     * Set Translated Product Option VAlue String
+     *
+     * @param ProductVariantInterface $optionValue
+     * @param LocaleInterface         $locale
+     * @param string                  $baseFieldName
+     * @param string                  $fieldData
+     *
+     * @return bool
+     */
+    public function setOptionValueTranslation(ProductOptionValueInterface $optionValue, LocaleInterface $locale, string $fieldData): bool
+    {
+        //====================================================================//
+        // Load Product Translations
+        $isoCode = $locale->getCode();
+        $translations = $optionValue->getTranslations();
+        //====================================================================//
+        // Add Translation if No Exists
+        if (!isset($translations[$isoCode])) {
+            $translations[$isoCode] = $this->createOptionValueTranslation($optionValue, $locale);
+        }
+        //====================================================================//
+        // Compare Values
+        $current = $translations[$locale->getCode()]->getValue();
+        if ($current == $fieldData) {
+            return false;
+        }
+        //====================================================================//
+        // Write Value to Translation
+        $translations[$isoCode]->setValue($fieldData);
+
+        return true;
+    }    
+    
+    /**
      * Create New Product Translation
      *
      * @param ProductVariantInterface $variant
@@ -193,4 +291,42 @@ class ProductTranslationsManager
 
         return $translation;
     }
+    
+    /**
+     * Create New Product Option Translation
+     *
+     * @param ProductOptionInterface $option
+     * @param LocaleInterface         $locale
+     *
+     * @return ProductOptionTranslationInterface
+     */
+    private function createOptionTranslation(ProductOptionInterface $option, LocaleInterface $locale): ProductOptionTranslationInterface
+    {
+        //====================================================================//
+        // Create New Option Translation
+        $translation = $this->options->createNew();
+        $translation->setLocale($locale->getCode());
+        $translation->setTranslatable($option);
+
+        return $translation;
+    }  
+    
+    /**
+     * Create New Product Option Translation
+     *
+     * @param ProductOptionInterface $optionValue
+     * @param LocaleInterface         $locale
+     *
+     * @return ProductOptionTranslationInterface
+     */
+    private function createOptionValueTranslation(ProductOptionValueInterface $optionValue, LocaleInterface $locale): ProductOptionValueTranslationInterface
+    {
+        //====================================================================//
+        // Create New Option Value Translation
+        $translation = $this->values->createNew();
+        $translation->setLocale($locale->getCode());
+        $translation->setTranslatable($optionValue);
+
+        return $translation;
+    }        
 }

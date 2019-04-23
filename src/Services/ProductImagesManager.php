@@ -153,11 +153,11 @@ class ProductImagesManager
      * Set Product Images
      *
      * @param ProductVariantInterface $variant
-     * @param ArrayObject             $fieldData
+     * @param array|ArrayObject             $fieldData
      *
      * @return bool
      */
-    public function setImages(ProductVariantInterface $variant, ArrayObject $fieldData)
+    public function setImages(ProductVariantInterface $variant, iterable $fieldData)
     {
         //====================================================================//
         // Get Current product Images Collection
@@ -217,11 +217,11 @@ class ProductImagesManager
      * Update An Image with Image Field Data
      *
      * @param ProductImageInterface $productImage
-     * @param ArrayObject           $inImage
+     * @param array|ArrayObject           $inImage
      *
      * @return bool True is Image was Modified
      */
-    public function updateImage(ProductImageInterface &$productImage, ArrayObject $inImage): bool
+    public function updateImage(ProductImageInterface &$productImage, iterable $inImage): bool
     {
         //====================================================================//
         // Check if Image Needs to Be Updated
@@ -264,7 +264,7 @@ class ProductImagesManager
         //====================================================================//
         // Setup Image Path
         $productImage->setPath($imagePath);
-        Splash::log()->msg("New Image Loaded => ".$imagePath);
+        Splash::log()->war("New Image Loaded => ".$imagePath);
 
         return true;
     }
@@ -274,11 +274,11 @@ class ProductImagesManager
      *
      * @param ProductImageInterface   $productImage
      * @param ProductVariantInterface $variant
-     * @param ArrayObject             $inImage
+     * @param array|ArrayObject             $inImage
      *
      * @return bool True if Something Changed
      */
-    private function updateVisibility(ProductImageInterface &$productImage, ProductVariantInterface $variant, ArrayObject $inImage): bool
+    private function updateVisibility(ProductImageInterface &$productImage, ProductVariantInterface $variant, iterable $inImage): bool
     {
         //====================================================================//
         // Safety Check
@@ -307,11 +307,11 @@ class ProductImagesManager
      * Add An Image to Product
      *
      * @param ProductVariantInterface $variant
-     * @param ArrayObject             $inImage
+     * @param array|ArrayObject             $inImage
      *
      * @return ProductImageInterface
      */
-    private function addImage(ProductVariantInterface $variant, ArrayObject $inImage): ProductImageInterface
+    private function addImage(ProductVariantInterface $variant, iterable $inImage): ProductImageInterface
     {
         //====================================================================//
         // Create a New Product Image
@@ -381,11 +381,11 @@ class ProductImagesManager
     /**
      * Generate Image Encoded Path
      *
-     * @param ArrayObject $inImage
+     * @param array|ArrayObject $inImage
      *
      * @return string
      */
-    private function generateRandomPath(ArrayObject $inImage): string
+    private function generateRandomPath(iterable $inImage): string
     {
         //====================================================================//
         // Get Images Base Path

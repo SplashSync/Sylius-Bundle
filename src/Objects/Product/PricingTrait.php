@@ -15,9 +15,6 @@
 
 namespace Splash\Sylius\Objects\Product;
 
-use Splash\Core\SplashCore      as Splash;
-use Splash\Local\Services\TaxManager;
-
 /**
  * Sylius Product Prices Fields
  */
@@ -31,7 +28,7 @@ trait PricingTrait
     /**
      * Build Fields using FieldFactory
      */
-    private function buildPricesFields()
+    protected function buildPricesFields()
     {
         $groupName = "Pricing";
 
@@ -42,33 +39,30 @@ trait PricingTrait
         //====================================================================//
         // Walk on All Available Channels
         foreach ($this->pricing->getChannels() as $channel) {
-
             //====================================================================//
             // Generate Identifier Suffix
             $suffix = $this->pricing->getChannelSuffix($channel);
-            
+
             //====================================================================//
             // Product Selling Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("price" . $suffix)
-                ->Name("Price (". $channel->getCode().")")
-                ->description("Selling Price Tax excl.(". $channel->getName().")")
-                ->MicroData("http://schema.org/Product", "price" . $suffix)
-                ->Group($groupName)
-//                ->isListed()
-                    ;
+                ->Identifier("price".$suffix)
+                ->Name("Price (".$channel->getCode().")")
+                ->description("Selling Price Tax excl.(".$channel->getName().")")
+                ->MicroData("http://schema.org/Product", "price".$suffix)
+                ->Group($groupName);
 
             //====================================================================//
             // WholeSale Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("originalPrice" . $suffix)
-                ->Name("Wholesale Price (". $channel->getCode().")")
-                ->description("Wholesale Price Tax excl.(". $channel->getName().")")
+                ->Identifier("originalPrice".$suffix)
+                ->Name("Wholesale Price (".$channel->getCode().")")
+                ->description("Wholesale Price Tax excl.(".$channel->getName().")")
                 ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "wholesalePrice" . $suffix);
+                ->MicroData("http://schema.org/Product", "wholesalePrice".$suffix);
         }
     }
-
+    
     /**
      * Read requested Field
      *
@@ -79,7 +73,7 @@ trait PricingTrait
     {
         //====================================================================//
         // reduce Load By Checking Field Name
-        if(false === strpos(strtolower($fieldName), "price")) {
+        if (false === strpos(strtolower($fieldName), "price")) {
             return;
         }
         //====================================================================//
@@ -95,21 +89,22 @@ trait PricingTrait
                 // PRICE INFORMATIONS
                 //====================================================================//
 
-                case 'price' . $suffix:
+                case 'price'.$suffix:
                     //====================================================================//
                     // Read Price
                     $this->out[$fieldName] = $this->pricing->getChannelPrice($this->object, $channel, false);
                     unset($this->in[$key]);
+
                     break;
-                
-                case 'originalPrice' . $suffix:
+                case 'originalPrice'.$suffix:
                     //====================================================================//
                     // Read Wholesale Price
-                    $this->out[$fieldName] = $this->pricing->getChannelPrice($this->object, $channel, TRUE);
+                    $this->out[$fieldName] = $this->pricing->getChannelPrice($this->object, $channel, true);
                     unset($this->in[$key]);
+
                     break;
             }
-        }        
+        }
     }
 
     /**
@@ -118,11 +113,11 @@ trait PricingTrait
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
      */
-    private function setPricesFields($fieldName, $fieldData)
+    protected function setPricesFields($fieldName, $fieldData)
     {
         //====================================================================//
         // reduce Load By Checking Field Name
-        if(false === strpos(strtolower($fieldName), "price")) {
+        if (false === strpos(strtolower($fieldName), "price")) {
             return;
         }
         //====================================================================//
@@ -138,26 +133,27 @@ trait PricingTrait
                 // PRICE INFORMATIONS
                 //====================================================================//
 
-                case 'price' . $suffix:
+                case 'price'.$suffix:
                     //====================================================================//
                     // Write Price
-                    $updated = $this->pricing->setChannelPrice($this->object, $channel, false);
+                    $updated = $this->pricing->setChannelPrice($this->object, $channel, false, $fieldData);
                     unset($this->in[$fieldName]);
-                    if($updated) {
-                        $this->needUpdate();
+                    if ($updated) {
+                        $this->needUpdate('product');
                     }
+
                     break;
-                
-                case 'originalPrice' . $suffix:
+                case 'originalPrice'.$suffix:
                     //====================================================================//
                     // Write Wholesale Price
-                    $updated = $this->pricing->setChannelPrice($this->object, $channel, TRUE);
+                    $updated = $this->pricing->setChannelPrice($this->object, $channel, true, $fieldData);
                     unset($this->in[$fieldName]);
-                    if($updated) {
-                        $this->needUpdate();
+                    if ($updated) {
+                        $this->needUpdate('product');
                     }
+
                     break;
             }
-        }        
+        }
     }
 }

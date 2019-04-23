@@ -15,6 +15,7 @@
 
 namespace Splash\Sylius\Objects\Product;
 
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Sylius Product Images Fields
@@ -60,7 +61,6 @@ trait ImagesTrait
             ->Name("Cover")
             ->MicroData("http://schema.org/Product", "isCover")
             ->Group($groupName)
-            ->isReadOnly()
             ->isNotTested();
 
         //====================================================================//
@@ -138,7 +138,8 @@ trait ImagesTrait
             //====================================================================//
             case 'images':
                 $this->images->setImages($this->object, $fieldData);
-                if($this->product->getImages()->isDirty()) {
+                $images = $this->product->getImages();
+                if(($images instanceof ArrayCollection) || $images->isDirty()) {
                     $this->needUpdate("product");
                 }
 

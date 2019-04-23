@@ -20,18 +20,27 @@ use Splash\Bundle\Connectors\Standalone;
 // Sylius Product Addictionnal Class to Monitor
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Client\Splash;
-use Sylius\Component\Core\Model\ChannelPricing;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Core\Model\Product;
-use Sylius\Component\Product\Model\ProductTranslation;
+use Sylius\Component\Product\Model\ProductTranslationInterface;
+use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
+
 
 class ObjectEventListener
 {
     const MANAGED_ENTITIES = array(
         "Address" => AddressInterface::class,
-        "ThirdParty" => CustomerInterface::class
+        "ThirdParty" => CustomerInterface::class,
+        "Product" => ProductVariantInterface::class,
     );
+    
+    const CONNECTED_ENTITIES = array(
+        "Product" => ProductInterface::class,
+        "Product" => ProductTranslationInterface::class,
+        "Product" => ChannelPricingInterface::class,
+    );    
 
     /**
      * Splash Connectors Manager
@@ -65,7 +74,7 @@ class ObjectEventListener
     {
         //====================================================================//
         // Check if Entity is managed by Splash Sylius Bundle
-        $objectType = $this->isManagedEntity($eventArgs);
+        $objectType = $this->isManagedEntity($eventArgs, false);
         if (null == $objectType) {
             return;
         }
@@ -74,7 +83,7 @@ class ObjectEventListener
         $objectId = $eventArgs->getEntity()->getId();
         //====================================================================//
         // Do Object Change Commit
-        $this->doCommit($objectType, $objectId, SPL_A_CREATE);
+        $this->doCommit($objectType, $objectId, SPL_A_CREATE);        
     }
 
     /**
@@ -86,59 +95,24 @@ class ObjectEventListener
     {
         //====================================================================//
         // Check if Entity is managed by Splash Sylius Bundle
-        $objectType = $this->isManagedEntity($eventArgs);
+        $objectType = $this->isManagedEntity($eventArgs, true);
         if (null == $objectType) {
             return;
         }
         //====================================================================//
-        // Get Impacted Object
-        $entity = $eventArgs->getEntity();
-        //====================================================================//
-        // Get Impacted Object Id
-        $objectId = $entity->getId();
-
-        //====================================================================//
-        // Update on Product Main
-        if (is_a($entity, Product::class)) {
-            if (Splash::Object('Product')->isLocked('Base-'.$entity->getId())) {
-                return;
-            }
-            $EntityIds = array();
-            foreach ($entity->getVariants() as $Variant) {
-                $EntityIds[] = $Variant->getId();
-            }
-            $this->doCommit('Product', $EntityIds, SPL_A_UPDATE);
-            Splash::Object('Product')->Lock('Base-'.$entity->getId());
-
+        // Get Impacted Object Ids
+        $objectIds = $this->getEntityIds($eventArgs);
+        if (null == $objectIds) {
             return;
         }
-
-        //====================================================================//
-        // Update on Product Translations
-        if (is_a($entity, ProductTranslation::class)) {
-            $Product = $entity->getTranslatable();
-            if (Splash::Object('Product')->isLocked('Base-'.$Product->getId())) {
-                return;
-            }
-            $EntityIds = array();
-            foreach ($entity->getTranslatable()->getVariants() as $Variant) {
-                $EntityIds[] = $Variant->getId();
-            }
-            $this->doCommit('Product', $EntityIds, SPL_A_UPDATE);
-            Splash::Object('Product')->Lock('Base-'.$entity->getTranslatable()->getId());
-
-            return;
-        }
-
-        //====================================================================//
-        // Update on Product Channel Price
-        if (is_a($entity, ChannelPricing::class)) {
-            $objectId = $entity->getProductVariant()->getId();
-        }
-
         //====================================================================//
         // Commit Object Change
-        $this->doCommit($objectType, $objectId, SPL_A_UPDATE);
+        $this->doCommit($objectType, $objectIds, SPL_A_UPDATE);
+        //====================================================================//
+        // After Updates on Product
+        if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
+            Splash::Object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
+        }         
     }
 
     /**
@@ -150,7 +124,7 @@ class ObjectEventListener
     {
         //====================================================================//
         // Check if Entity is managed by Splash Sylius Bundle
-        $objectType = $this->isManagedEntity($eventArgs);
+        $objectType = $this->isManagedEntity($eventArgs, false);
         if (null == $objectType) {
             return;
         }
@@ -211,7 +185,6 @@ class ObjectEventListener
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
-
     }
 
     /**
@@ -219,10 +192,11 @@ class ObjectEventListener
      * Also Detect Entity Type Name
      *
      * @param LifecycleEventArgs $eventArgs
+     * @param bool $connected
      *
-     * @return bool
+     * @return string
      */
-    private function isManagedEntity(LifecycleEventArgs $eventArgs): ?string
+    private function isManagedEntity(LifecycleEventArgs $eventArgs, bool $connected): ?string
     {
         //====================================================================//
         // Touch Impacted Entity
@@ -234,7 +208,57 @@ class ObjectEventListener
                 return $objectType;
             }
         }
+        //====================================================================//
+        // Walk on Connected Entities
+        if ($connected) {
+            foreach (self::CONNECTED_ENTITIES as $objectType => $entityClass) {
+                if (is_a($entity, $entityClass)) {
+                    return $objectType;
+                }
+            }
+        }
 
         return null;
     }
+    
+    /**
+     * Check if Entity is managed by Splash Sylius Bundle
+     * Also Detect Entity Type Name
+     *
+     * @param LifecycleEventArgs $eventArgs
+     *
+     * @return null|array
+     */
+    private function getEntityIds(LifecycleEventArgs $eventArgs): ?array
+    {
+        //====================================================================//
+        // Get Impacted Object
+        $entity = $eventArgs->getEntity();
+        //====================================================================//
+        // Get Impacted Object Id
+        $objectIds = array($entity->getId());
+        //====================================================================//
+        // Update on Product Translations
+        if (is_a($entity, ProductTranslationInterface::class)) {
+            $entity = $entity->getTranslatable();
+        }
+        //====================================================================//
+        // Update on Product Main
+        if (is_a($entity, ProductInterface::class)) {
+            if (Splash::Object('Product')->isLocked('Base-'.$entity->getId())) {
+                return null;
+            }
+            $objectIds = array();
+            foreach ($entity->getVariants() as $variant) {
+                $objectIds[] = $variant->getId();
+            }
+        }
+        //====================================================================//
+        // Update on Product Channel Price
+        if (is_a($entity, ChannelPricingInterface::class)) {
+            $objectIds = array($entity->getProductVariant()->getId());
+        }
+
+        return $objectIds;
+    }    
 }

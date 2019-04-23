@@ -27,13 +27,6 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository;
 trait CrudTrait
 {
     /**
-     * Doctrine Entity Manager
-     *
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
      * @var ProductVariantRepository
      */
     protected $repository;
@@ -52,21 +45,19 @@ trait CrudTrait
         Splash::log()->trace();
         //====================================================================//
         // Search in Repository
-        $entity = $this->repository->find($objectId);
+        $variant = $this->crud->loadVariant($objectId);
         //====================================================================//
         // Check Object Entity was Found
-        if (!$entity) {
-            return Splash::log()->errTrace(static::$NAME.' : Unable to load '.$objectId);
+        if (null == $variant) {
+            return false;
         }
         //====================================================================//
         // Load Parent Product Entity
-        $this->product = $entity->getProduct();
-//        //====================================================================//
-//        // Load Parent Product Translations
-//        $this->translations = $entity->getProduct()->getTranslations();
+        $this->product = $variant->getProduct();
         
-        return $entity;
+        return $variant;
     }
+    
     /**
      * Create Request Object
      *
@@ -75,23 +66,16 @@ trait CrudTrait
     public function create()
     {
         //====================================================================//
-        // Stack Trace
-        Splash::log()->trace();
-
-        //====================================================================//
-        // Check Customer Email is given
-        if (empty($this->in["email"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
+        // Create New Product Variant Entity
+        $variant = $this->crud->createVariant($this->in);
+        if (null == $variant) {
+            return false;
         }
-        
         //====================================================================//
-        // Create New Entity
-        /** @var CustomerInterface $customer */
-        $customer = $this->factory->createNew();
-        $customer->setEmail($this->in["email"]);
-        $this->repository->add($customer);
-
-        return $customer;
+        // Load Parent Product Entity
+        $this->product = $variant->getProduct();
+        return  $variant;        
+        
     }
     
     /**
@@ -105,14 +89,10 @@ trait CrudTrait
     {
         //====================================================================//
         // Save
-        if ($needed) {
-            $this->entityManager->flush($this->object);
-        }
-
-        if ($this->isUpdated("product")) {
-            $this->entityManager->flush();
-        }
+        $this->crud->update($this->object, (bool) $needed, (bool) $this->isUpdated("product"));
         
+        //====================================================================//
+        // Return Object Id
         return $this->getObjectIdentifier();
     }
     
@@ -121,26 +101,7 @@ trait CrudTrait
      */
     public function delete($objectId = null)
     {
-        //====================================================================//
-        // Try Loading Object to Check if Exists
-        $this->object = $this->load($objectId);
-        if (!$this->object) {
-            return true;
-        }
-        //====================================================================//
-        // Load Product from Variant
-        $product    =   $this->object->getProduct();
-        //====================================================================//
-        // Delete Product Variant from Product
-        $product->removeVariant($this->object);
-        //====================================================================//
-        // If Product has no more Variant
-        if ($product->getVariants()->count() == 0) {
-            //====================================================================//
-            // Delete
-            $this->repository->remove($product);
-        }
-        return true;
+        return $this->crud->delete($objectId);
     }    
 
     /**

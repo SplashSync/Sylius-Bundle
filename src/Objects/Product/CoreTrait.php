@@ -42,6 +42,15 @@ trait CoreTrait
             ->Name("Active")
             ->MicroData("http://schema.org/Product", "offered")
             ->isListed();
+        
+        //====================================================================//
+        // Product Variation Parent Link
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("parent_id")
+            ->Name("Parent")
+            ->MicroData("http://schema.org/Product", "isVariationOf")
+            ->isReadOnly();
+        
     }
 
     /**
@@ -63,6 +72,10 @@ trait CoreTrait
             // Product Readings
             case 'enabled':
                 $this->getGenericBool($fieldName, "product");
+
+                break;
+            case 'parent_id':
+                $this->out[$fieldName] = (string) $this->product->getId();
 
                 break;
             default:

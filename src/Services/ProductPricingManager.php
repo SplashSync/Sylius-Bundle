@@ -21,7 +21,8 @@ use Doctrine\ORM\EntityManagerInterface as Manager;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
 use Sylius\Component\Core\Model\ChannelInterface as Channel;
 use Splash\Models\Objects\PricesTrait;
-
+use Splash\Core\SplashCore      as Splash;
+use Splash\Sylius\Helpers\ChannelsAwareTrait;
 
 /**
  * Product Pricing Manager
@@ -30,6 +31,7 @@ use Splash\Models\Objects\PricesTrait;
 class ProductPricingManager
 {
     use PricesTrait;
+    use ChannelsAwareTrait;
     
     /**
      * Doctrine Entity Manager
@@ -38,13 +40,6 @@ class ProductPricingManager
      */
     protected $manager;
 
-    /**
-     * Doctrine Entity Manager
-     *
-     * @var ChannelRepository
-     */
-    protected $channels;
-    
     /**
      * @var Factory
      */
@@ -56,11 +51,6 @@ class ProductPricingManager
     protected $config;
 
     /**
-     * @var ChannelInterface
-     */
-    private $defaultChannel;
-
-    /**
      * Service Constructor
      *
      * @param Factory $factory
@@ -70,81 +60,18 @@ class ProductPricingManager
     public function __construct(ChannelRepository $channels, Manager $manager, Factory $factory, array $configuration)
     {
         //====================================================================//
-        // Sylius Channels Repository
-        $this->channels = $channels;
-        //====================================================================//
         // Sylius Channels Pricing manager
         $this->manager = $manager;
         //====================================================================//
-        // Sylius Translations Factory
+        // Sylius Channel Pricing Factory
         $this->factory = $factory;
         //====================================================================//
         // Store Bundle Configuration
         $this->config = $configuration;
         //====================================================================//
-        // Detect Default Channel for Splash
-        $channel = $channels->findOneByCode($configuration["default_channel"]);
-        if(!($channel instanceof Channel)) {
-            throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
-        }
-        $this->defaultChannel = $channel;
+        // Setup Sylius Channels Repository
+        $this->setChannelsRepository($channels, $configuration);
     }
-
-    /**
-     * Get Default Channel Code 
-     *
-     * @return string
-     */
-    public function getDefaultChannelCode(): string
-    {
-        return $this->defaultChannel->getCode();
-    }
-
-    /**
-     * Get Default Channel Code 
-     *
-     * @return string
-     */
-    public function getDefaultChannel(): Channel
-    {
-        return $this->defaultChannel;
-    }
-
-    /**
-     * Get All Available Channels 
-     *
-     * @return Channels[]
-     */
-    public function getChannels(): array
-    {
-        return $this->channels->findAll();
-    }
-    
-    /**
-     * Is Default Channel 
-     *
-     * @return bool
-     */
-    public function isDefaultChannel(Channel $channel): bool
-    {
-        if(!isset($this->defaultChannel)) {
-            return false;
-        }
-        return ($this->defaultChannel->getCode() == $channel->getCode());
-    }
-    
-    /**
-     * Get Channel Suffix 
-     *
-     * @return string
-     */
-    public function getChannelSuffix(Channel $channel): string
-    {
-        if($this->isDefaultChannel($channel)) {
-            return "";
-        }
-        return "_" . strtolower($channel->getCode());
-    }    
 
     /**
      * Get Product Price on a Channel
@@ -172,7 +99,6 @@ class ProductPricingManager
             $channelPrice   = $variant->getChannelPricingForChannel($channel);
             $price = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
         }
-        
         //====================================================================//
         // Encode Splash Price Array
         return self::prices()->encode(
@@ -184,78 +110,60 @@ class ProductPricingManager
             $currency->getName()
         );
     }
-//    
-//    public function getDefaultChannelPricing($Variant)
-//    {
-//        //====================================================================//
-//        // Identify Default ChannelPricing
-//        foreach ($Variant->getChannelPricings() as $ChannelPricing) {
-//            $Code = method_exists($ChannelPricing, 'getChannel') ? $ChannelPricing->getChannel()->getCode() : $ChannelPricing->getChannelCode();
-//            if ($Code == $this->parameters["default_channel"]) {
-//                return $ChannelPricing;
-//            }
-//        }
-//        //====================================================================//
-//        // Create Channel Price if Needed
-//        $ChannelPricing = new ChannelPricing();
-//        $this->manager->persist($ChannelPricing);
-//        //====================================================================//
-//        // Identify Default ChannelPricing in Parameters
-//        if (method_exists($ChannelPricing, 'setChannel')) {
-//            $Channel = $this->channels->findOneByCode($this->parameters["default_channel"]);
-//            if (!$Channel) {
-//                $Channel = array_shift($this->channels->findAll());
-//                Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
-//            }
-//            $ChannelPricing->setChannel($Channel);
-//        } else {
-//            if (!$this->channels->findOneByCode($this->parameters["default_channel"])) {
-//                Splash::Log()->Err("Sylius Default Channel Code Doesn't Exists!");
-//                $ChannelPricing->setChannelCode(array_shift($this->channels->findAll())->getCode());
-//            } else {
-//                $ChannelPricing->setChannelCode($this->parameters["default_channel"]);
-//            }
-//        }
-//        $ChannelPricing->setProductVariant($Variant);
-//        
-//        //====================================================================//
-//        // Add Channel Pricing to Variant
-//        $Variant->getChannelPricings()->add($ChannelPricing);
-//        //====================================================================//
-//        // Return New Channel Pricing
-//        return $ChannelPricing;
-//    }
     
     /**
      * Update Variant Channel Price
      * @param Variant $variant
      * @param Channel $channel
      * @param bool $original
-     * @param array $fieldData
+     * @param null|array $fieldData
      * @return bool
      */
-    public function setChannelPrice(Variant $variant, Channel $channel, bool $original, array $fieldData): bool
+    public function setChannelPrice(Variant $variant, Channel $channel, bool $original, $fieldData): bool
     {
-        if (!isset($fieldData["ht"])) {
-            return false;
+        $updated = false;
+        if (!is_iterable($fieldData) || !isset($fieldData["ht"])) {
+            return $updated;
         }
         //====================================================================//
         // Identify Default Channel Price
-        $currentPrice = 0;
+        $channelPrice   = null;        
         if($variant->hasChannelPricingForChannel($channel)) {
             $channelPrice   = $variant->getChannelPricingForChannel($channel);
-            $currentPrice = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
+        }        
+        //====================================================================//
+        // Create Channel Price if Not Defined
+        if(!$channelPrice) {
+            //====================================================================//
+            // Create New Channel Pricing from Factory
+            $channelPrice = $this->factory->createNew();
+            $channelPrice->setChannelCode($channel->getCode());
+            $channelPrice->setProductVariant($variant);
+            $channelPrice->setPrice(0);
+            $channelPrice->setOriginalPrice(0);
+            $variant->addChannelPricing($channelPrice);
+            $this->manager->persist($channelPrice);
+            $updated = true;
         }
+        //====================================================================//
+        // Init Channel Price
+        $newPrice = (int) (round($fieldData["ht"] * 100, 0, PHP_ROUND_HALF_UP));
+        //====================================================================//
+        // Get Current Price
+        $currentPrice = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
         //====================================================================//
         // Compare Channel Price
-        if (!isset($fieldData["ht"])) {
-            return false;
-        }
-        $ChannelPrice   = $this->getDefaultChannelPricing($variant);
+        if ($newPrice == $currentPrice) {
+            return $updated;
+        }      
         //====================================================================//
         // Update Product Price
-        $ChannelPrice->setPrice($fieldData["ht"] * 100);
-        return ;
+        if ($original) {
+            $channelPrice->setOriginalPrice($newPrice);
+        } else {
+            $channelPrice->setPrice($newPrice);
+        }
+        return true;
     }
     
 }

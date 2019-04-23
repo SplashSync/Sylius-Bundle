@@ -39,6 +39,7 @@ trait DescriptionsTrait
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales() as $locale) {
+            
             //====================================================================//
             // Name without Options
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -48,6 +49,17 @@ trait DescriptionsTrait
                 ->MicroData("http://schema.org/Product", "alternateName")
                 ->setMultilang($locale->getCode())
                 ->isRequired();
+            
+            //====================================================================//
+            // Name with Options
+            $this->fieldsFactory()->create(SPL_T_VARCHAR)
+                ->Identifier("fullName")
+                ->Name("Product Name with Options")
+                ->Group($groupName)
+                ->MicroData("http://schema.org/Product", "name")
+                ->setMultilang($locale->getCode())
+                ->isReadOnly();
+            
             //====================================================================//
             // Slug
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -57,6 +69,7 @@ trait DescriptionsTrait
                 ->MicroData("http://schema.org/Product", "urlRewrite")
                 ->setMultilang($locale->getCode())
                 ->Association("name");
+            
             //====================================================================//
             // Long Description
             $this->fieldsFactory()->create(SPL_T_TEXT)
@@ -65,6 +78,7 @@ trait DescriptionsTrait
                 ->Group($groupName)
                 ->MicroData("http://schema.org/Article", "articleBody")
                 ->setMultilang($locale->getCode());
+            
             //====================================================================//
             // Short Description
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -73,6 +87,7 @@ trait DescriptionsTrait
                 ->Group($groupName)
                 ->MicroData("http://schema.org/Product", "description")
                 ->setMultilang($locale->getCode());
+            
             //====================================================================//
             // Meta Description
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -113,6 +128,18 @@ trait DescriptionsTrait
                     unset($this->in[$key]);
 
                     break;
+                
+                case 'fullName':
+                    // Read Variant Name
+                    $this->out[$fieldName] = $this->translations
+                        ->getTranslated($this->object, $locale, 'name');
+                    // Complet Variant Name with Options Values
+                    $this->out[$fieldName] .= $this->attributes
+                        ->getOptionsNameString($this->object, $locale);
+                    
+                    unset($this->in[$key]);
+
+                    break;                
             }
         }       
     }
