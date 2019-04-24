@@ -43,13 +43,12 @@ before_install:
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:   
-    - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
     - cd sylius
     
     
     - echo "Install Sylius"
     - cp  ../build/.env.dist ".env" 
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
+    - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
     - php bin/console sylius:install --env=test --no-interaction --no-debug
     - php bin/console sylius:fixtures:load --env=test --no-interaction --no-debug
     
@@ -57,6 +56,7 @@ install:
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
     - cp  ../build/config_splash.yml    config/packages/splash.yml
     - cp  ../build/routing_splash.yml   config/routes/splash.yml
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
     
     - echo "Configuring Splash Bundles"
     
