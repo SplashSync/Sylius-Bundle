@@ -51,7 +51,7 @@ install:
     - cp  ../build/config_splash.yml    config/packages/splash.yml
     - cp  ../build/routing_splash.yml   config/routes/splash.yml
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist -no-scripts
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist --no-scripts
     
     - echo "Configuring Splash Bundles"
     
