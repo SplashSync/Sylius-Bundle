@@ -38,7 +38,8 @@ before_install:
   - phpenv config-add build/x_memory.ini
 #  - phpenv config-add build/x_errors.ini
   - php -ini | grep memory_limit  
-
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS sylius;'
+  
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:   
