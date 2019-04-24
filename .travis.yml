@@ -78,7 +78,7 @@ install:
 
 # Run script
 script:
-  - php vendor/bin/phpunit
+  - php vendor/bin/phpunit --testdox
 
 # After a build, send email notification with the build results
 notifications:
