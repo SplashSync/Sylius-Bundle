@@ -21,20 +21,11 @@
     "autoload": {
         "psr-4": { 
             "Splash\\Sylius\\":     "src/"
-        },
-        "files":    [ 
-            "../phpcore/inc/Splash.Inc.php",
-            "../php-bundle/src/Tests/KernelTestCase.php"
-        ]
+        }
     },
-    
     
     "autoload-dev": {
         "classmap": [ "tests/Kernel.php" ],
-        "files":    [ 
-            "vendor/splash/phpcore/inc/Splash.Inc.php",
-            "vendor/splash/php-bundle/src/Tests/KernelTestCase.php"
-        ],
         "psr-4": { 
             "Splash\\Sylius\\Test\\":     "tests/"
         }        
