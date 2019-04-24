@@ -38,7 +38,7 @@ before_install:
   - phpenv config-add build/x_memory.ini
 #  - phpenv config-add build/x_errors.ini
   - php -ini | grep memory_limit  
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS sylius;'
+#  - mysql -e 'CREATE DATABASE IF NOT EXISTS sylius;'
   
 # Install composer dependencies,
 # Create database, schema and fixtures
@@ -51,7 +51,7 @@ install:
     - cp  ../build/config_splash.yml    config/packages/splash.yml
     - cp  ../build/routing_splash.yml   config/routes/splash.yml
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist -no-scripts
     
     - echo "Configuring Splash Bundles"
     
