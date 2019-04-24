@@ -43,12 +43,12 @@ before_install:
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:   
-    - cd sylius
     
     
     - echo "Install Sylius"
-    - cp  ../build/.env.dist ".env" 
     - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
+    - cd sylius
+    - cp  ../build/.env.dist ".env" 
     - php bin/console sylius:install --env=test --no-interaction --no-debug
     - php bin/console sylius:fixtures:load --env=test --no-interaction --no-debug
     
