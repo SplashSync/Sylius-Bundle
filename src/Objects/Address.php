@@ -29,6 +29,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Sylius Address Object
+ * 
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Address extends AbstractStandaloneObject
 {

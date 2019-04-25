@@ -53,7 +53,10 @@ trait CrudTrait
         }
         //====================================================================//
         // Load Parent Product Entity
-        $this->product = $variant->getProduct();
+        $product = $variant->getProduct();
+        if($product instanceof ProductInterface) {
+            $this->product = $product;
+        }
         
         return $variant;
     }
@@ -68,12 +71,15 @@ trait CrudTrait
         //====================================================================//
         // Create New Product Variant Entity
         $variant = $this->crud->createVariant($this->in);
-        if (null == $variant) {
+        if (!($variant instanceof ProductVariantInterface)) {
             return false;
         }
         //====================================================================//
         // Load Parent Product Entity
-        $this->product = $variant->getProduct();
+        $product = $variant->getProduct();
+        if($product instanceof ProductInterface) {
+            $this->product = $product;
+        }        
         return  $variant;        
         
     }

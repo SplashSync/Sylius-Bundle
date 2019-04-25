@@ -15,19 +15,19 @@
 
 namespace   Splash\Sylius\Services;
 
+use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Core\SplashCore      as Splash;
+use Splash\Models\Objects\ObjectsTrait;
 use Splash\Sylius\Helpers\ChannelsAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as Products;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
-use Sylius\Component\Core\Model\ProductInterface as Product;
-use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 use Sylius\Component\Product\Factory\ProductFactory;
 use Sylius\Component\Product\Factory\ProductVariantFactory;
+use Sylius\Component\Core\Model\ProductInterface as Product;
+use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 use Sylius\Component\Resource\Factory\Factory;
-use Splash\Models\Objects\ObjectsTrait;
-
 
 /**
  * Product CRUD Manager
@@ -43,22 +43,15 @@ class ProductCrudManager
      *
      * @var Manager
      */
-    protected $manager;
-
-    /**
-     * Doctrine Entity Manager
-     *
-     * @var EntityManagerInterface
-     */
     protected $entityManager;
 
     /**
-     * @var ProductRepository
+     * @var Products
      */
     protected $products;
 
     /**
-     * @var ProductVariantRepository
+     * @var Variants
      */
     protected $variants;
 
@@ -80,15 +73,19 @@ class ProductCrudManager
     /**
      * Service Constructor
      *
-     * @param Factory $factory
-     * @param array   $locales
-     * @param array   $configuration
+     * @param Manager               $manager
+     * @param Products              $products
+     * @param Variants              $variants
+     * @param Channels              $channels
+     * @param ProductFactory        $pFactory
+     * @param ProductVariantFactory $vFactory
+     * @param array                 $configuration
      */
     public function __construct(Manager $manager, Products $products, Variants $variants, Channels $channels, ProductFactory $pFactory, ProductVariantFactory $vFactory, array $configuration)
     {
         //====================================================================//
         // Sylius Product Manager
-        $this->manager = $manager;
+        $this->entityManager = $manager;
         //====================================================================//
         // Sylius Products Repository
         $this->products = $products;
@@ -155,23 +152,25 @@ class ProductCrudManager
         if ($baseProduct instanceof Product) {
             //====================================================================//
             // Create a Variant
+            /** @var Variant $variant */
             $variant = $this->variantFactory->createForProduct($baseProduct);
             //====================================================================//
             // Persist New Variant
-            $this->manager->persist($variant);            
+            $this->entityManager->persist($variant);
             //====================================================================//
             // Return New Variant
             return $variant;
         }
         //====================================================================//
         // Create a Product
+        /** @var Product $newProduct */
         $newProduct = $this->productFactory->createWithVariant();
-//        //====================================================================//
-//        // Setup Product Channel
-//        $newProduct->addChannel($this->getDefaultChannel());
+        //====================================================================//
+        // Setup Product Channel
+        $newProduct->addChannel($this->getDefaultChannel());
         //====================================================================//
         // Persist New Product
-        $this->manager->persist($newProduct);
+        $this->entityManager->persist($newProduct);
         //====================================================================//
         // Return a Product First Variant
         return  $newProduct->getVariants()->first();
@@ -181,20 +180,15 @@ class ProductCrudManager
      * Update Request Object
      *
      * @param Variant $variant
-     * @param array   $needed        Is This Variant Update Needed
-     * @param array   $neededProduct Is This Product Update Needed
+     * @param bool    $needed        Is This Variant Update Needed
+     * @param bool    $neededProduct Is This Product Update Needed
      */
     public function update(Variant $variant, bool $needed, bool $neededProduct): void
     {
         //====================================================================//
-        // Save Product Variant Only
-        if ($needed) {
-            $this->manager->flush($variant);
-        }
-        //====================================================================//
         // Save All Product Changes
-        if ($neededProduct) {
-            $this->manager->flush();
+        if ($needed || $neededProduct) {
+            $this->entityManager->flush();
         }
     }
 
@@ -209,13 +203,16 @@ class ProductCrudManager
     {
         //====================================================================//
         // Try Loading Object to Check if Exists
-        $variant = $this->loadVariant($objectId);
+        $variant = $this->loadVariant((string) $objectId);
         if (!$variant) {
             return true;
         }
         //====================================================================//
         // Load Product from Variant
         $product = $variant->getProduct();
+        if (!$product) {
+            return false;
+        }
         //====================================================================//
         // Delete Product Variant from Product
         $product->removeVariant($variant);
@@ -279,27 +276,48 @@ class ProductCrudManager
         }
         //====================================================================//
         // For Each Available Variants
-        $baseVariantId = false;
         foreach ($variants as $variant) {
             //====================================================================//
-            // Check Product Id is here
-            if (!isset($variant["id"]) || !is_string($variant["id"])) {
-                continue;
-            }
-            //====================================================================//
-            // Extract Variable Product Id
-            $baseVariantId = self::objects()->id($variant["id"]);
-            if (!$baseVariantId) {
-                return null;
-            }
-            //====================================================================//
-            // Load Base Product
-            $baseVariant = $this->variants->find($baseVariantId);
-            if ($baseVariant instanceof Variant) {
-                return $baseVariant->getProduct();
+            // Check Product Searched Product
+            $baseProduct = $this->isBaseProduct($variant);
+            if ($baseProduct instanceof Product) {
+                return $baseProduct;
             }
         }
 
         return null;
     }
+    
+    /**
+     * Is Base Product by Given Existing Variants Ids
+     *
+     * @param array|ArrayObject $variant Variant Input Array
+     *
+     * @return null|Product
+     */
+    private function isBaseProduct($variant): ?Product
+    {
+        //====================================================================//
+        // Check Product Id is here
+        if (!isset($variant["id"]) || !is_string($variant["id"])) {
+            return null;
+        }
+        //====================================================================//
+        // Extract Variable Product Id
+        $baseVariantId = self::objects()->id($variant["id"]);
+        if (!$baseVariantId) {
+            return null;
+        }
+        //====================================================================//
+        // Load Base Product
+        $baseVariant = $this->variants->find($baseVariantId);
+        if (!($baseVariant instanceof Variant)) {
+            return null;
+        }
+        $baseProduct = $baseVariant->getProduct();
+        if (!($baseProduct instanceof Product)) {
+            return null;
+        }
+        return $baseProduct;
+    }    
 }

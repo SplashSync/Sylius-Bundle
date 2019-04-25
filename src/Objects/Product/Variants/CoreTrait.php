@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  *  This file is part of SplashSync Project.
  *
@@ -23,8 +22,21 @@ use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 /**
  * Sylius Produitc Variants Core Fields
  */
-trait CoreTrait {
-    
+trait CoreTrait
+{
+    /**
+     * Write Given Fields
+     *
+     * @param string $fieldName Field Identifier / Name
+     * @param mixed  $fieldData Field Data
+     */
+    public function setVariantsCoreFields($fieldName, $fieldData)
+    {
+        if (isset($this->in["variants"])) {
+            unset($this->in["variants"]);
+        }
+    }
+
     /**
      * Build Fields using FieldFactory
      */
@@ -38,7 +50,7 @@ trait CoreTrait {
             ->InList("variants")
             ->MicroData("http://schema.org/Product", "Variants")
             ->isNotTested();
-        
+
         //====================================================================//
         // Product Variation List - Product SKU
         $this->fieldsFactory()->Create(SPL_T_VARCHAR)
@@ -48,7 +60,7 @@ trait CoreTrait {
             ->MicroData("http://schema.org/Product", "VariationName")
             ->isReadOnly();
     }
-    
+
     /**
      * Read requested Field
      *
@@ -72,7 +84,7 @@ trait CoreTrait {
             if (!$this->isAllowedVariantChild($variant)) {
                 continue;
             }
-            
+
             //====================================================================//
             // Read Products Variants Infos
             switch ($fieldId) {
@@ -80,6 +92,7 @@ trait CoreTrait {
                 // Variant Readings
                 case 'id':
                     $value = (string) self::objects()->encode("Product", $variant->getId());
+
                     break;
                 //====================================================================//
                 // Product Readings
@@ -87,31 +100,22 @@ trait CoreTrait {
                     $value = $variant->getCode();
 
                     break;
-            }            
+                default:
+                    $value = null;
+
+                    break;
+            }
             //====================================================================//
             // Add Variant Infos to List
             self::lists()->insert($this->out, "variants", $fieldId, $index, $value);
         }
         unset($this->in[$key]);
     }
-    
-    /**
-     * Write Given Fields
-     *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
-     */
-    public function setVariantsCoreFields($fieldName, $fieldData)
-    {
-        if (isset($this->in["variants"])) {
-            unset($this->in["variants"]);
-        }        
-    }    
 
     //====================================================================//
     // PRIVATE - Tooling Functions
     //====================================================================//
-    
+
     /**
      * Check if Product Variant Should be Listed
      *
@@ -129,5 +133,5 @@ trait CoreTrait {
         //====================================================================//
         // Travis Mode => Skip Current Product Variant
         return ($variant->getId() != $this->object->getId());
-    }    
+    }
 }

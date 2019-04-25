@@ -26,8 +26,8 @@ use Splash\Sylius\Services\ProductImagesManager as Images;
 use Splash\Sylius\Services\ProductPricingManager as Pricing;
 use Splash\Sylius\Services\ProductTranslationsManager as Translations;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
-use Sylius\Component\Product\Model\ProductInterface;
-use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Product\Factory\ProductFactory as Factory;
 
 /**
@@ -130,10 +130,12 @@ class Product extends AbstractStandaloneObject
     /**
      * Service Constructor
      *
-     * @param TranslatorInterface    $translator
-     * @param EntityManagerInterface $entityManager
-     * @param CustomerRepository     $repository
-     * @param Factory                $factory
+     * @param Variants     $variants
+     * @param Crud         $crudService
+     * @param Translations $translations
+     * @param Images       $images
+     * @param Pricing      $pricing
+     * @param Attributes   $attributes
      */
     public function __construct(Variants $variants, Crud $crudService, Translations $translations, Images $images, Pricing $pricing, Attributes $attributes)
     {

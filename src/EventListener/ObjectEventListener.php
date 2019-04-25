@@ -26,7 +26,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-
+use Sylius\Component\Core\Model\OrderInterface;
 
 class ObjectEventListener
 {
@@ -34,6 +34,7 @@ class ObjectEventListener
         "Address" => AddressInterface::class,
         "ThirdParty" => CustomerInterface::class,
         "Product" => ProductVariantInterface::class,
+        "Order" => OrderInterface::class,
     );
     
     const CONNECTED_ENTITIES = array(
@@ -173,14 +174,15 @@ class ObjectEventListener
                 continue;
             }
             //====================================================================//
+            //  Prepare Commit Parameters
+            $user = 'Sylius Bundle';
+            $msg = 'Change Commited on Sylius for '.$objectType;
+            //====================================================================//
             //  Execute Commit
-            $connector->commit(
-                $objectType,
-                $objectIds,
-                $action,
-                'Sylius Bundle',
-                'Change Commited on Sylius for '.$objectType
-            );
+            $connector->commit($objectType, $objectIds, $action, $user, $msg);
+            if($objectType == "Order") {
+                $connector->commit("Invoice", $objectIds, $action, $user, $msg);
+            }
         }
         //====================================================================//
         // Catch Splash Logs

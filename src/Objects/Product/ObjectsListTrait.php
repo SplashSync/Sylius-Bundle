@@ -34,10 +34,11 @@ trait ObjectsListTrait
      */
     protected function getObjectListArray(ProductVariantInterface $variant): array
     {
+        $product = $variant->getProduct();
         return array(
             'id' => $variant->getId(),
             'code' => $variant->getCode(),
-            'enabled' => $variant->getProduct()->isEnabled(),
+            'enabled' => $product ? $product->isEnabled() : false,
             'email' => $variant->getName(),
             'phoneNumber' => $variant->getName(),
             'onHand' => $variant->getOnHand(),

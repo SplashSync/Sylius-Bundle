@@ -24,7 +24,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
  */
 trait CrudTrait
 {
-    use \Splash\Bundle\Helpers\Doctrine\CrudHelperTrait;
+    use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
     
     /**
      * Create Request Object

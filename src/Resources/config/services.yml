@@ -108,6 +108,38 @@ services:
             - "%splash_sylius%" 
         
     ########################################################################
+    # Sylius Orders Object
+    splash.sylius.order:
+        class:      Splash\Sylius\Objects\Order
+        arguments:  
+            - "@sylius.repository.order"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.customer"
+            - "@sylius.repository.address"
+            - "@sylius.manager.order"
+            - "@sylius.factory.order"
+            - "%splash_sylius%"     
+#        tags:
+#            # Register as Standalone Connector Object           
+#            - { name: "splash.standalone.object", type : "Order" }  
+
+    ########################################################################
+    # Sylius Invoice Object
+    splash.sylius.invoice:
+        class:      Splash\Sylius\Objects\Invoice
+        arguments:  
+            - "@sylius.repository.order"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.customer"
+            - "@sylius.repository.address"
+            - "@sylius.manager.order"
+            - "@sylius.factory.order"
+            - "%splash_sylius%"     
+#        tags:
+#            # Register as Standalone Connector Object           
+#            - { name: "splash.standalone.object", type : "Invoice" }  
+            
+    ########################################################################
     # Sylius Additionnal Object Event Listener
     # This Listner is Triggered on Any Object changes dont on ORM
     # It will detect impacted Splash Objects and Dispatch Commits to Splash Server

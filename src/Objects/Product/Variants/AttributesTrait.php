@@ -146,7 +146,7 @@ trait AttributesTrait
             //====================================================================//
             // Identify or Add Attribute
             $option = $this->attributes->touchProductOption($attrItem);
-            if (!$option) {
+            if (empty($option)) {
                 continue;
             }
             //====================================================================//
@@ -155,7 +155,7 @@ trait AttributesTrait
             //====================================================================//
             // Identify or Add Attribute Id
             $optionValue = $this->attributes->touchProductOptionValue($option, $attrItem);
-            if (!$optionValue) {
+            if (empty($optionValue)) {
                 continue;
             }
             //====================================================================//
@@ -187,6 +187,10 @@ trait AttributesTrait
      */
     private function getVariantsAttributesField(Option $optionValue, $fieldName): ?string
     {
+        $option = $optionValue->getOption();
+        if(empty($option)) {
+            return null;
+        }
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales()  as $locale) { 
@@ -197,9 +201,9 @@ trait AttributesTrait
             // Read Attribute Data
             switch ($baseFieldName) {
                 case 'code':
-                    return $optionValue->getOption()->getCode();
+                    return $option->getCode();
                 case 'name':
-                    return $optionValue->getOption()->getTranslation($locale->getCode())->getName();
+                    return $option->getTranslation($locale->getCode())->getName();
                 case 'value':
                     return $optionValue->getTranslation($locale->getCode())->getValue();
             }

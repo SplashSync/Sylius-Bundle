@@ -15,14 +15,15 @@
 
 namespace   Splash\Sylius\Services;
 
-use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
-use Sylius\Component\Resource\Factory\Factory;
 use Doctrine\ORM\EntityManagerInterface as Manager;
+use Splash\Core\SplashCore      as Splash;
+use Splash\Models\Objects\PricesTrait;
+use Splash\Sylius\Helpers\ChannelsAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
 use Sylius\Component\Core\Model\ChannelInterface as Channel;
-use Splash\Models\Objects\PricesTrait;
-use Splash\Core\SplashCore      as Splash;
-use Splash\Sylius\Helpers\ChannelsAwareTrait;
+use Sylius\Component\Core\Model\ChannelPricingInterface as ChannelPricing;
+use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
+use Sylius\Component\Resource\Factory\Factory;
 
 /**
  * Product Pricing Manager
@@ -32,7 +33,7 @@ class ProductPricingManager
 {
     use PricesTrait;
     use ChannelsAwareTrait;
-    
+
     /**
      * Doctrine Entity Manager
      *
@@ -53,9 +54,10 @@ class ProductPricingManager
     /**
      * Service Constructor
      *
-     * @param Factory $factory
-     * @param array   $locales
-     * @param array   $configuration
+     * @param ChannelRepository $channels
+     * @param Manager           $manager
+     * @param Factory           $factory
+     * @param array             $configuration
      */
     public function __construct(ChannelRepository $channels, Manager $manager, Factory $factory, array $configuration)
     {
@@ -75,28 +77,31 @@ class ProductPricingManager
 
     /**
      * Get Product Price on a Channel
+     *
      * @param Variant $variant
      * @param Channel $channel
-     * @return false|array
+     *
+     * @return array|string
      */
     public function getChannelPrice(Variant $variant, Channel $channel, bool $original)
     {
         //====================================================================//
         // Retreive Price Currency
-        $currency       =   $channel->getBaseCurrency();
+        $currency = $channel->getBaseCurrency();
         //====================================================================//
         // TODO : Select Default TaxZone in Parameters
         // Retreive Price TAX Percentile
-        if ($variant->getTaxCategory()) {
-            $taxRate = $variant->getTaxCategory()->getRates()->first()->getAmount() * 100;
+        $taxCategory = $variant->getTaxCategory();
+        if ($taxCategory) {
+            $taxRate = $taxCategory->getRates()->first()->getAmount() * 100;
         } else {
             $taxRate = 0.0;
         }
         //====================================================================//
         // Identify Default Channel Price
         $price = 0;
-        if($variant->hasChannelPricingForChannel($channel)) {
-            $channelPrice   = $variant->getChannelPricingForChannel($channel);
+        $channelPrice = $variant->getChannelPricingForChannel($channel);
+        if ($channelPrice) {
             $price = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
         }
         //====================================================================//
@@ -105,18 +110,20 @@ class ProductPricingManager
             doubleval($price / 100),        // No TAX Price
             $taxRate,                       // TAX Percent
             null,
-            $currency->getCode(),
-            $currency->getCode(),
-            $currency->getName()
+            $currency ? (string) $currency->getCode() : "",
+            $currency ? (string) $currency->getCode() : "",
+            $currency ? (string) $currency->getName() : ""
         );
     }
-    
+
     /**
      * Update Variant Channel Price
-     * @param Variant $variant
-     * @param Channel $channel
-     * @param bool $original
+     *
+     * @param Variant    $variant
+     * @param Channel    $channel
+     * @param bool       $original
      * @param null|array $fieldData
+     *
      * @return bool
      */
     public function setChannelPrice(Variant $variant, Channel $channel, bool $original, $fieldData): bool
@@ -127,15 +134,16 @@ class ProductPricingManager
         }
         //====================================================================//
         // Identify Default Channel Price
-        $channelPrice   = null;        
-        if($variant->hasChannelPricingForChannel($channel)) {
-            $channelPrice   = $variant->getChannelPricingForChannel($channel);
-        }        
+        $channelPrice = null;
+        if ($variant->hasChannelPricingForChannel($channel)) {
+            $channelPrice = $variant->getChannelPricingForChannel($channel);
+        }
         //====================================================================//
         // Create Channel Price if Not Defined
-        if(!$channelPrice) {
+        if (!$channelPrice) {
             //====================================================================//
             // Create New Channel Pricing from Factory
+            /** @var ChannelPricing $channelPrice */
             $channelPrice = $this->factory->createNew();
             $channelPrice->setChannelCode($channel->getCode());
             $channelPrice->setProductVariant($variant);
@@ -155,7 +163,7 @@ class ProductPricingManager
         // Compare Channel Price
         if ($newPrice == $currentPrice) {
             return $updated;
-        }      
+        }
         //====================================================================//
         // Update Product Price
         if ($original) {
@@ -163,7 +171,7 @@ class ProductPricingManager
         } else {
             $channelPrice->setPrice($newPrice);
         }
+
         return true;
     }
-    
 }

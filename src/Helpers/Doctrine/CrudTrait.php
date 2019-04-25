@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Helpers;
+namespace Splash\Sylius\Helpers\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Splash\Client\Splash;

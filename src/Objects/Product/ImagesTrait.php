@@ -15,7 +15,11 @@
 
 namespace Splash\Sylius\Objects\Product;
 
+use Splash\Client\Splash;
+use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Sylius\Component\Core\Model\ImagesAwareInterface;
+use Sylius\Component\Core\Model\ProductImageInterface;
 
 /**
  * Sylius Product Images Fields
@@ -84,6 +88,11 @@ trait ImagesTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
+        if(!($this->product instanceof ImagesAwareInterface)) {
+            return;
+        }        
+        //====================================================================//
+        // Check if List field & Init List Array
         $fieldId = self::lists()->InitOutput($this->out, "images", $fieldName);
         if (!$fieldId) {
             return;
@@ -92,6 +101,11 @@ trait ImagesTrait
         // For All Availables Product Images
         $isFirst = true;
         foreach ($this->product->getImages() as $index => $image) {
+            //====================================================================//
+            // Safety Check for PhpStan
+            if(!($image instanceof ProductImageInterface)) {
+                continue;
+            }        
             //====================================================================//
             // Prepare
             switch ($fieldId) {
@@ -139,7 +153,7 @@ trait ImagesTrait
             case 'images':
                 $this->images->setImages($this->object, $fieldData);
                 $images = $this->product->getImages();
-                if(($images instanceof ArrayCollection) || $images->isDirty()) {
+                if(!($images instanceof PersistentCollection) || $images->isDirty()) {
                     $this->needUpdate("product");
                 }
 

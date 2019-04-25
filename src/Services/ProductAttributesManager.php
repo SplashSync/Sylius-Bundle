@@ -15,6 +15,7 @@
 
 namespace   Splash\Sylius\Services;
 
+use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Sylius\Services\ProductTranslationsManager as Translations;
@@ -52,7 +53,7 @@ class ProductAttributesManager
      * @var Factory
      */
     protected $valuesFactory;
-    
+
     /**
      * @var Translations
      */
@@ -62,6 +63,7 @@ class ProductAttributesManager
      * @var array
      */
     protected $config;
+
     /**
      * List of Required Attributes Fields
      *
@@ -76,9 +78,12 @@ class ProductAttributesManager
     /**
      * Service Constructor
      *
-     * @param Factory $factory
-     * @param array   $locales
-     * @param array   $configuration
+     * @param Manager      $manager
+     * @param Options      $options
+     * @param Factory      $factory
+     * @param Factory      $values
+     * @param Translations $translations
+     * @param array        $configuration
      */
     public function __construct(Manager $manager, Options $options, Factory $factory, Factory $values, Translations $translations, array $configuration)
     {
@@ -160,7 +165,7 @@ class ProductAttributesManager
      *
      * @return ProductOptionInterface
      */
-    public function touchProductOption(iterable $attrItem): ProductOptionInterface
+    public function touchProductOption($attrItem): ProductOptionInterface
     {
         //====================================================================//
         // Load Product Option
@@ -185,18 +190,16 @@ class ProductAttributesManager
      * Update Product Option Names
      *
      * @param ProductOptionInterface $option
-     * @param iterable               $attrItem
-     *
-     * @return void
+     * @param array|ArrayObject      $attrItem
      */
-    public function updateProductOption(ProductOptionInterface &$option, iterable $attrItem): void
+    public function updateProductOption(ProductOptionInterface &$option, $attrItem): void
     {
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales()  as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
-            $nameKey = "name" . $this->translations->getLocaleSuffix($locale);
+            $nameKey = "name".$this->translations->getLocaleSuffix($locale);
             //====================================================================//
             // Read New Attribute Name
             $newName = isset($attrItem[$nameKey]) ? $attrItem[$nameKey] : $attrItem["name"];
@@ -210,11 +213,11 @@ class ProductAttributesManager
      * Load or Create Product Attribute Value
      *
      * @param ProductOptionInterface $option
-     * @param iterable               $attrItem
+     * @param array|ArrayObject      $attrItem
      *
      * @return ProductOptionValueInterface
      */
-    public function touchProductOptionValue(ProductOptionInterface $option, iterable $attrItem): ProductOptionValueInterface
+    public function touchProductOptionValue(ProductOptionInterface $option, $attrItem): ProductOptionValueInterface
     {
         //====================================================================//
         // Walk on All Available Options Values
@@ -225,7 +228,7 @@ class ProductAttributesManager
                 return $optionValue;
             }
         }
-        
+
         //====================================================================//
         // Create Product Option Value
         $newValue = $this->valuesFactory->createNew();
@@ -239,26 +242,24 @@ class ProductAttributesManager
         //====================================================================//
         // Add Value to Option
         $option->addValue($newValue);
-        
+
         return $newValue;
     }
-    
+
     /**
      * Update Product Option Value Names
      *
      * @param ProductOptionValueInterface $value
-     * @param iterable               $attrItem
-     *
-     * @return void
+     * @param array|ArrayObject           $attrItem
      */
-    public function updateProductOptionValue(ProductOptionValueInterface &$value, iterable $attrItem): void
+    public function updateProductOptionValue(ProductOptionValueInterface &$value, $attrItem): void
     {
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales()  as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
-            $nameKey = "value" . $this->translations->getLocaleSuffix($locale);
+            $nameKey = "value".$this->translations->getLocaleSuffix($locale);
             //====================================================================//
             // Read New Attribute Value
             $newName = isset($attrItem[$nameKey]) ? $attrItem[$nameKey] : $attrItem["value"];
@@ -267,14 +268,12 @@ class ProductAttributesManager
             $this->translations->setOptionValueTranslation($value, $locale, $newName);
         }
     }
-    
+
     /**
      * Update Variant Option Value Names
      *
-     * @param Variant $variant
+     * @param Variant                     $variant
      * @param ProductOptionValueInterface $newValue
-     * 
-     * @return void
      */
     public function updateVariantOptionValue(Variant &$variant, ProductOptionValueInterface $newValue): void
     {
@@ -282,32 +281,45 @@ class ProductAttributesManager
         // Walk on All Available Variant Options Values
         foreach ($variant->getOptionValues()  as $optionValue) {
             //====================================================================//
+            // Load Option
+            $option = $optionValue->getOption();
+            $newOption = $newValue->getOption();
+            if (!$option || !$newOption) {
+                continue;
+            }
+            //====================================================================//
             // Remove Similar Option Value
-            if ($optionValue->getOption()->getId() == $newValue->getOption()->getId()) {
+            if ($option->getId() == $newOption->getId()) {
                 $variant->removeOptionValue($optionValue);
             }
-        }        
+        }
         //====================================================================//
         // Add Option Value to Variant
         $variant->addOptionValue($newValue);
-    }  
-    
+    }
+
     /**
      * CleanUp Product Variant Attributes
      *
      * @param Variant $variant
-     * @param array $codes
-     * 
-     * @return void
+     * @param array   $codes
      */
     public function cleanVariantOptionValues(Variant &$variant, array $codes): void
     {
         //====================================================================//
         // CleanUp Product Variant Attributes
         foreach ($variant->getOptionValues() as $optionValue) {
-            if(!in_array($optionValue->getOption()->getCode(), $codes)) {
+            //====================================================================//
+            // Load Option
+            $option = $optionValue->getOption();
+            if (!$option) {
+                continue;
+            }
+            //====================================================================//
+            // Chezck if Option is Still Available
+            if (!in_array($option->getCode(), $codes, true)) {
                 $variant->removeOptionValue($optionValue);
             }
         }
-    }     
+    }
 }

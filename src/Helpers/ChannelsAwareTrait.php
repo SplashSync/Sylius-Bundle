@@ -30,6 +30,12 @@ trait ChannelsAwareTrait
     private $channels;
 
     /**
+     * @var string
+     */
+    private $defaultChannelCode;
+    
+    
+    /**
      * @var ChannelInterface
      */
     private $defaultChannel;
@@ -48,12 +54,8 @@ trait ChannelsAwareTrait
         // Store link to Channels Repository
         $this->channels = $channels;
         //====================================================================//
-        // Detect Default Channel for Splash
-        $channel = $channels->findOneByCode($configuration["default_channel"]);
-        if(!($channel instanceof ChannelInterface)) {
-            throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
-        }
-        $this->defaultChannel = $channel;        
+        // Store Default Channels Code
+        $this->defaultChannelCode = (string) $configuration["default_channel"];
         
         return $this;
     }
@@ -75,6 +77,22 @@ trait ChannelsAwareTrait
      */
     public function getDefaultChannel(): ChannelInterface
     {
+        if(!isset($this->defaultChannel)) {
+            //====================================================================//
+            // Detect Default Channel for Splash
+            $channel = $this->channels->findOneByCode($this->defaultChannelCode);
+            if(!($channel instanceof ChannelInterface)) {
+                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
+            }
+            //====================================================================//
+            // Reload Channel from Entity Manager
+            $defaultChannel = $this->entityManager->find(get_class($channel), $channel->getId());        
+            if(!($defaultChannel instanceof ChannelInterface)) {
+                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
+            }
+            $this->defaultChannel = $defaultChannel;        
+        }
+        
         return $this->defaultChannel;
     }
 

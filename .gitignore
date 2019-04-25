@@ -4,3 +4,4 @@
 /tests/config/parameters.yml
 /.directory
 /.php_cs.cache
+/coverage/

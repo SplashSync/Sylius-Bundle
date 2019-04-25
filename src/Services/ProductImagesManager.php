@@ -16,8 +16,9 @@
 namespace   Splash\Sylius\Services;
 
 use ArrayObject;
+use Exception;
 use Doctrine\ORM\EntityManagerInterface as Manager;
-use Doctrine\ORM\PersistentCollection;
+use Doctrine\Common\Collections\Collection;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Splash\Client\Splash;
 use Splash\Models\Objects\ImagesTrait;
@@ -26,6 +27,7 @@ use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface as Router;
+use Sylius\Component\Core\Model\ImagesAwareInterface;
 
 /**
  * Product Images Manager
@@ -65,16 +67,18 @@ class ProductImagesManager
     /**
      * Product Current Images Collection
      *
-     * @var PersistentCollection
+     * @var Collection
      */
     private $currentImages;
 
     /**
      * Service Constructor
-     *
+     * 
+     * @param Router $router
+     * @param Manager $manager
      * @param Factory $factory
-     * @param array   $locales
-     * @param array   $configuration
+     * @param CacheManager $cache
+     * @param array $configuration
      */
     public function __construct(Router $router, Manager $manager, Factory $factory, CacheManager $cache, array $configuration)
     {
@@ -125,7 +129,7 @@ class ProductImagesManager
      *
      * @param ProductImageInterface $image
      *
-     * @return array
+     * @return false|array
      */
     public function getImageField(ProductImageInterface $image)
     {
@@ -142,9 +146,9 @@ class ProductImagesManager
         //====================================================================//
         // Add Image
         return  self::images()->encode(
-            $image->getType(),
-            basename($image->getPath()),
-            $imgPath.dirname($image->getPath())."/",
+            (string) $image->getType(),
+            basename((string) $image->getPath()),
+            $imgPath.dirname((string) $image->getPath())."/",
             $publicUrl
         );
     }
@@ -153,7 +157,7 @@ class ProductImagesManager
      * Set Product Images
      *
      * @param ProductVariantInterface $variant
-     * @param array|ArrayObject             $fieldData
+     * @param array|ArrayObject       $fieldData
      *
      * @return bool
      */
@@ -161,7 +165,11 @@ class ProductImagesManager
     {
         //====================================================================//
         // Get Current product Images Collection
-        $this->currentImages = $variant->getProduct()->getImages();
+        $product = $variant->getProduct();
+        if(!$product ||!($product instanceof ImagesAwareInterface)) {
+            return false;
+        }
+        $this->currentImages = $product->getImages();
         //====================================================================//
         // Init Images List Update
         $productImage = $this->currentImages->first();
@@ -217,11 +225,11 @@ class ProductImagesManager
      * Update An Image with Image Field Data
      *
      * @param ProductImageInterface $productImage
-     * @param array|ArrayObject           $inImage
+     * @param array|ArrayObject     $inImage
      *
      * @return bool True is Image was Modified
      */
-    public function updateImage(ProductImageInterface &$productImage, iterable $inImage): bool
+    public function updateImage(ProductImageInterface &$productImage, $inImage): bool
     {
         //====================================================================//
         // Check if Image Needs to Be Updated
@@ -274,7 +282,7 @@ class ProductImagesManager
      *
      * @param ProductImageInterface   $productImage
      * @param ProductVariantInterface $variant
-     * @param array|ArrayObject             $inImage
+     * @param array|ArrayObject       $inImage
      *
      * @return bool True if Something Changed
      */
@@ -307,25 +315,32 @@ class ProductImagesManager
      * Add An Image to Product
      *
      * @param ProductVariantInterface $variant
-     * @param array|ArrayObject             $inImage
+     * @param array|ArrayObject       $inImage
      *
      * @return ProductImageInterface
      */
     private function addImage(ProductVariantInterface $variant, iterable $inImage): ProductImageInterface
     {
         //====================================================================//
+        // Load Variant Product
+        $product = $variant->getProduct();
+        if(!$product) {
+            throw new Exception("Variant has No Product!");
+        }
+        //====================================================================//
         // Create a New Product Image
+        /** @var ProductImageInterface $productImage */
         $productImage = $this->factory->createNew();
         $this->manager->persist($productImage);
         //====================================================================//
         // Setup New Product Image
-        $productImage->setOwner($variant->getProduct());
+        $productImage->setOwner($product);
         if (isset($inImage["name"]) && !empty($inImage["name"])) {
             $productImage->setType($inImage["name"]);
         } elseif ($variant->getCode()) {
             $productImage->setType($variant->getCode()."-".uniqid());
         } else {
-            $productImage->setType($variant->getProduct()->getCode()."-".uniqid());
+            $productImage->setType($product->getCode()."-".uniqid());
         }
         //====================================================================//
         // Add to Product Images
@@ -349,11 +364,11 @@ class ProductImagesManager
         if (is_file($imgPath)) {
             //====================================================================//
             // Delete Product Image
-            Splash::file()->deleteFile($imgPath, md5_file($imgPath));
+            Splash::file()->deleteFile($imgPath, (string) md5_file($imgPath));
         }
         //====================================================================//
         // Remove From Product Images
-        $this->currentImages->remove($productImage);
+        $this->currentImages->removeElement($productImage);
         //====================================================================//
         // DeleteProduct Image
         $this->manager->remove($productImage);
@@ -385,7 +400,7 @@ class ProductImagesManager
      *
      * @return string
      */
-    private function generateRandomPath(iterable $inImage): string
+    private function generateRandomPath($inImage): string
     {
         //====================================================================//
         // Get Images Base Path
@@ -400,7 +415,7 @@ class ProductImagesManager
         // Generate Image Encoded Path
         do {
             // Generate a Unique Hash
-            $hash = md5(uniqid(mt_rand(), true));
+            $hash = md5(uniqid((string) mt_rand(), true));
             // Expeand Image Path
             $imagePath = $this->expand($hash.'.'.$ext);
             // Check if File Already Exists
@@ -413,8 +428,6 @@ class ProductImagesManager
      * Ensure Path Exists or Create Tt
      *
      * @param string $path
-     *
-     * @return string
      */
     private static function createPath(string $path): void
     {
