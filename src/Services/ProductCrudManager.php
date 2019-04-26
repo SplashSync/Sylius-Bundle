@@ -179,11 +179,10 @@ class ProductCrudManager
     /**
      * Update Request Object
      *
-     * @param Variant $variant
-     * @param bool    $needed        Is This Variant Update Needed
-     * @param bool    $neededProduct Is This Product Update Needed
+     * @param bool $needed        Is This Variant Update Needed
+     * @param bool $neededProduct Is This Product Update Needed
      */
-    public function update(Variant $variant, bool $needed, bool $neededProduct): void
+    public function update(bool $needed, bool $neededProduct): void
     {
         //====================================================================//
         // Save All Product Changes

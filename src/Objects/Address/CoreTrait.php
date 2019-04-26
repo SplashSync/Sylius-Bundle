@@ -125,6 +125,8 @@ trait CoreTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getCoreFields($key, $fieldName)
     {
@@ -164,6 +166,8 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function setCoreFields($fieldName, $fieldData)
     {

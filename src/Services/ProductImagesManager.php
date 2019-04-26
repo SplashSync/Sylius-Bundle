@@ -25,6 +25,7 @@ use Splash\Models\Objects\ImagesTrait;
 use Sylius\Component\Core\Model\ImagesAwareInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface as Router;
@@ -32,6 +33,8 @@ use Symfony\Component\Routing\RouterInterface as Router;
 /**
  * Product Images Manager
  * Manage Access to Products Images
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductImagesManager
 {
@@ -319,7 +322,7 @@ class ProductImagesManager
      *
      * @return ProductImageInterface
      */
-    private function addImage(ProductVariantInterface $variant, iterable $inImage): ProductImageInterface
+    private function addImage(ProductVariantInterface $variant, $inImage): ProductImageInterface
     {
         //====================================================================//
         // Load Variant Product
@@ -335,13 +338,7 @@ class ProductImagesManager
         //====================================================================//
         // Setup New Product Image
         $productImage->setOwner($product);
-        if (isset($inImage["name"]) && !empty($inImage["name"])) {
-            $productImage->setType($inImage["name"]);
-        } elseif ($variant->getCode()) {
-            $productImage->setType($variant->getCode()."-".uniqid());
-        } else {
-            $productImage->setType($product->getCode()."-".uniqid());
-        }
+        $productImage->setType($this->getImageName($variant, $product, $inImage));
         //====================================================================//
         // Add to Product Images
         $this->currentImages->add($productImage);
@@ -391,6 +388,27 @@ class ProductImagesManager
         //====================================================================//
         // If CheckSum are Similar => Unset & return Image
         return ($imgMd5 == $inMd5);
+    }
+
+    /**
+     * Get New Image Image Name
+     *
+     * @param ProductVariantInterface $variant
+     * @param ProductInterface        $product
+     * @param array|ArrayObject       $inImage
+     *
+     * @return string
+     */
+    private function getImageName(ProductVariantInterface $variant, ProductInterface $product, $inImage): string
+    {
+        if (isset($inImage["name"]) && !empty($inImage["name"])) {
+            return $inImage["name"];
+        }
+        if ($variant->getCode()) {
+            return $variant->getCode()."-".uniqid();
+        }
+
+        return $product->getCode()."-".uniqid();
     }
 
     /**

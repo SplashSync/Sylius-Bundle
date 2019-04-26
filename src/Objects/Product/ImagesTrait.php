@@ -15,9 +15,8 @@
 
 namespace Splash\Sylius\Objects\Product;
 
-use Splash\Client\Splash;
 use Doctrine\ORM\PersistentCollection;
-use Doctrine\Common\Collections\ArrayCollection;
+use Splash\Client\Splash;
 use Sylius\Component\Core\Model\ImagesAwareInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 
@@ -111,7 +110,7 @@ trait ImagesTrait
             switch ($fieldId) {
                 case "image":
                     $value = $this->images->getImageField($image);
-                    
+
                     break;
                 case "position":
                     $value = $index + 1;

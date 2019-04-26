@@ -93,11 +93,9 @@ class ProductPricingManager
         // TODO : Select Default TaxZone in Parameters
         // Retreive Price TAX Percentile
         $taxCategory = $variant->getTaxCategory();
-        if ($taxCategory) {
-            $taxRate = $taxCategory->getRates()->first()->getAmount() * 100;
-        } else {
-            $taxRate = 0.0;
-        }
+        $taxRate = $taxCategory
+            ? $taxCategory->getRates()->first()->getAmount() * 100
+            : 0.0;
         //====================================================================//
         // Identify Default Channel Price
         $price = 0;
@@ -167,11 +165,9 @@ class ProductPricingManager
         }
         //====================================================================//
         // Update Product Price
-        if ($original) {
-            $channelPrice->setOriginalPrice($newPrice);
-        } else {
-            $channelPrice->setPrice($newPrice);
-        }
+        $original
+            ? $channelPrice->setOriginalPrice($newPrice)
+            : $channelPrice->setPrice($newPrice);
 
         return true;
     }
