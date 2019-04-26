@@ -17,34 +17,72 @@ cache:
         - $HOME/.composer/cache/files
         - $HOME/.cache/pip
 
+################################################################################
+# Specify versions of Php & Dolibarr to test against
+#
+# SYLIUS_VERSION => Branch of Sylius Standerd Edition to test Against
+matrix:
+    include:
+        
+#        - php: 7.1
+#          env: SYLIUS_VERSION=1.2  
+#          
+#        - php: 7.1
+#          env: SYLIUS_VERSION=1.3  
+#          
+#        - php: 7.1
+#          env: SYLIUS_VERSION=1.4  
+#          
+#        - php: 7.2
+#          env: SYLIUS_VERSION=1.4
+          
+        - php: 7.2
+          env: SYLIUS_VERSION=master  
+          
+    allow_failures:
+        - env: SYLIUS_VERSION=master    
+          
+    # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
+    fast_finish: true
+        
+    
+################################################################################
 # Versions of PHP to test against
 php:
-
 #    - "7.1"
     - "7.2"
     
+################################################################################
 # Define an environment variable
 env:
   - SYLIUS_VERSION=""
 #  - SYLIUS_VERSION="1.0"
 
+################################################################################
+# Install Update Composer, Configure Env. 
 before_install:
-# Update composer
-  - composer self-update
-# Install Yarn
-  - yarn 
-# Increase memory limit to 4GB  
-  - phpenv config-rm xdebug.ini
-  - phpenv config-add build/x_memory.ini
-#  - phpenv config-add build/x_errors.ini
-  - php -ini | grep memory_limit  
-#  - mysql -e 'CREATE DATABASE IF NOT EXISTS sylius;'
+    # Update composer
+    - composer self-update
+    # Install Yarn
+    - yarn 
+    # Increase memory limit to 4GB  
+    - phpenv config-rm xdebug.ini
+    - phpenv config-add travis/x_memory.ini
+#    - phpenv config-add travis/x_errors.ini
+    - php -ini | grep memory_limit  
   
+################################################################################
 # Install composer dependencies,
 # Create database, schema and fixtures
 install:   
     
+    ################################################################################
+    # Run Composer Update
+    - echo "Install Dependencies"
+    - composer update
     
+    ################################################################################
+    # Install Sylius Standard Project
     - echo "Install Sylius"
     - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
     - cd sylius
@@ -52,33 +90,33 @@ install:
     - php bin/console sylius:install --env=test --no-interaction --no-debug
     - php bin/console sylius:fixtures:load --env=test --no-interaction --no-debug
     
+    ################################################################################
+    # Install Splash Sylius Bundles
     - echo "Install Splash Bundles"
     - cp  ../build/phpunit.xml.dist phpunit.xml.dist
     - cp  ../build/config_splash.yml    config/packages/splash.yml
     - cp  ../build/routing_splash.yml   config/routes/splash.yml
     - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
-    
-    - echo "Configuring Splash Bundles"
-    
-#    # PHP > 7.1    
-#    - if [[ ${TRAVIS_PHP_VERSION:0:3} > "7.1" ]]; then cp ../build/.en.dist .env; fi 
-    
-#    - cp ../build/parameters.yml.dist app/config/parameters.yml
-#    - cp ../build/autoload.php app/autoload.php
-    
-    
 
-#    - echo "Enable Splash Bundles"
-#    - cp ../build/AppKernel.php app/AppKernel.php
-    
+    ################################################################################
+    # Start Symfony WebServer
     - echo "Start Web Srever"
     - php bin/console server:start --env=test
-#    - php bin/console server:run --env=test
-#    - php bin/console server:start
 
-# Run script
+################################################################################
+# Run Tests Scripts
 script:
-  - php vendor/bin/phpunit --testdox
+    ################################################################################
+    # Run Code Quality Checks Tests
+    - cd ..
+    - php vendor/bin/grump run --testsuite=travis
+    - php vendor/bin/grump run --testsuite=phpstan
+    
+    ################################################################################
+    # Run Functionnal Tests
+    - cd sylius
+#    - phpdbg -qrr -d memory_limit=-1 vendor/bin/phpunit
+    - php vendor/bin/phpunit
 
 # After a build, send email notification with the build results
 notifications:

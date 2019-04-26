@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SplashSync/Php-Bundle.git",
-                "reference": "8139ec10557a876b8a0f5cd84e510cde6801f4eb"
+                "reference": "8fa383c6f5e53ed24f6eb7efb2c1b2cd299ce83f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SplashSync/Php-Bundle/zipball/8139ec10557a876b8a0f5cd84e510cde6801f4eb",
-                "reference": "8139ec10557a876b8a0f5cd84e510cde6801f4eb",
+                "url": "https://api.github.com/repos/SplashSync/Php-Bundle/zipball/8fa383c6f5e53ed24f6eb7efb2c1b2cd299ce83f",
+                "reference": "8fa383c6f5e53ed24f6eb7efb2c1b2cd299ce83f",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,6 @@
                     "Splash\\Bundle\\": "src/",
                     "Splash\\Local\\": "src/Local/"
                 },
-                "files": [
-                    "src/Tests/KernelTestCase.php"
-                ],
                 "exclude-from-classmap": [
                     "/Tests/"
                 ]
@@ -78,7 +75,7 @@
                 }
             ],
             "description": "Splash Core Bundle for Symfony Applications",
-            "time": "2019-04-24T16:59:49+00:00"
+            "time": "2019-04-24T17:34:19+00:00"
         },
         {
             "name": "splash/phpcore",
@@ -86,12 +83,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SplashSync/Php-Core.git",
-                "reference": "8a06e4a1071abc64a56bbbd83471b2e27d631f03"
+                "reference": "c72b5fed11202c831afcced7f361acb4ffb184a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SplashSync/Php-Core/zipball/8a06e4a1071abc64a56bbbd83471b2e27d631f03",
-                "reference": "8a06e4a1071abc64a56bbbd83471b2e27d631f03",
+                "url": "https://api.github.com/repos/SplashSync/Php-Core/zipball/c72b5fed11202c831afcced7f361acb4ffb184a6",
+                "reference": "c72b5fed11202c831afcced7f361acb4ffb184a6",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +138,7 @@
                 }
             ],
             "description": "Splash Fundation Module for All Php Applications",
-            "time": "2019-04-24T00:21:46+00:00"
+            "time": "2019-04-25T09:01:26+00:00"
         }
     ],
     "packages-dev": [
@@ -1595,16 +1592,16 @@
         },
         {
             "name": "doctrine/migrations",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/migrations.git",
-                "reference": "2d5c1141e91833ae706d5611cb74c56cdc7a7402"
+                "reference": "43280c14b696a7896a9c70a5e0e4a312ff003187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/2d5c1141e91833ae706d5611cb74c56cdc7a7402",
-                "reference": "2d5c1141e91833ae706d5611cb74c56cdc7a7402",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/43280c14b696a7896a9c70a5e0e4a312ff003187",
+                "reference": "43280c14b696a7896a9c70a5e0e4a312ff003187",
                 "shasum": ""
             },
             "require": {
@@ -1673,7 +1670,7 @@
                 "migrations",
                 "php"
             ],
-            "time": "2019-04-23T14:41:17+00:00"
+            "time": "2019-04-25T22:14:55+00:00"
         },
         {
             "name": "doctrine/orm",
@@ -6990,16 +6987,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.1.0",
+            "version": "4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656"
+                "reference": "3095910f0f0fb155ac4021fc51a4a7a39ac04e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/6fda8ce1974b62b14935adc02a9ed38252eca656",
-                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/3095910f0f0fb155ac4021fc51a4a7a39ac04e8a",
+                "reference": "3095910f0f0fb155ac4021fc51a4a7a39ac04e8a",
                 "shasum": ""
             },
             "require": {
@@ -7014,7 +7011,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -7039,7 +7036,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2019-02-01T05:27:49+00:00"
+            "time": "2019-04-25T07:55:20+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -7776,16 +7773,16 @@
         },
         {
             "name": "sonata-project/core-bundle",
-            "version": "3.16.2",
+            "version": "3.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "d0f376d0551358609df523d2e63010c5b42c5887"
+                "reference": "af8ba4f76eef8c855302af8b26713cf33be4103d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/d0f376d0551358609df523d2e63010c5b42c5887",
-                "reference": "d0f376d0551358609df523d2e63010c5b42c5887",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/af8ba4f76eef8c855302af8b26713cf33be4103d",
+                "reference": "af8ba4f76eef8c855302af8b26713cf33be4103d",
                 "shasum": ""
             },
             "require": {
@@ -7856,7 +7853,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2019-03-12T07:07:16+00:00"
+            "time": "2019-04-24T18:55:18+00:00"
         },
         {
             "name": "sonata-project/datagrid-bundle",
