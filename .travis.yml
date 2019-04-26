@@ -108,9 +108,9 @@ install:
 script:
 #    ################################################################################
 #    # Run Code Quality Checks Tests
-#    - cd ..
-#    - php vendor/bin/grumphp run --testsuite=travis
-#    - php vendor/bin/grumphp run --testsuite=phpstan
+    - cd ..
+    - php vendor/bin/grumphp run --testsuite=travis
+    - php vendor/bin/grumphp run --testsuite=phpstan
     
     ################################################################################
     # Run Functionnal Tests
