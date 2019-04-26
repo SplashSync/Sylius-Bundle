@@ -37,10 +37,10 @@ matrix:
 #          env: SYLIUS_VERSION=1.4
           
         - php: 7.2
-          env: SYLIUS_VERSION=master  
+          env: SYLIUS_VERSION=""  
           
     allow_failures:
-        - env: SYLIUS_VERSION=master    
+        - env: SYLIUS_VERSION=""    
           
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
     fast_finish: true
