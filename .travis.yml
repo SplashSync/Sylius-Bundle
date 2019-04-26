@@ -30,9 +30,9 @@ matrix:
 #        - php: 7.1
 #          env: SYLIUS_VERSION=1.3  
 #          
-#        - php: 7.1
-#          env: SYLIUS_VERSION=1.4  
-#          
+        - php: 7.1
+          env: SYLIUS_VERSION=1.4  
+          
         - php: 7.2
           env: SYLIUS_VERSION=1.4
           
