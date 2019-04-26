@@ -46,17 +46,17 @@ matrix:
     fast_finish: true
         
     
-################################################################################
-# Versions of PHP to test against
-php:
-#    - "7.1"
-    - "7.2"
-    
-################################################################################
-# Define an environment variable
-env:
-  - SYLIUS_VERSION=""
-#  - SYLIUS_VERSION="1.0"
+#################################################################################
+## Versions of PHP to test against
+#php:
+##    - "7.1"
+#    - "7.2"
+#    
+#################################################################################
+## Define an environment variable
+#env:
+#  - SYLIUS_VERSION=""
+##  - SYLIUS_VERSION="1.0"
 
 ################################################################################
 # Install Update Composer, Configure Env. 
@@ -79,7 +79,7 @@ install:
     ################################################################################
     # Run Composer Update
     - echo "Install Dependencies"
-    - composer update
+    - composer update --no-interaction --prefer-dist
     
     ################################################################################
     # Install Sylius Standard Project
