@@ -16,23 +16,23 @@
 namespace Splash\Sylius\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Exception;
 use Splash\Bundle\Connectors\Standalone;
-// Sylius Product Addictionnal Class to Monitor
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Client\Splash;
-use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\AddressInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
-use Sylius\Component\Product\Model\ProductTranslationInterface;
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Product\Model\ProductTranslationInterface;
 
 class ObjectEventListener
 {
     /**
      * List of Entities Managed by Splash Sylius Module
-     * 
+     *
      * @var array
      */
     const MANAGED_ENTITIES = array(
@@ -41,17 +41,17 @@ class ObjectEventListener
         ProductVariantInterface::class => "Product",
         OrderInterface::class => "Order",
     );
-    
+
     /**
      * List of Connected Entities Managed by Splash Sylius Module
-     * 
+     *
      * @var array
      */
     const CONNECTED_ENTITIES = array(
         ProductInterface::class => "Product",
         ProductTranslationInterface::class => "Product",
         ChannelPricingInterface::class => "Product",
-    ); 
+    );
 
     /**
      * Splash Connectors Manager
@@ -90,11 +90,8 @@ class ObjectEventListener
             return;
         }
         //====================================================================//
-        // Get Impacted Object Id
-        $objectId = $eventArgs->getEntity()->getId();
-        //====================================================================//
         // Do Object Change Commit
-        $this->doCommit($objectType, $objectId, SPL_A_CREATE);        
+        $this->doCommit($objectType, $this->getEventEntityId($eventArgs), SPL_A_CREATE);
     }
 
     /**
@@ -123,7 +120,7 @@ class ObjectEventListener
         // After Updates on Product
         if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
             Splash::Object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
-        }         
+        }
     }
 
     /**
@@ -140,11 +137,8 @@ class ObjectEventListener
             return;
         }
         //====================================================================//
-        // Get Impacted Object Id
-        $objectId = $eventArgs->getEntity()->getId();
-        //====================================================================//
         // Do Object Change Commit
-        $this->doCommit($objectType, $objectId, SPL_A_DELETE);
+        $this->doCommit($objectType, $this->getEventEntityId($eventArgs), SPL_A_DELETE);
     }
 
     /**
@@ -168,7 +162,7 @@ class ObjectEventListener
         // Locked (Just created) => Skip
         if ((SPL_A_UPDATE == $action) && Splash::Object($objectType)->isLocked()) {
             return;
-        }        
+        }
         //====================================================================//
         //  Search in Configured Servers using Standalone Connector
         $servers = $this->manager->getConnectorConfigurations(Standalone::NAME);
@@ -190,7 +184,7 @@ class ObjectEventListener
             //====================================================================//
             //  Execute Commit
             $connector->commit($objectType, $objectIds, $action, $user, $msg);
-            if($objectType == "Order") {
+            if ("Order" == $objectType) {
                 $connector->commit("Invoice", $objectIds, $action, $user, $msg);
             }
         }
@@ -204,7 +198,7 @@ class ObjectEventListener
      * Also Detect Entity Type Name
      *
      * @param LifecycleEventArgs $eventArgs
-     * @param bool $connected
+     * @param bool               $connected
      *
      * @return string
      */
@@ -232,7 +226,30 @@ class ObjectEventListener
 
         return null;
     }
-    
+
+    /**
+     * Safe Get Envent Doctrine Entity Id
+     *
+     * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
+    private function getEventEntityId(LifecycleEventArgs $eventArgs): string
+    {
+        //====================================================================//
+        // Get Impacted Object Id
+        $entity = $eventArgs->getEntity();
+        //====================================================================//
+        // Safety Check
+        if (!method_exists($entity, "getId")) {
+            throw new Exception("Sylius Managed Entity is Invalid, no Id getter exists.");
+        }
+
+        return (string) $entity->getId();
+    }
+
     /**
      * Check if Entity is managed by Splash Sylius Bundle
      * Also Detect Entity Type Name
@@ -248,7 +265,7 @@ class ObjectEventListener
         $entity = $eventArgs->getEntity();
         //====================================================================//
         // Get Impacted Object Id
-        $objectIds = array($entity->getId());
+        $objectIds = array($this->getEventEntityId($eventArgs));
         //====================================================================//
         // Update on Product Translations
         if (is_a($entity, ProductTranslationInterface::class)) {
@@ -268,9 +285,13 @@ class ObjectEventListener
         //====================================================================//
         // Update on Product Channel Price
         if (is_a($entity, ChannelPricingInterface::class)) {
-            $objectIds = array($entity->getProductVariant()->getId());
+            $variant = $entity->getProductVariant();
+            if(null == $variant) {
+                return null;
+            }
+            $objectIds = array($variant->getId());
         }
 
         return $objectIds;
-    }    
+    }
 }
