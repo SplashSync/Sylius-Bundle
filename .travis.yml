@@ -33,8 +33,8 @@ matrix:
 #        - php: 7.1
 #          env: SYLIUS_VERSION=1.4  
 #          
-#        - php: 7.2
-#          env: SYLIUS_VERSION=1.4
+        - php: 7.2
+          env: SYLIUS_VERSION=1.4
           
         - php: 7.2
           env: SYLIUS_VERSION=""  
@@ -110,7 +110,7 @@ script:
 #    # Run Code Quality Checks Tests
     - cd ..
     - php vendor/bin/grumphp run --testsuite=travis
-    - php vendor/bin/grumphp run --testsuite=phpstan
+ #   - php vendor/bin/grumphp run --testsuite=phpstan
     
     ################################################################################
     # Run Functionnal Tests
