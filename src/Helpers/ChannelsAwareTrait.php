@@ -67,13 +67,13 @@ trait ChannelsAwareTrait
      */
     public function getDefaultChannelCode(): string
     {
-        return $this->defaultChannel->getCode();
+        return (string) $this->defaultChannel->getCode();
     }
 
     /**
      * Get Default Channel Code 
      *
-     * @return strChannelInterfaceing
+     * @return ChannelInterfaceing
      */
     public function getDefaultChannel(): ChannelInterface
     {
@@ -129,7 +129,7 @@ trait ChannelsAwareTrait
         if($this->isDefaultChannel($channel)) {
             return "";
         }
-        return "_" . strtolower($channel->getCode());
+        return "_" . strtolower((string) $channel->getCode());
     }      
     
 }

@@ -23,7 +23,7 @@ use Sylius\Component\Core\Model\AddressInterface;
  */
 trait CrudTrait
 {
-    use \Splash\Bundle\Helpers\Doctrine\CrudHelperTrait;
+    use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
     
     private static $requiredFields = array(
         "firstname",

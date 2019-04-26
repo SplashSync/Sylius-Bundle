@@ -53,7 +53,7 @@ trait CrudTrait
         $entity = $this->repository->find($objectId);
         //====================================================================//
         // Check Object Entity was Found
-        if (!$entity) {
+        if (empty($entity)) {
             return Splash::log()->errTrace(static::$NAME.' : Unable to load '.$objectId);
         }
 
@@ -72,7 +72,7 @@ trait CrudTrait
         //====================================================================//
         // Save
         if ($needed) {
-            $this->entityManager->flush($this->object);
+            $this->entityManager->flush();
         }
 
         return $this->getObjectIdentifier();

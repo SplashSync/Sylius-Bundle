@@ -16,9 +16,11 @@
 namespace Splash\Sylius\Objects\Order;
 
 use Sylius\Component\Core\Model\AdjustmentInterface;
-use Sylius\Component\Core\Model\OrderItem;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
+use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Order\Model\Adjustment;
-use Sylius\Component\Product\Model\ProductInterface;
 
 trait ItemsTrait
 {
@@ -145,17 +147,17 @@ trait ItemsTrait
     /**
      * Get Order Item Sku
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
      * @return string
      */
     private function getOrderItemSku($orderItem): string
     {
-        if ($orderItem instanceof OrderItem) {
-            return $orderItem->getVariant()->getCode();
+        if ($orderItem instanceof OrderItemInterface) {
+            return (string) $this->getOrderItemVariant($orderItem)->getCode();
         }
         if ($orderItem instanceof Adjustment) {
-            return $orderItem->getType();
+            return (string) $orderItem->getType();
         }
 
         return "";
@@ -164,21 +166,21 @@ trait ItemsTrait
     /**
      * Get Order Item Name
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
      * @return string
      */
     private function getOrderItemName($orderItem): string
     {
-        if ($orderItem instanceof OrderItem) {
-            $localCode = $orderItem->getOrder()->getLocaleCode();
+        if ($orderItem instanceof OrderItemInterface) {
+            $localCode = $this->getOrderItemOrder($orderItem)->getLocaleCode();
 
             return $this->getOrderItemProduct($orderItem)
-                ->getTranslations()->get($localCode)
+                ->getTranslations()->get((string) $localCode)
                 ->getName();
         }
         if ($orderItem instanceof Adjustment) {
-            return $orderItem->getLabel();
+            return (string) $orderItem->getLabel();
         }
 
         return "";
@@ -187,13 +189,13 @@ trait ItemsTrait
     /**
      * Get Order Item Product Id
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
-     * @return string
+     * @return null|string
      */
     private function getOrderItemProductId($orderItem)
     {
-        if ($orderItem instanceof OrderItem) {
+        if ($orderItem instanceof OrderItemInterface) {
             return self::objects()->encode(
                 "Product",
                 $this->getOrderItemProduct($orderItem)->getId()
@@ -206,13 +208,13 @@ trait ItemsTrait
     /**
      * Get Order Item Quantity
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
      * @return int
      */
     private function getOrderItemQty($orderItem): int
     {
-        if ($orderItem instanceof OrderItem) {
+        if ($orderItem instanceof OrderItemInterface) {
             return $orderItem->getQuantity();
         }
         if ($orderItem instanceof Adjustment) {
@@ -223,16 +225,16 @@ trait ItemsTrait
     /**
      * Get Order Item Quantity
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
-     * @return int
+     * @return array|string
      */
     private function getOrderItemPrice($orderItem)
     {
         $taxRate = 0.0;
         $unitPrice = 0.0;
-        if ($orderItem instanceof OrderItem) {
-            $taxCategory = $orderItem->getVariant()->getTaxCategory();
+        if ($orderItem instanceof OrderItemInterface) {
+            $taxCategory = $this->getOrderItemVariant($orderItem)->getTaxCategory();
             if ($taxCategory) {
                 $taxRate = $taxCategory->getRates()->first()->getAmount() * 100;
             }
@@ -248,22 +250,22 @@ trait ItemsTrait
             doubleval($unitPrice / 100),            // No TAX Price
             $taxRate,                               // TAX Percent
             null,
-            $this->object->getCurrencyCode(),
-            $this->object->getCurrencyCode(),
-            $this->object->getCurrencyCode()
+            (string) $this->object->getCurrencyCode(),
+            (string) $this->object->getCurrencyCode(),
+            (string) $this->object->getCurrencyCode()
         );
     }
 
     /**
      * Get Order Item Quantity
      *
-     * @param Adjustment|OrderItem $orderItem
+     * @param Adjustment|OrderItemInterface $orderItem
      *
-     * @return int
+     * @return float
      */
-    private function getOrderItemDiscount($orderItem): int
+    private function getOrderItemDiscount($orderItem): float
     {
-        if (!($orderItem instanceof OrderItem)) {
+        if (!($orderItem instanceof OrderItemInterface)) {
             return 0.0;
         }
         if ($orderItem->getUnits()->isEmpty()) {
@@ -280,15 +282,32 @@ trait ItemsTrait
     }
 
     /**
+     * Get Order Item Order
+     *
+     * @param OrderItemInterface $orderItem
+     *
+     * @return OrderInterface
+     */
+    private function getOrderItemOrder(OrderItemInterface $orderItem): OrderInterface
+    {
+        $order = $orderItem->getOrder();
+        if (!($order instanceof OrderInterface)) {
+            throw new \Exception("Unable to Load Oder Item Order");
+        }
+
+        return $order;
+    }
+
+    /**
      * Get Order Item Product
      *
-     * @param OrderItem $orderItem
+     * @param OrderItemInterface $orderItem
      *
-     * @return type
+     * @return ProductInterface
      */
-    private function getOrderItemProduct(OrderItem $orderItem): ProductInterface
+    private function getOrderItemProduct(OrderItemInterface $orderItem): ProductInterface
     {
-        $product = $orderItem->getVariant()->getProduct();
+        $product = $this->getOrderItemVariant($orderItem)->getProduct();
         if (!($product instanceof ProductInterface)) {
             throw new \Exception("Unable to Load Oder Item Product");
         }
@@ -296,19 +315,20 @@ trait ItemsTrait
         return $product;
     }
 
-//    /**
-//     * Get Order Item Variant
-//     *
-//     * @param OrderItem $orderItem
-//     *
-//     * @return type
-//     */
-//    private function getOrderItemProduct(OrderItem $orderItem): ProductInterface
-//    {
-//        $product = $orderItem->getVariant()->getProduct();
-//        if (!($product instanceof ProductInterface)) {
-//            throw new \Exception("Unable to Load Oder Item Product");
-//        }
-//        return $product;
-//    }
+    /**
+     * Get Order Item Variant
+     *
+     * @param OrderItemInterface $orderItem
+     *
+     * @return ProductVariantInterface
+     */
+    private function getOrderItemVariant(OrderItemInterface $orderItem): ProductVariantInterface
+    {
+        $variant = $orderItem->getVariant();
+        if (!($variant instanceof ProductVariantInterface)) {
+            throw new \Exception("Unable to Load Oder Item Product Variant");
+        }
+
+        return $variant;
+    }
 }

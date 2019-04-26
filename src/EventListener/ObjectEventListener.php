@@ -30,18 +30,28 @@ use Sylius\Component\Core\Model\OrderInterface;
 
 class ObjectEventListener
 {
+    /**
+     * List of Entities Managed by Splash Sylius Module
+     * 
+     * @var array
+     */
     const MANAGED_ENTITIES = array(
-        "Address" => AddressInterface::class,
-        "ThirdParty" => CustomerInterface::class,
-        "Product" => ProductVariantInterface::class,
-        "Order" => OrderInterface::class,
+        AddressInterface::class => "Address",
+        CustomerInterface::class => "ThirdParty",
+        ProductVariantInterface::class => "Product",
+        OrderInterface::class => "Order",
     );
     
+    /**
+     * List of Connected Entities Managed by Splash Sylius Module
+     * 
+     * @var array
+     */
     const CONNECTED_ENTITIES = array(
-        "Product" => ProductInterface::class,
-        "Product" => ProductTranslationInterface::class,
-        "Product" => ChannelPricingInterface::class,
-    );    
+        ProductInterface::class => "Product",
+        ProductTranslationInterface::class => "Product",
+        ChannelPricingInterface::class => "Product",
+    ); 
 
     /**
      * Splash Connectors Manager
@@ -205,7 +215,7 @@ class ObjectEventListener
         $entity = $eventArgs->getEntity();
         //====================================================================//
         // Walk on Managed Entities
-        foreach (self::MANAGED_ENTITIES as $objectType => $entityClass) {
+        foreach (self::MANAGED_ENTITIES as $entityClass => $objectType) {
             if (is_a($entity, $entityClass)) {
                 return $objectType;
             }
@@ -213,7 +223,7 @@ class ObjectEventListener
         //====================================================================//
         // Walk on Connected Entities
         if ($connected) {
-            foreach (self::CONNECTED_ENTITIES as $objectType => $entityClass) {
+            foreach (self::CONNECTED_ENTITIES as $entityClass => $objectType) {
                 if (is_a($entity, $entityClass)) {
                     return $objectType;
                 }

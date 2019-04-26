@@ -119,9 +119,9 @@ services:
             - "@sylius.manager.order"
             - "@sylius.factory.order"
             - "%splash_sylius%"     
-#        tags:
-#            # Register as Standalone Connector Object           
-#            - { name: "splash.standalone.object", type : "Order" }  
+        tags:
+            # Register as Standalone Connector Object           
+            - { name: "splash.standalone.object", type : "Order" }  
 
     ########################################################################
     # Sylius Invoice Object
@@ -135,9 +135,9 @@ services:
             - "@sylius.manager.order"
             - "@sylius.factory.order"
             - "%splash_sylius%"     
-#        tags:
-#            # Register as Standalone Connector Object           
-#            - { name: "splash.standalone.object", type : "Invoice" }  
+        tags:
+            # Register as Standalone Connector Object           
+            - { name: "splash.standalone.object", type : "Invoice" }  
             
     ########################################################################
     # Sylius Additionnal Object Event Listener

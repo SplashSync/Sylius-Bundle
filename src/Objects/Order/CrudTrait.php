@@ -34,16 +34,22 @@ trait CrudTrait
         //====================================================================//
         // Load Default Channel
         $dfChannel = $this->getDefaultChannel();       
-        if (!$dfChannel) {
-            return null;
+        if (empty($dfChannel)) {
+            return false;
         }
         //====================================================================//
         // Create a New Object
         /** @var OrderInterface $order */
         $order = $this->factory->createNew();
         $order->setChannel($dfChannel);
-        $order->setLocaleCode($dfChannel->getDefaultLocale()->getCode());
-        $order->setCurrencyCode($dfChannel->getBaseCurrency()->getCode());
+        $dfLocale = $dfChannel->getDefaultLocale();
+        if ($dfLocale) {
+            $order->setLocaleCode($dfLocale->getCode());
+        }
+        $dfCurrency = $dfChannel->getBaseCurrency();
+        if ($dfCurrency) {
+            $order->setCurrencyCode($dfCurrency->getCode());
+        }
         //====================================================================//
         // Persist New Object
         $this->repository->add($order);

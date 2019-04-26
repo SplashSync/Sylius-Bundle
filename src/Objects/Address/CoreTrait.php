@@ -53,7 +53,7 @@ trait CoreTrait
             ->MicroData("http://schema.org/Person", "givenName")
             ->isListed()
             ->isRequired();
-        
+
         //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
@@ -61,15 +61,15 @@ trait CoreTrait
             ->Name("Phone")
             ->isLogged()
             ->MicroData("http://schema.org/Person", "telephone")
-            ->isListed();        
-        
+            ->isListed();
+
         //====================================================================//
         // Company
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("company")
             ->Name("Company Name")
             ->MicroData("http://schema.org/Organization", "legalName");
-        
+
         //====================================================================//
         // Street
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -86,7 +86,7 @@ trait CoreTrait
             ->MicroData("http://schema.org/PostalAddress", "addressLocality")
             ->isRequired()
             ->isListed();
-        
+
         //====================================================================//
         // Zip Code
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -103,14 +103,14 @@ trait CoreTrait
             ->Name("Country ISO Code")
             ->MicroData("http://schema.org/PostalAddress", "addressCountry")
             ->isRequired();
-        
+
         //====================================================================//
         // State Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->Identifier("provinceName")
             ->Name("Province Name")
             ->isReadOnly();
-        
+
         //====================================================================//
         // State Code
         $this->fieldsFactory()->create(SPL_T_STATE)
@@ -170,9 +170,10 @@ trait CoreTrait
         switch ($fieldName) {
             case 'customer':
                 $this->setGenericObject(
-                    $fieldName, 
+                    $fieldName,
                     $this->customers->find((int) self::objects()->id($fieldData))
                 );
+
                 break;
             case 'firstname':
             case 'lastname':
@@ -185,17 +186,12 @@ trait CoreTrait
                 $this->setGeneric($fieldName, $fieldData);
 
                 break;
-            case 'email':
-                $this->setGeneric($fieldName, $fieldData);
-                $this->object->setEmailCanonical(strtolower($fieldData));
-
-                break;
             default:
                 return;
         }
         unset($this->in[$fieldName]);
     }
-    
+
     /**
      * Format Customer Address Province Code
      */
@@ -204,7 +200,10 @@ trait CoreTrait
         if (null === $this->object->getCountryCode()) {
             return $this->object->getProvinceCode();
         }
-        
-        return substr($this->object->getProvinceCode(), strlen($this->object->getCountryCode()) + 1);
-    }    
+
+        return substr(
+            (string) $this->object->getProvinceCode(),
+            strlen($this->object->getCountryCode()) + 1
+        );
+    }
 }

@@ -39,7 +39,7 @@ class ProductPricingManager
      *
      * @var Manager
      */
-    protected $manager;
+    protected $entityManager;
 
     /**
      * @var Factory
@@ -63,7 +63,7 @@ class ProductPricingManager
     {
         //====================================================================//
         // Sylius Channels Pricing manager
-        $this->manager = $manager;
+        $this->entityManager = $manager;
         //====================================================================//
         // Sylius Channel Pricing Factory
         $this->factory = $factory;
@@ -150,7 +150,7 @@ class ProductPricingManager
             $channelPrice->setPrice(0);
             $channelPrice->setOriginalPrice(0);
             $variant->addChannelPricing($channelPrice);
-            $this->manager->persist($channelPrice);
+            $this->entityManager->persist($channelPrice);
             $updated = true;
         }
         //====================================================================//

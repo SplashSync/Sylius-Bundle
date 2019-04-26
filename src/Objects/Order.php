@@ -35,7 +35,7 @@ use Sylius\Component\Resource\Factory\Factory;
 
 /**
  * Sylius Order Object
- * 
+ *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Order extends AbstractStandaloneObject
@@ -114,10 +114,13 @@ class Order extends AbstractStandaloneObject
     /**
      * Service Constructor
      *
-     * @param Orders                 $repository
-     * @param EntityManagerInterface $entityManager
-     * @param CustomerRepository     $repository
-     * @param Factory                $factory
+     * @param Orders    $repository
+     * @param Channels  $channels
+     * @param Customers $customer
+     * @param Addresses $address
+     * @param Manager   $manager
+     * @param Factory   $factory
+     * @param array     $configuration
      */
     public function __construct(Orders $repository, Channels $channels, Customers $customer, Addresses $address, Manager $manager, Factory $factory, array $configuration)
     {
