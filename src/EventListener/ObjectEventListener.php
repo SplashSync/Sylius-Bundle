@@ -286,6 +286,7 @@ class ObjectEventListener
             foreach ($entity->getVariants() as $variant) {
                 $objectIds[] = $variant->getId();
             }
+            krsort($objectIds);
         }
         //====================================================================//
         // Update on Product Channel Price

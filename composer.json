@@ -23,7 +23,7 @@
             "Splash\\Sylius\\":     "src/"
         },
         "files":    [ 
-            "../php-bundle/src/Tests/KernelTestCase.php"
+            "tests/KernelTestCase.php"
         ]
     },
     

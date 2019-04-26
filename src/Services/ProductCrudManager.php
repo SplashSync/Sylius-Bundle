@@ -154,6 +154,7 @@ class ProductCrudManager
             // Create a Variant
             /** @var Variant $variant */
             $variant = $this->variantFactory->createForProduct($baseProduct);
+            $baseProduct->addVariant($variant);
             //====================================================================//
             // Persist New Variant
             $this->entityManager->persist($variant);
