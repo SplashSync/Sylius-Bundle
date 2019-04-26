@@ -28,12 +28,13 @@ trait PaymentsTrait
      * @var PaymentInterface
      */
     protected $payment;
+    
     /**
      * Known Payment Method Codes Names
      *
      * @var array
      */
-    private static $knownMethods = array(
+    protected static $knownMethods = array(
         "cash_on_delivery" => "COD",
 
         "bank_transfer" => "ByBankTransferInAdvance",
@@ -51,7 +52,7 @@ trait PaymentsTrait
      *
      * @var array
      */
-    private static $completedStates = array(
+    protected static $completedStates = array(
         PaymentInterface::STATE_AUTHORIZED,
         PaymentInterface::STATE_COMPLETED,
     );

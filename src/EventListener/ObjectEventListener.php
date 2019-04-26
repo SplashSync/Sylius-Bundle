@@ -189,7 +189,7 @@ class ObjectEventListener
             //====================================================================//
             //  Execute Commit
             $connector->commit($objectType, $objectIds, $action, $user, $msg);
-            if ("Order" == $objectType) {
+            if ($this->isInvoiceCommitRequired($objectType, $objectIds, $action)) {
                 $connector->commit("Invoice", $objectIds, $action, $user, $msg);
             }
         }
@@ -298,5 +298,33 @@ class ObjectEventListener
         }
 
         return $objectIds;
+    }
+
+    /**
+     * Check if Invoice Object Should be Commited Too
+     *
+     * @param string       $objectType
+     * @param array|string $objectIds
+     * @param string       $action
+     *
+     * @return bool
+     */
+    private function isInvoiceCommitRequired(string $objectType, $objectIds, string $action): bool
+    {
+        //====================================================================//
+        // Entity is An Order
+        if (("Order" != $objectType) || !is_scalar($objectIds)) {
+            return false;
+        }
+        //====================================================================//
+        // Order is Locked
+        if (Splash::object($objectType)->isLocked($objectIds)) {
+            return false;
+        }
+        if ((SPL_A_CREATE == $action)) {
+            return false;
+        }
+
+        return true;
     }
 }

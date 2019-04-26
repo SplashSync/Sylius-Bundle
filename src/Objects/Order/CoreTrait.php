@@ -65,7 +65,8 @@ trait CoreTrait
             ->Name("Billing Address")
             ->MicroData("http://schema.org/Order", "billingAddress")
             ->setPreferRead()
-            ->isRequired();
+            ->isNotTested();
+//            ->isRequired();
 
         //====================================================================//
         // Customer Shipping Address
@@ -74,7 +75,8 @@ trait CoreTrait
             ->Name("Shipping Address")
             ->MicroData("http://schema.org/Order", "orderDelivery")
             ->setPreferRead()
-            ->isRequired();
+            ->isNotTested();
+//            ->isRequired();
 
         //====================================================================//
         // Order Note
