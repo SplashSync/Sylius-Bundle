@@ -106,11 +106,11 @@ install:
 ################################################################################
 # Run Tests Scripts
 script:
-    ################################################################################
-    # Run Code Quality Checks Tests
-    - cd ..
-    - php vendor/bin/grump run --testsuite=travis
-    - php vendor/bin/grump run --testsuite=phpstan
+#    ################################################################################
+#    # Run Code Quality Checks Tests
+#    - cd ..
+#    - php vendor/bin/grumphp run --testsuite=travis
+#    - php vendor/bin/grumphp run --testsuite=phpstan
     
     ################################################################################
     # Run Functionnal Tests
