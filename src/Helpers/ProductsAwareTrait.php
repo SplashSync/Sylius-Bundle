@@ -15,26 +15,26 @@
 
 namespace Splash\Sylius\Helpers;
 
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductsRepository;
+use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductRepository;
 
 /**
  * Give Access to Products for Objects
  */
-class ProdutsAwareTrait
+class ProductsAwareTrait
 {
     /**
-     * @var ProductsRepository
+     * @var ProductRepository
      */
     private $products;
 
     /**
      * Setup Products Repository
      *
-     * @param ProductsRepository $repository
+     * @param ProductRepository $repository
      *
      * @return $this
      */
-    protected function setChannelsRepository(ProductsRepository $repository): self
+    protected function setProductsRepository(ProductRepository $repository): self
     {
         $this->products = $repository;
     }
