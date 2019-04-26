@@ -17,10 +17,10 @@ namespace Splash\Sylius\Objects;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Splash\Bundle\Models\AbstractStandaloneObject;
+use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
-use Splash\Models\Objects\GenericFieldsTrait;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Factory\AddressFactory as Factory;
@@ -29,7 +29,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Sylius Address Object
- * 
+ *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Address extends AbstractStandaloneObject
@@ -70,8 +70,13 @@ class Address extends AbstractStandaloneObject
      */
     protected static $ICO = 'fa fa-envelope';
 
-    // Enable Creation Of New Local Objects when Not Existing
+    /**
+     * Enable Creation Of New Local Objects when Not Existing
+     *
+     * @codingStandardsIgnoreStart
+     */
     protected static $ENABLE_PUSH_CREATED = false;
+    /** @codingStandardsIgnoreEnd */
 
     //====================================================================//
     // Private variables

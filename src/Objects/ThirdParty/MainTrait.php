@@ -15,7 +15,6 @@
 
 namespace Splash\Sylius\Objects\ThirdParty;
 
-use DateTime;
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\CustomerInterface;
 
@@ -141,23 +140,27 @@ trait MainTrait
 
     /**
      * Override Sylius Getter for Translations
+     *
+     * @return string
      */
     private function getGender()
     {
         switch ($this->object->getGender()) {
             case CustomerInterface::MALE_GENDER:
-                return $this->translator->Trans("sylius.gender.male", array(), "messages");
+                return $this->translator->trans("sylius.gender.male", array(), "messages");
             case CustomerInterface::FEMALE_GENDER:
-                return $this->translator->Trans("sylius.gender.female", array(), "messages");
+                return $this->translator->trans("sylius.gender.female", array(), "messages");
             case CustomerInterface::UNKNOWN_GENDER:
-                return $this->translator->Trans("sylius.gender.unknown", array(), "messages");
+                return $this->translator->trans("sylius.gender.unknown", array(), "messages");
             default:
-                return $this->translator->Trans("sylius.gender.unknown", array(), "messages");
+                return $this->translator->trans("sylius.gender.unknown", array(), "messages");
         }
     }
 
     /**
      * Convert Sylius Customer Gender Type to Splash Standard Gender Type
+     *
+     * @return int
      */
     private function getGenderType()
     {

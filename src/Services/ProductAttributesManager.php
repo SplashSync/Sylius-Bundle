@@ -196,7 +196,7 @@ class ProductAttributesManager
     {
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) {
+        foreach ($this->translations->getLocales() as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $nameKey = "name".$this->translations->getLocaleSuffix($locale);
@@ -221,7 +221,7 @@ class ProductAttributesManager
     {
         //====================================================================//
         // Walk on All Available Options Values
-        foreach ($option->getValues()  as $optionValue) {
+        foreach ($option->getValues() as $optionValue) {
             //====================================================================//
             // Compare Attribute Value Name
             if ($optionValue->getValue() == $attrItem["value"]) {
@@ -256,7 +256,7 @@ class ProductAttributesManager
     {
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) {
+        foreach ($this->translations->getLocales() as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $nameKey = "value".$this->translations->getLocaleSuffix($locale);
@@ -279,7 +279,7 @@ class ProductAttributesManager
     {
         //====================================================================//
         // Walk on All Available Variant Options Values
-        foreach ($variant->getOptionValues()  as $optionValue) {
+        foreach ($variant->getOptionValues() as $optionValue) {
             //====================================================================//
             // Load Option
             $option = $optionValue->getOption();

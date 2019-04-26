@@ -50,7 +50,6 @@ trait CoreTrait
             ->Name("Parent")
             ->MicroData("http://schema.org/Product", "isVariationOf")
             ->isReadOnly();
-        
     }
 
     /**
@@ -98,7 +97,7 @@ trait CoreTrait
             case 'code':
                 if (!$this->product->getCode()) {
                     $this->product->setCode($fieldData);
-                }                
+                }
                 $this->setGeneric($fieldName, $fieldData);
 
                 break;

@@ -21,11 +21,6 @@ namespace Splash\Sylius\Objects\Product;
 trait PricingTrait
 {
     /**
-     * @var string
-     */
-    private $NewPrice;
-
-    /**
      * Build Fields using FieldFactory
      */
     protected function buildPricesFields()

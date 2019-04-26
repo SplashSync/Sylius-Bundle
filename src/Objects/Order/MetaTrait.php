@@ -131,10 +131,9 @@ trait MetaTrait
             array(
                 OrderPaymentStates::STATE_PAID,
                 OrderPaymentStates::STATE_PARTIALLY_REFUNDED,
-                OrderPaymentStates::STATE_REFUNDED
+                OrderPaymentStates::STATE_REFUNDED,
             ),
             true
         );
-    }    
-    
+    }
 }

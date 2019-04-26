@@ -18,15 +18,15 @@ namespace Splash\Sylius\Objects\Product;
 /**
  * Sylius Product Stocks Fields
  */
-trait StocksTrait {
-    
+trait StocksTrait
+{
     /**
      * Build Fields using FieldFactory
      */
     public function buildStocksFields()
     {
-        $groupName= "Stocks";
-        
+        $groupName = "Stocks";
+
         //====================================================================//
         // Stock Reel
         $this->fieldsFactory()->create(SPL_T_INT)
@@ -35,7 +35,7 @@ trait StocksTrait {
             ->MicroData("http://schema.org/Offer", "inventoryLevel")
             ->Group($groupName)
             ->isListed();
-        
+
         //====================================================================//
         // Out of Stock Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -43,8 +43,7 @@ trait StocksTrait {
             ->Name("Out of stock")
             ->MicroData("http://schema.org/ItemAvailability", "OutOfStock")
             ->Group($groupName)
-            ->isReadOnly();        
-        
+            ->isReadOnly();
     }
 
     /**
@@ -62,14 +61,13 @@ trait StocksTrait {
                 $this->getGeneric($fieldName);
 
                 break;
-            
             case 'outofstock':
                 if ($this->object->isTracked()) {
                     $this->out[$fieldName] = ($this->object->getOnHand() > 0) ? false : true;
                 }
                 $this->out[$fieldName] = false;
+
                 break;
-                
             default:
                 return;
         }

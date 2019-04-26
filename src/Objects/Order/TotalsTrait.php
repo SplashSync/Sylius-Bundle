@@ -20,14 +20,14 @@ trait TotalsTrait
         $this->fieldsFactory()->Create(SPL_T_DOUBLE)
             ->Identifier("total")
             ->Name("Total Tax Excl.")
-            ->isReadOnly();  
+            ->isReadOnly();
         
         //====================================================================//
         // Order Currency Code
         $this->fieldsFactory()->create(SPL_T_CURRENCY)
             ->Identifier("currencyCode")
             ->Name("Currency")
-            ->isReadOnly();  
+            ->isReadOnly();
     }
     
     /**
@@ -55,5 +55,5 @@ trait TotalsTrait
                 return;
         }
         unset($this->in[$key]);
-    }    
+    }
 }

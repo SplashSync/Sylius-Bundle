@@ -35,6 +35,7 @@ trait ObjectsListTrait
     protected function getObjectListArray(ProductVariantInterface $variant): array
     {
         $product = $variant->getProduct();
+
         return array(
             'id' => $variant->getId(),
             'code' => $variant->getCode(),

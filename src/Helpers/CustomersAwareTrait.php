@@ -32,7 +32,7 @@ trait CustomersAwareTrait
      * Setup Customers Repository
      *
      * @param CustomerRepository $customers
-     * 
+     *
      * @return $this
      */
     protected function setCustomersRepository(CustomerRepository $customers): self
@@ -48,7 +48,7 @@ trait CustomersAwareTrait
      * Get Customers from Splash Field Data
      *
      * @param string $fieldData Object Identifier String.
-     * 
+     *
      * @return null|CustomerInterface
      */
     public function getCustomer(string $fieldData): ?CustomerInterface

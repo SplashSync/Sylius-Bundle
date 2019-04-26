@@ -45,7 +45,10 @@ class Invoice extends Order
      *  Object Synchronistion Limitations
      *
      *  This Flags are Used by Splash Server to Prevent Unexpected Operations on Remote Server
+     *
+     * @codingStandardsIgnoreStart
      */
+
     // Allow Creation Of New Local Objects
     protected static $ALLOW_PUSH_CREATED = false;
     // Allow Update Of Existing Local Objects
@@ -56,10 +59,13 @@ class Invoice extends Order
     /**
      *  Object Synchronistion Recommended Configuration
      */
+
     // Enable Creation Of New Local Objects when Not Existing
     protected static $ENABLE_PUSH_CREATED = false;
     // Enable Update Of Existing Local Objects when Modified Remotly
     protected static $ENABLE_PUSH_UPDATED = false;
     // Enable Delete Of Existing Local Objects when Deleted Remotly
     protected static $ENABLE_PUSH_DELETED = false;
+
+    /** @codingStandardsIgnoreEnd */
 }

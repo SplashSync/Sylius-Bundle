@@ -39,7 +39,7 @@ trait CoreTrait
             ->Identifier("email")
             ->Name("Customer Email")
             ->MicroData("http://schema.org/ContactPoint", "email")
-            ->isReadOnly();        
+            ->isReadOnly();
 
         //====================================================================//
         // Order Number

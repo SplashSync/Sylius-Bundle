@@ -88,9 +88,9 @@ trait ImagesTrait
     {
         //====================================================================//
         // Check if List field & Init List Array
-        if(!($this->product instanceof ImagesAwareInterface)) {
+        if (!($this->product instanceof ImagesAwareInterface)) {
             return;
-        }        
+        }
         //====================================================================//
         // Check if List field & Init List Array
         $fieldId = self::lists()->InitOutput($this->out, "images", $fieldName);
@@ -103,9 +103,9 @@ trait ImagesTrait
         foreach ($this->product->getImages() as $index => $image) {
             //====================================================================//
             // Safety Check for PhpStan
-            if(!($image instanceof ProductImageInterface)) {
+            if (!($image instanceof ProductImageInterface)) {
                 continue;
-            }        
+            }
             //====================================================================//
             // Prepare
             switch ($fieldId) {
@@ -153,7 +153,7 @@ trait ImagesTrait
             case 'images':
                 $this->images->setImages($this->object, $fieldData);
                 $images = $this->product->getImages();
-                if(!($images instanceof PersistentCollection) || $images->isDirty()) {
+                if (!($images instanceof PersistentCollection) || $images->isDirty()) {
                     $this->needUpdate("product");
                 }
 
@@ -163,5 +163,4 @@ trait ImagesTrait
         }
         unset($this->in[$fieldName]);
     }
-
 }

@@ -80,6 +80,7 @@ class ProductPricingManager
      *
      * @param Variant $variant
      * @param Channel $channel
+     * @param bool    $original
      *
      * @return array|string
      */

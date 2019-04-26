@@ -6,7 +6,7 @@
 //
 //trait ProductSlugTrait
 //{
-//    
+//
 //    /**
 //     * @SPL\Field(
 //     *          id      =   "slug",
@@ -18,7 +18,7 @@
 //     * )
 //     */
 //    protected $slug;
-//    
+//
 //    public function getSlug($Variant)
 //    {
 //        $Response = array();
@@ -35,7 +35,7 @@
 //        }
 //        return $Response;
 //    }
-//    
+//
 //    public function setSlug($Variant, $Data)
 //    {
 //        $Translations   =   $Variant->getProduct()->getTranslations();

@@ -194,11 +194,13 @@ trait CoreTrait
 
     /**
      * Format Customer Address Province Code
+     *
+     * @return string
      */
     private function getProvinceCode()
     {
         if (null === $this->object->getCountryCode()) {
-            return $this->object->getProvinceCode();
+            return (string) $this->object->getProvinceCode();
         }
 
         return substr(

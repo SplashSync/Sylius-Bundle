@@ -77,5 +77,4 @@ trait CrudTrait
 
         return $this->object;
     }
-
 }

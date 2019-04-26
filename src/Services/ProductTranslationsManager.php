@@ -118,6 +118,8 @@ class ProductTranslationsManager
     /**
      * Get Locale Field Id Suffix
      *
+     * @param LocaleInterface $locale
+     *
      * @return string
      */
     public function getLocaleSuffix(LocaleInterface $locale): string

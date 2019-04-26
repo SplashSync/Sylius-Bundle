@@ -18,7 +18,6 @@ namespace Splash\Sylius\Objects\ThirdParty;
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\CustomerInterface;
 
-
 /**
  * Sylius Customers CRUD
  */
@@ -52,5 +51,4 @@ trait CrudTrait
 
         return $customer;
     }
-
 }

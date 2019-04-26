@@ -28,6 +28,11 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
 
+/**
+ * Sylius Bundle Doctrine Entity Changes Event Listener
+ *
+ * Catch changes on Entities & Sends Commits to Splash
+ */
 class ObjectEventListener
 {
     /**
@@ -286,7 +291,7 @@ class ObjectEventListener
         // Update on Product Channel Price
         if (is_a($entity, ChannelPricingInterface::class)) {
             $variant = $entity->getProductVariant();
-            if(null == $variant) {
+            if (null == $variant) {
                 return null;
             }
             $objectIds = array($variant->getId());

@@ -22,6 +22,9 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Order\Model\Adjustment;
 
+/**
+ * Sylius Customer Order Items & Adjustements Field
+ */
 trait ItemsTrait
 {
     /**

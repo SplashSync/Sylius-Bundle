@@ -16,18 +16,18 @@
 namespace   Splash\Sylius\Services;
 
 use ArrayObject;
-use Exception;
-use Doctrine\ORM\EntityManagerInterface as Manager;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface as Manager;
+use Exception;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Splash\Client\Splash;
 use Splash\Models\Objects\ImagesTrait;
+use Sylius\Component\Core\Model\ImagesAwareInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Resource\Factory\Factory;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface as Router;
-use Sylius\Component\Core\Model\ImagesAwareInterface;
 
 /**
  * Product Images Manager
@@ -73,12 +73,12 @@ class ProductImagesManager
 
     /**
      * Service Constructor
-     * 
-     * @param Router $router
-     * @param Manager $manager
-     * @param Factory $factory
+     *
+     * @param Router       $router
+     * @param Manager      $manager
+     * @param Factory      $factory
      * @param CacheManager $cache
-     * @param array $configuration
+     * @param array        $configuration
      */
     public function __construct(Router $router, Manager $manager, Factory $factory, CacheManager $cache, array $configuration)
     {
@@ -129,7 +129,7 @@ class ProductImagesManager
      *
      * @param ProductImageInterface $image
      *
-     * @return false|array
+     * @return array|false
      */
     public function getImageField(ProductImageInterface $image)
     {
@@ -166,7 +166,7 @@ class ProductImagesManager
         //====================================================================//
         // Get Current product Images Collection
         $product = $variant->getProduct();
-        if(!$product ||!($product instanceof ImagesAwareInterface)) {
+        if (!$product || !($product instanceof ImagesAwareInterface)) {
             return false;
         }
         $this->currentImages = $product->getImages();
@@ -324,7 +324,7 @@ class ProductImagesManager
         //====================================================================//
         // Load Variant Product
         $product = $variant->getProduct();
-        if(!$product) {
+        if (!$product) {
             throw new Exception("Variant has No Product!");
         }
         //====================================================================//
@@ -381,7 +381,7 @@ class ProductImagesManager
      * @param ProductImageInterface $productImage Sylius Product Image
      * @param string                $inMd5        Expected Image Md5
      *
-     * @retrurn     bool
+     * @return bool
      */
     private function isSearchedImage(ProductImageInterface $productImage, string $inMd5)
     {

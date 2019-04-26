@@ -17,6 +17,9 @@ namespace Splash\Sylius\Objects\Order;
 
 use Sylius\Component\Payment\Model\PaymentInterface;
 
+/**
+ * Sylius Customer Order Payments Field
+ */
 trait PaymentsTrait
 {
     /**

@@ -32,7 +32,7 @@ trait AddressAwareTrait
      * Setup Address Repository
      *
      * @param AddressRepository $addresses
-     * 
+     *
      * @return $this
      */
     protected function setAddressRepository(AddressRepository $addresses): self
@@ -48,7 +48,7 @@ trait AddressAwareTrait
      * Get Customers Address from Splash Field Data
      *
      * @param string $fieldData Object Identifier String.
-     * 
+     *
      * @return null|AddressInterface
      */
     public function getAddress(string $fieldData): ?AddressInterface

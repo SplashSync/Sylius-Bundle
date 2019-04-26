@@ -33,7 +33,7 @@ trait CrudTrait
     {
         //====================================================================//
         // Load Default Channel
-        $dfChannel = $this->getDefaultChannel();       
+        $dfChannel = $this->getDefaultChannel();
         if (empty($dfChannel)) {
             return false;
         }

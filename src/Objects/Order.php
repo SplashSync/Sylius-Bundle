@@ -86,12 +86,16 @@ class Order extends AbstractStandaloneObject
     protected static $ICO = 'fa fa-shopping-cart';
 
     /**
-     *  Object Synchronistion Recommended Configuration
+     * Object Synchronistion Recommended Configuration
+     *
+     * @codingStandardsIgnoreStart
      */
+
     // Enable Creation Of New Local Objects when Not Existing
     protected static $ENABLE_PUSH_CREATED = false;
     // Enable Delete Of Existing Local Objects when Deleted Remotly
     protected static $ENABLE_PUSH_DELETED = false;
+    /** @codingStandardsIgnoreEnd */
 
     //====================================================================//
     // Private variables

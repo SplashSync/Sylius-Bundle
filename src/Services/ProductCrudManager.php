@@ -318,6 +318,7 @@ class ProductCrudManager
         if (!($baseProduct instanceof Product)) {
             return null;
         }
+
         return $baseProduct;
-    }    
+    }
 }

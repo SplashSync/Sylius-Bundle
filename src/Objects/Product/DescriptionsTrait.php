@@ -23,7 +23,7 @@ trait DescriptionsTrait
     
     /**
      * List of System Available Locales
-     * 
+     *
      * @var array
      */
     protected $availableLocales = array();
@@ -39,7 +39,6 @@ trait DescriptionsTrait
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales() as $locale) {
-            
             //====================================================================//
             // Name without Options
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
@@ -95,7 +94,7 @@ trait DescriptionsTrait
                 ->Name("Meta Description")
                 ->Group($groupName)
                 ->MicroData("http://schema.org/Article", "headline")
-                ->setMultilang($locale->getCode());        
+                ->setMultilang($locale->getCode());
         }
     }
 
@@ -109,12 +108,12 @@ trait DescriptionsTrait
     {
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) { 
+        foreach ($this->translations->getLocales() as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
             //====================================================================//
-            // READ Fields            
+            // READ Fields
             switch ($baseFieldName) {
                 //====================================================================//
                 // Direct Readings
@@ -139,9 +138,9 @@ trait DescriptionsTrait
                     
                     unset($this->in[$key]);
 
-                    break;                
+                    break;
             }
-        }       
+        }
     }
 
     /**
@@ -154,12 +153,12 @@ trait DescriptionsTrait
     {
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) { 
+        foreach ($this->translations->getLocales() as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
             //====================================================================//
-            // READ Fields            
+            // READ Fields
             switch ($baseFieldName) {
                 //====================================================================//
                 // Direct Readings
@@ -169,21 +168,18 @@ trait DescriptionsTrait
                 case 'shortDescription':
                 case 'metaDescription':
                     $updated = $this->translations->setTranslated(
-                        $this->object, 
-                        $locale, 
-                        $baseFieldName, 
+                        $this->object,
+                        $locale,
+                        $baseFieldName,
                         $fieldData
                     );
                     unset($this->in[$fieldName]);
 
-                    if($updated) {
+                    if ($updated) {
                         $this->needUpdate("product");
                     }
                     break;
             }
-        }   
+        }
     }
-
-
-    
 }

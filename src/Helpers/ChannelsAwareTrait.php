@@ -33,19 +33,96 @@ trait ChannelsAwareTrait
      * @var string
      */
     private $defaultChannelCode;
-    
-    
+
     /**
      * @var ChannelInterface
      */
     private $defaultChannel;
-    
+
+    /**
+     * Get Default Channel Code
+     *
+     * @return string
+     */
+    public function getDefaultChannelCode(): string
+    {
+        return (string) $this->defaultChannel->getCode();
+    }
+
+    /**
+     * Get Default Channel Code
+     *
+     * @return ChannelInterface
+     */
+    public function getDefaultChannel(): ChannelInterface
+    {
+        if (!isset($this->defaultChannel)) {
+            //====================================================================//
+            // Detect Default Channel for Splash
+            $channel = $this->channels->findOneByCode($this->defaultChannelCode);
+            if (!($channel instanceof ChannelInterface)) {
+                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
+            }
+            //====================================================================//
+            // Reload Channel from Entity Manager
+            $defaultChannel = $this->entityManager->find(get_class($channel), $channel->getId());
+            if (!($defaultChannel instanceof ChannelInterface)) {
+                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
+            }
+            $this->defaultChannel = $defaultChannel;
+        }
+
+        return $this->defaultChannel;
+    }
+
+    /**
+     * Get All Available Channels
+     *
+     * @return ChannelInterface[]
+     */
+    public function getChannels(): array
+    {
+        return $this->channels->findAll();
+    }
+
+    /**
+     * Is Default Channel
+     *
+     * @param ChannelInterface $channel
+     *
+     * @return bool
+     */
+    public function isDefaultChannel(ChannelInterface $channel): bool
+    {
+        if (!isset($this->defaultChannel)) {
+            return false;
+        }
+
+        return ($this->defaultChannel->getCode() == $channel->getCode());
+    }
+
+    /**
+     * Get Channel Suffix
+     *
+     * @param ChannelInterface $channel
+     *
+     * @return string
+     */
+    public function getChannelSuffix(ChannelInterface $channel): string
+    {
+        if ($this->isDefaultChannel($channel)) {
+            return "";
+        }
+
+        return "_".strtolower((string) $channel->getCode());
+    }
+
     /**
      * Setup Channels Repository
      *
      * @param ChannelRepository $channels
-     * @param array   $configuration
-     * 
+     * @param array             $configuration
+     *
      * @return $this
      */
     protected function setChannelsRepository(ChannelRepository $channels, array $configuration): self
@@ -56,80 +133,7 @@ trait ChannelsAwareTrait
         //====================================================================//
         // Store Default Channels Code
         $this->defaultChannelCode = (string) $configuration["default_channel"];
-        
+
         return $this;
     }
-    
-    /**
-     * Get Default Channel Code 
-     *
-     * @return string
-     */
-    public function getDefaultChannelCode(): string
-    {
-        return (string) $this->defaultChannel->getCode();
-    }
-
-    /**
-     * Get Default Channel Code 
-     *
-     * @return ChannelInterfaceing
-     */
-    public function getDefaultChannel(): ChannelInterface
-    {
-        if(!isset($this->defaultChannel)) {
-            //====================================================================//
-            // Detect Default Channel for Splash
-            $channel = $this->channels->findOneByCode($this->defaultChannelCode);
-            if(!($channel instanceof ChannelInterface)) {
-                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
-            }
-            //====================================================================//
-            // Reload Channel from Entity Manager
-            $defaultChannel = $this->entityManager->find(get_class($channel), $channel->getId());        
-            if(!($defaultChannel instanceof ChannelInterface)) {
-                throw new Exception("Splash Bundle: Unable to Identify Default Sylius Channel");
-            }
-            $this->defaultChannel = $defaultChannel;        
-        }
-        
-        return $this->defaultChannel;
-    }
-
-    /**
-     * Get All Available Channels 
-     *
-     * @return ChannelInterface[]
-     */
-    public function getChannels(): array
-    {
-        return $this->channels->findAll();
-    }
-    
-    /**
-     * Is Default Channel 
-     *
-     * @return bool
-     */
-    public function isDefaultChannel(ChannelInterface $channel): bool
-    {
-        if(!isset($this->defaultChannel)) {
-            return false;
-        }
-        return ($this->defaultChannel->getCode() == $channel->getCode());
-    }
-    
-    /**
-     * Get Channel Suffix 
-     *
-     * @return string
-     */
-    public function getChannelSuffix(ChannelInterface $channel): string
-    {
-        if($this->isDefaultChannel($channel)) {
-            return "";
-        }
-        return "_" . strtolower((string) $channel->getCode());
-    }      
-    
 }

@@ -54,7 +54,7 @@ trait CrudTrait
         //====================================================================//
         // Load Parent Product Entity
         $product = $variant->getProduct();
-        if($product instanceof ProductInterface) {
+        if ($product instanceof ProductInterface) {
             $this->product = $product;
         }
         
@@ -77,11 +77,11 @@ trait CrudTrait
         //====================================================================//
         // Load Parent Product Entity
         $product = $variant->getProduct();
-        if($product instanceof ProductInterface) {
+        if ($product instanceof ProductInterface) {
             $this->product = $product;
-        }        
-        return  $variant;        
-        
+        }
+
+        return  $variant;
     }
     
     /**
@@ -108,7 +108,7 @@ trait CrudTrait
     public function delete($objectId = null)
     {
         return $this->crud->delete($objectId);
-    }    
+    }
 
     /**
      * {@inheritdoc}
@@ -121,5 +121,4 @@ trait CrudTrait
 
         return (string) $this->object->getId();
     }
-    
 }
