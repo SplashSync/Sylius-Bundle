@@ -75,7 +75,7 @@ script:
     # Run Functionnal Tests
     - cd sylius
     - php vendor/bin/phpunit
-    - phpdbg -qrr -d memory_limit=-1 vendor/bin/phpunit
+#    - phpdbg -qrr -d memory_limit=-1 vendor/bin/phpunit
 
 ################################################################################
 # General Configuration
