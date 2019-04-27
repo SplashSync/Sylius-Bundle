@@ -33,7 +33,6 @@ trait CoreTrait
             ->Description("Product reference")
             ->MicroData("http://schema.org/Product", "model")
             ->isRequired()->isListed()->isLogged();
-                
 
         //====================================================================//
         // Enable Flag
@@ -42,7 +41,7 @@ trait CoreTrait
             ->Name("Active")
             ->MicroData("http://schema.org/Product", "offered")
             ->isListed();
-        
+
         //====================================================================//
         // Product Variation Parent Link
         $this->fieldsFactory()->create(SPL_T_VARCHAR)

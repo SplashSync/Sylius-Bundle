@@ -90,8 +90,6 @@ trait MetaTrait
         }
         unset($this->in[$key]);
     }
-    
-    
 
     /**
      * @return bool
@@ -100,7 +98,7 @@ trait MetaTrait
     {
         return (OrderCheckoutStates::STATE_COMPLETED !== $this->object->getCheckoutState());
     }
-    
+
     /**
      * @return bool
      */
@@ -108,7 +106,7 @@ trait MetaTrait
     {
         return (OrderCheckoutStates::STATE_COMPLETED === $this->object->getCheckoutState());
     }
-    
+
     /**
      * @return bool
      */
@@ -120,7 +118,7 @@ trait MetaTrait
             true
         );
     }
-     
+
     /**
      * @return bool
      */

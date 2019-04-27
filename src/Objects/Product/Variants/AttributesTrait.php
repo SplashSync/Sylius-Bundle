@@ -79,7 +79,7 @@ trait AttributesTrait
                 ->isNotTested();
         }
     }
-    
+
     //====================================================================//
     // Fields Reading Functions
     //====================================================================//
@@ -107,21 +107,19 @@ trait AttributesTrait
             //====================================================================//
             // Push Attribute Data to List
             self::lists()->insert($this->out, "attributes", $fieldId, $index, $value);
-        }        
+        }
         unset($this->in[$key]);
-    }    
-    
+    }
 
     //====================================================================//
     // Fields Writting Functions
     //====================================================================//
-    
+
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
-     *
      */
     protected function setVariantsAttributesFields($fieldName, $fieldData)
     {
@@ -134,7 +132,6 @@ trait AttributesTrait
         // Identify Product Variant Attributes
         $optionsCodes = array();
         foreach ($fieldData as $attrItem) {
-            
             //====================================================================//
             // Check Product Attributes are Valid
             if (!$this->attributes->isValidDefinition($attrItem)) {
@@ -163,7 +160,7 @@ trait AttributesTrait
             $this->attributes->updateProductOptionValue($optionValue, $attrItem);
             //====================================================================//
             // Setup Product Variant Option Value
-            if(!$this->object->hasOptionValue($optionValue)) {
+            if (!$this->object->hasOptionValue($optionValue)) {
                 $this->attributes->updateVariantOptionValue($this->object, $optionValue);
                 $this->needUpdate();
                 $this->needUpdate("product");
@@ -172,28 +169,27 @@ trait AttributesTrait
         //====================================================================//
         // CleanUp Product Variant Attributes
         $this->attributes->cleanVariantOptionValues($this->object, $optionsCodes);
-        
+
         unset($this->in[$fieldName]);
     }
-    
-    
+
     /**
      * Read requested Field
      *
-     * @param Option $optionValue       Sylius Product OptionValue Object
-     * @param string $fieldName Field Identifier / Name
-     * 
+     * @param Option $optionValue Sylius Product OptionValue Object
+     * @param string $fieldName   Field Identifier / Name
+     *
      * @return null|string
      */
     private function getVariantsAttributesField(Option $optionValue, $fieldName): ?string
     {
         $option = $optionValue->getOption();
-        if(empty($option)) {
+        if (empty($option)) {
             return null;
         }
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) { 
+        foreach ($this->translations->getLocales()  as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
@@ -208,9 +204,7 @@ trait AttributesTrait
                     return $optionValue->getTranslation($locale->getCode())->getValue();
             }
         }
-        
+
         return null;
-    }    
-    
-    
+    }
 }

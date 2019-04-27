@@ -16,10 +16,9 @@
 namespace Splash\Sylius\Objects\Product;
 
 use Splash\Client\Splash;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository;
 
 /**
  * Sylius Product CRUD
@@ -57,14 +56,14 @@ trait CrudTrait
         if ($product instanceof ProductInterface) {
             $this->product = $product;
         }
-        
+
         return $variant;
     }
-    
+
     /**
      * Create Request Object
      *
-     * @return ProductVariantInterface|false
+     * @return false|ProductVariantInterface
      */
     public function create()
     {
@@ -83,7 +82,7 @@ trait CrudTrait
 
         return  $variant;
     }
-    
+
     /**
      * Update Request Object
      *
@@ -96,12 +95,12 @@ trait CrudTrait
         //====================================================================//
         // Save
         $this->crud->update((bool) $needed, (bool) $this->isUpdated("product"));
-        
+
         //====================================================================//
         // Return Object Id
         return $this->getObjectIdentifier();
     }
-    
+
     /**
      * {@inheritdoc}
      */

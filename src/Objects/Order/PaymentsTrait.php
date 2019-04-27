@@ -28,7 +28,7 @@ trait PaymentsTrait
      * @var PaymentInterface
      */
     protected $payment;
-    
+
     /**
      * Known Payment Method Codes Names
      *

@@ -26,7 +26,7 @@ trait ShippingTrait
     public function buildShippingFields()
     {
         $groupName = "Shipping";
-        
+
         //====================================================================//
         // Weight
         $this->fieldsFactory()->create(SPL_T_DOUBLE)

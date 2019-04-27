@@ -23,10 +23,10 @@ use Splash\Sylius\Helpers\ChannelsAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as Products;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
-use Sylius\Component\Product\Factory\ProductFactory;
-use Sylius\Component\Product\Factory\ProductVariantFactory;
 use Sylius\Component\Core\Model\ProductInterface as Product;
 use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
+use Sylius\Component\Product\Factory\ProductFactory;
+use Sylius\Component\Product\Factory\ProductVariantFactory;
 use Sylius\Component\Resource\Factory\Factory;
 
 /**
@@ -287,7 +287,7 @@ class ProductCrudManager
 
         return null;
     }
-    
+
     /**
      * Is Base Product by Given Existing Variants Ids
      *

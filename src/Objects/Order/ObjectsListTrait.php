@@ -35,7 +35,7 @@ trait ObjectsListTrait
     {
         $orderDate = $order->getCheckoutCompletedAt();
         $orderDateStr = $orderDate ? $orderDate->format(SPL_T_DATECAST) : "";
-        
+
         return array(
             'id' => $order->getId(),
             'number' => $order->getNumber(),

@@ -29,6 +29,20 @@ trait AddressAwareTrait
     private $addresses;
 
     /**
+     * Get Customers Address from Splash Field Data
+     *
+     * @param string $fieldData Object Identifier String.
+     *
+     * @return null|AddressInterface
+     */
+    public function getAddress(string $fieldData): ?AddressInterface
+    {
+        $address = $this->addresses->find((int) self::objects()->id($fieldData));
+
+        return $address ? $address : null;
+    }
+
+    /**
      * Setup Address Repository
      *
      * @param AddressRepository $addresses
@@ -40,21 +54,7 @@ trait AddressAwareTrait
         //====================================================================//
         // Store link to Customers Repository
         $this->addresses = $addresses;
-        
+
         return $this;
-    }
-    
-    /**
-     * Get Customers Address from Splash Field Data
-     *
-     * @param string $fieldData Object Identifier String.
-     *
-     * @return null|AddressInterface
-     */
-    public function getAddress(string $fieldData): ?AddressInterface
-    {
-        $address = $this->addresses->find((int) self::objects()->id($fieldData));
-                
-        return $address ? $address : null;
     }
 }

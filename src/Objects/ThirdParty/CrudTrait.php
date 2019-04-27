@@ -24,7 +24,7 @@ use Sylius\Component\Core\Model\CustomerInterface;
 trait CrudTrait
 {
     use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
-    
+
     /**
      * Create Request Object
      *
@@ -41,7 +41,7 @@ trait CrudTrait
         if (empty($this->in["email"])) {
             return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
         }
-        
+
         //====================================================================//
         // Create New Entity
         /** @var CustomerInterface $customer */

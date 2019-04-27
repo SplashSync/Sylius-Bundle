@@ -57,7 +57,7 @@ trait PricingTrait
                 ->MicroData("http://schema.org/Product", "wholesalePrice".$suffix);
         }
     }
-    
+
     /**
      * Read requested Field
      *

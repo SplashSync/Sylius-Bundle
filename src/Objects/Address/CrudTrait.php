@@ -24,7 +24,7 @@ use Sylius\Component\Core\Model\AddressInterface;
 trait CrudTrait
 {
     use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
-    
+
     private static $requiredFields = array(
         "firstname",
         "lastname",
@@ -33,7 +33,7 @@ trait CrudTrait
         "postcode",
         "countrycode",
     );
-        
+
     /**
      * Create Request Object
      *

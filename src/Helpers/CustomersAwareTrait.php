@@ -29,6 +29,20 @@ trait CustomersAwareTrait
     private $customers;
 
     /**
+     * Get Customers from Splash Field Data
+     *
+     * @param string $fieldData Object Identifier String.
+     *
+     * @return null|CustomerInterface
+     */
+    public function getCustomer(string $fieldData): ?CustomerInterface
+    {
+        $customer = $this->customers->find((int) self::objects()->id($fieldData));
+
+        return $customer ? $customer : null;
+    }
+
+    /**
      * Setup Customers Repository
      *
      * @param CustomerRepository $customers
@@ -40,21 +54,7 @@ trait CustomersAwareTrait
         //====================================================================//
         // Store link to Customers Repository
         $this->customers = $customers;
-        
+
         return $this;
-    }
-    
-    /**
-     * Get Customers from Splash Field Data
-     *
-     * @param string $fieldData Object Identifier String.
-     *
-     * @return null|CustomerInterface
-     */
-    public function getCustomer(string $fieldData): ?CustomerInterface
-    {
-        $customer = $this->customers->find((int) self::objects()->id($fieldData));
-                
-        return $customer ? $customer : null;
     }
 }

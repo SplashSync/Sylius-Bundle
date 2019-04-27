@@ -32,7 +32,7 @@ trait CoreTrait
             ->Name("Customer")
             ->MicroData("http://schema.org/Organization", "ID")
             ->isRequired();
-        
+
         //====================================================================//
         // Customer Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)

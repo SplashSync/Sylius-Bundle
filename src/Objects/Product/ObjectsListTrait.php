@@ -15,8 +15,8 @@
 
 namespace Splash\Sylius\Objects\Product;
 
-use Sylius\Component\Core\Model\ProductVariantInterface;
 use Splash\Client\Splash;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 
 /**
  * Sylius Product Objects Lists

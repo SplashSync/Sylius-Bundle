@@ -16,12 +16,12 @@
 namespace Splash\Tests\Tools;
 
 use Exception;
+use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Splash\Bundle\Services\ConnectorsManager;
 
 /**
  * Base PhpUnit Test Class for Splash Modules Tests
