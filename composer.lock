@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5994ffae27a16800f0aa1e16348ac52b",
+    "content-hash": "f24fba164d506d69e818b0172f0d1a55",
     "packages": [
         {
             "name": "splash/php-bundle",
@@ -12753,7 +12753,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.6|^7.0"
+        "php": "^7.2"
     },
     "platform-dev": []
 }
