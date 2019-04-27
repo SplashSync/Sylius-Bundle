@@ -79,7 +79,8 @@ install:
     ################################################################################
     # Run Composer Update
     - echo "Install Dependencies"
-    - composer install --no-interaction --prefer-dist
+#    - composer install --no-interaction --prefer-dist
+    - composer update --no-interaction --prefer-dist
     
     ################################################################################
     # Install Sylius Standard Project
