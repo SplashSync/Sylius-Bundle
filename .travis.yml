@@ -24,14 +24,14 @@ cache:
 matrix:
     include:
         
+        - php: 7.2
+          env: SYLIUS_VERSION=1.2  
+          
+        - php: 7.2
+          env: SYLIUS_VERSION=1.3  
+##          
 #        - php: 7.1
-#          env: SYLIUS_VERSION=1.2  
-#          
-#        - php: 7.1
-#          env: SYLIUS_VERSION=1.3  
-#          
-        - php: 7.1
-          env: SYLIUS_VERSION=1.4  
+#          env: SYLIUS_VERSION=1.4  
           
         - php: 7.2
           env: SYLIUS_VERSION=1.4
@@ -45,19 +45,6 @@ matrix:
     # Fast finish allows to set the build as "finished" even if the "allow_failures" matrix elements are not finished yet.
     fast_finish: true
         
-    
-#################################################################################
-## Versions of PHP to test against
-#php:
-##    - "7.1"
-#    - "7.2"
-#    
-#################################################################################
-## Define an environment variable
-#env:
-#  - SYLIUS_VERSION=""
-##  - SYLIUS_VERSION="1.0"
-
 ################################################################################
 # Install Update Composer, Configure Env. 
 before_install:
@@ -79,8 +66,9 @@ install:
     ################################################################################
     # Run Composer Update
     - echo "Install Dependencies"
-#    - composer install --no-interaction --prefer-dist
-    - composer update --no-interaction --prefer-dist
+    - composer install --no-interaction --prefer-dist
+#    - composer update --no-interaction --prefer-dist
+#    - composer update --no-interaction --prefer-dist
     
     ################################################################################
     # Install Sylius Standard Project
