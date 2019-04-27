@@ -20,6 +20,8 @@ use Splash\Core\SplashCore as Splash;
 use Splash\Local\Local;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as BaseTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Splash\Bundle\Services\ConnectorsManager;
 
 /**
  * Base PhpUnit Test Class for Splash Modules Tests
@@ -44,14 +46,15 @@ class TestCase extends BaseTestCase
         // Boot Symfony Kernel
         /** @var ContainerInterface $container */
         $container = static::bootKernel()->getContainer();
+        /** @var ConnectorsManager $manager */
+        $manager = $container->get("splash.connectors.manager");
+        /** @var RouterInterface $router */
+        $router = $container->get("router");
         //====================================================================//
         // Boot Local Splash Module
         /** @var Local $local */
         $local = Splash::local();
-        $local->boot(
-            $container->get("splash.connectors.manager"),
-            $container->get("router")
-        );
+        $local->boot($manager, $router);
 
         //====================================================================//
         // Init Local Class with First Server Infos
@@ -59,7 +62,7 @@ class TestCase extends BaseTestCase
 
         //====================================================================//
         // Load Servers Namess
-        $servers = $container->get("splash.connectors.manager")->getServersNames();
+        $servers = $manager->getServersNames();
         if (empty($servers)) {
             throw new Exception("No server Configured for Splash");
         }
