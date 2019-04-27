@@ -11,7 +11,7 @@
     processIsolation            = "true"
     stopOnFailure               = "true"
     bootstrap                   = "config/bootstrap.php" 
-    verbose                     = "false"
+    verbose                     = "true"
     timeoutForLargeTests        = "120"  
 >
 
