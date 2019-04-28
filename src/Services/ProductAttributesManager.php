@@ -289,7 +289,7 @@ class ProductAttributesManager
             }
             //====================================================================//
             // Remove Similar Option Value
-            if ($option->getId() == $newOption->getId()) {
+            if ($option->getCode() == $newOption->getCode()) {
                 $variant->removeOptionValue($optionValue);
             }
         }
