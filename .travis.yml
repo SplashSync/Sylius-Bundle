@@ -54,7 +54,7 @@ install:
     - cp  ../travis/phpunit.xml.dist phpunit.xml.dist
     - cp  ../travis/config_splash.yml    config/packages/splash.yml
     - cp  ../travis/routing_splash.yml   config/routes/splash.yml
-    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master phpunit/phpunit:^7.0 --no-interaction --prefer-dist
+    - composer require splash/phpcore:dev-master splash/php-bundle:dev-master splash/sylius-bundle:dev-master --no-interaction --prefer-dist
 
     ################################################################################
     # Start Symfony WebServer
@@ -74,16 +74,15 @@ script:
     ################################################################################
     # Run Functionnal Tests
     - cd sylius
-    - php vendor/bin/phpunit
+    - php phpunit
+#    - php vendor/bin/phpunit
 #    - phpdbg -qrr -d memory_limit=-1 vendor/bin/phpunit
 
 ################################################################################
 # General Configuration
 ################################################################################
-# Project language
 language: php
-# Allows use container-based infrastructure
-sudo: false
+os: linux
 # Start mysql service
 services:
   - mysql
