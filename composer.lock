@@ -21,7 +21,7 @@
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": "^7.1",
                 "splash/phpcore": "dev-master"
             },
             "require-dev": {
@@ -32,23 +32,25 @@
                 "friendsofphp/php-cs-fixer": "*",
                 "j13k/yaml-lint": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^1.0",
-                "phpmd/phpmd": "^2.6",
-                "phpro/grumphp": "^0.14.0",
-                "phpstan/phpstan-doctrine": "^0.10",
-                "phpstan/phpstan-phpunit": "^0.10",
-                "phpstan/phpstan-shim": "^0.10",
-                "phpstan/phpstan-symfony": "^0.10",
+                "monolog/monolog": "^1.0",
+                "phpmd/phpmd": "~2.7.0",
+                "phpro/grumphp": "^0.16",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-doctrine": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
+                "phpstan/phpstan-symfony": "^0.12",
                 "phpunit/phpunit": ">6",
                 "sclable/xml-lint": "^0.2.4",
                 "sebastian/phpcpd": ">3.0",
                 "seld/jsonlint": "^1.7",
                 "sensio/framework-extra-bundle": "*",
                 "sensiolabs/security-checker": "*",
+                "splash/console": "dev-master",
                 "splash/faker": "dev-master",
                 "squizlabs/php_codesniffer": "^3.2",
                 "symfony/monolog-bundle": "*",
                 "symfony/phpunit-bridge": "*",
-                "symfony/symfony": "~4.0"
+                "symfony/symfony": "~3.4|~4.0.0|~4.2.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -83,16 +85,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SplashSync/Php-Core.git",
-                "reference": "c72b5fed11202c831afcced7f361acb4ffb184a6"
+                "reference": "75cd95efb7a75294304f0535fb5bdfcf699b2151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SplashSync/Php-Core/zipball/c72b5fed11202c831afcced7f361acb4ffb184a6",
-                "reference": "c72b5fed11202c831afcced7f361acb4ffb184a6",
+                "url": "https://api.github.com/repos/SplashSync/Php-Core/zipball/75cd95efb7a75294304f0535fb5bdfcf699b2151",
+                "reference": "75cd95efb7a75294304f0535fb5bdfcf699b2151",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6|^7.0"
+                "php": "^7.1"
             },
             "conflict": {
                 "phpunit/phpunit": ">7.5.3|~8.0"
@@ -103,14 +105,15 @@
                 "j13k/yaml-lint": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^1.0",
                 "phpmd/phpmd": "^2.6",
-                "phpro/grumphp": "^0.14.0",
-                "phpstan/phpstan-phpunit": "~0.11",
-                "phpstan/phpstan-shim": "~0.11",
+                "phpro/grumphp": "^0.16",
+                "phpstan/phpstan": "^0.12",
+                "phpstan/phpstan-phpunit": "^0.12",
                 "phpunit/phpunit": "~5.0|~6.0|~7.0",
                 "sclable/xml-lint": "^0.2.4",
                 "sebastian/phpcpd": ">3.0",
                 "seld/jsonlint": "^1.7",
                 "sensiolabs/security-checker": "^5.0",
+                "splash/console": "dev-master",
                 "squizlabs/php_codesniffer": "^3.2"
             },
             "type": "package",
@@ -138,7 +141,7 @@
                 }
             ],
             "description": "Splash Fundation Module for All Php Applications",
-            "time": "2019-04-25T09:01:26+00:00"
+            "time": "2020-02-04T03:31:13+00:00"
         }
     ],
     "packages-dev": [
@@ -5957,6 +5960,7 @@
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
+            "abandoned": "phpstan/phpstan",
             "time": "2019-01-08T10:03:03+00:00"
         },
         {
@@ -6554,16 +6558,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.1.0",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
-                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/446d54b4cb6bf489fc9d75f55843658e6f25d801",
+                "reference": "446d54b4cb6bf489fc9d75f55843658e6f25d801",
                 "shasum": ""
             },
             "require": {
@@ -6572,7 +6576,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -6597,7 +6601,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2018-11-20T15:27:04+00:00"
+            "time": "2019-11-01T11:05:21+00:00"
         },
         {
             "name": "psr/simple-cache",
@@ -6747,17 +6751,17 @@
             ],
             "authors": [
                 {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                },
+                {
                     "name": "Marijn Huizendveld",
                     "email": "marijn.huizendveld@gmail.com"
                 },
                 {
                     "name": "Thibaud Fabre",
                     "email": "thibaud@aztech.io"
-                },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
                 }
             ],
             "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
@@ -8780,24 +8784,24 @@
         },
         {
             "name": "symfony/cache",
-            "version": "v4.2.7",
+            "version": "v4.3.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/cache.git",
-                "reference": "9e64db924324700e19ef4f21c2c279a35ff9bdff"
+                "reference": "8794ccf68ac341fc19311919d2287f7557bfccba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/cache/zipball/9e64db924324700e19ef4f21c2c279a35ff9bdff",
-                "reference": "9e64db924324700e19ef4f21c2c279a35ff9bdff",
+                "url": "https://api.github.com/repos/symfony/cache/zipball/8794ccf68ac341fc19311919d2287f7557bfccba",
+                "reference": "8794ccf68ac341fc19311919d2287f7557bfccba",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1.3",
                 "psr/cache": "~1.0",
                 "psr/log": "~1.0",
-                "psr/simple-cache": "^1.0",
-                "symfony/contracts": "^1.0",
+                "symfony/cache-contracts": "^1.1",
+                "symfony/service-contracts": "^1.1",
                 "symfony/var-exporter": "^4.2"
             },
             "conflict": {
@@ -8808,13 +8812,14 @@
             "provide": {
                 "psr/cache-implementation": "1.0",
                 "psr/simple-cache-implementation": "1.0",
-                "symfony/cache-contracts-implementation": "1.0"
+                "symfony/cache-implementation": "1.0"
             },
             "require-dev": {
                 "cache/integration-tests": "dev-master",
                 "doctrine/cache": "~1.6",
                 "doctrine/dbal": "~2.5",
                 "predis/predis": "~1.1",
+                "psr/simple-cache": "^1.0",
                 "symfony/config": "~4.2",
                 "symfony/dependency-injection": "~3.4|~4.1",
                 "symfony/var-dumper": "^4.1.1"
@@ -8822,7 +8827,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.3-dev"
                 }
             },
             "autoload": {
@@ -8853,7 +8858,7 @@
                 "caching",
                 "psr6"
             ],
-            "time": "2019-04-16T09:36:45+00:00"
+            "time": "2020-01-27T09:15:09+00:00"
         },
         {
             "name": "symfony/config",
@@ -8992,36 +8997,45 @@
         },
         {
             "name": "symfony/contracts",
-            "version": "v1.0.2",
+            "version": "v1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/contracts.git",
-                "reference": "1aa7ab2429c3d594dd70689604b5cf7421254cdf"
+                "reference": "f51bca9de06b7a25b19a4155da7bebad099a5def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/contracts/zipball/1aa7ab2429c3d594dd70689604b5cf7421254cdf",
-                "reference": "1aa7ab2429c3d594dd70689604b5cf7421254cdf",
+                "url": "https://api.github.com/repos/symfony/contracts/zipball/f51bca9de06b7a25b19a4155da7bebad099a5def",
+                "reference": "f51bca9de06b7a25b19a4155da7bebad099a5def",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1.3"
-            },
-            "require-dev": {
+                "php": "^7.1.3",
                 "psr/cache": "^1.0",
                 "psr/container": "^1.0"
             },
+            "replace": {
+                "symfony/cache-contracts": "self.version",
+                "symfony/event-dispatcher-contracts": "self.version",
+                "symfony/http-client-contracts": "self.version",
+                "symfony/service-contracts": "self.version",
+                "symfony/translation-contracts": "self.version"
+            },
+            "require-dev": {
+                "symfony/polyfill-intl-idn": "^1.10"
+            },
             "suggest": {
-                "psr/cache": "When using the Cache contracts",
-                "psr/container": "When using the Service contracts",
-                "symfony/cache-contracts-implementation": "",
-                "symfony/service-contracts-implementation": "",
-                "symfony/translation-contracts-implementation": ""
+                "psr/event-dispatcher": "When using the EventDispatcher contracts",
+                "symfony/cache-implementation": "",
+                "symfony/event-dispatcher-implementation": "",
+                "symfony/http-client-implementation": "",
+                "symfony/service-implementation": "",
+                "symfony/translation-implementation": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -9056,7 +9070,7 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2018-12-05T08:06:11+00:00"
+            "time": "2019-11-07T12:44:51+00:00"
         },
         {
             "name": "symfony/debug",
@@ -11665,28 +11679,28 @@
         },
         {
             "name": "symfony/var-exporter",
-            "version": "v4.2.7",
+            "version": "v4.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-exporter.git",
-                "reference": "57e00f3e0a3deee65b67cf971455b98afeacca46"
+                "reference": "1a76a943f2af334da13bc9f33f49392fa530eec9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/57e00f3e0a3deee65b67cf971455b98afeacca46",
-                "reference": "57e00f3e0a3deee65b67cf971455b98afeacca46",
+                "url": "https://api.github.com/repos/symfony/var-exporter/zipball/1a76a943f2af334da13bc9f33f49392fa530eec9",
+                "reference": "1a76a943f2af334da13bc9f33f49392fa530eec9",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1.3"
             },
             "require-dev": {
-                "symfony/var-dumper": "^4.1.1"
+                "symfony/var-dumper": "^4.1.1|^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.4-dev"
                 }
             },
             "autoload": {
@@ -11721,7 +11735,7 @@
                 "instantiate",
                 "serialize"
             ],
-            "time": "2019-04-09T20:09:28+00:00"
+            "time": "2020-01-04T13:00:46+00:00"
         },
         {
             "name": "symfony/web-profiler-bundle",
@@ -12275,7 +12289,7 @@
                     "email": "adrien.brault@gmail.com"
                 },
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
@@ -12579,6 +12593,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2018-08-13T20:36:59+00:00"
         },
         {
@@ -12633,6 +12648,7 @@
                 "events",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2018-04-25T15:33:34+00:00"
         },
         {
@@ -12696,6 +12712,7 @@
                 "hydrator",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-hydrator",
             "time": "2018-11-19T19:16:10+00:00"
         },
         {
@@ -12742,6 +12759,7 @@
                 "stdlib",
                 "zf"
             ],
+            "abandoned": "laminas/laminas-stdlib",
             "time": "2018-08-28T21:34:05+00:00"
         }
     ],
