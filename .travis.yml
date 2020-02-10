@@ -1,14 +1,14 @@
 ################################################################################
-# Specify versions of Php & Dolibarr to test against
+# Specify versions of Php & Sylius to test against
 ################################################################################
 # SYLIUS_VERSION => Branch of Sylius Standerd Edition to test Against
 matrix:
     include:
         
-        - php: 7.2
+        - php: 7.3
           env: SYLIUS_VERSION=1.4
           
-        - php: 7.2
+        - php: 7.3
           env: SYLIUS_VERSION=""  
           
     allow_failures:
