@@ -33,14 +33,13 @@ class TestCase extends BaseTestCase
     use \Splash\Bundle\Tests\ConnectorAssertTrait;
     use \Splash\Bundle\Tests\ConnectorTestTrait;
     use \Splash\Tests\Tools\Traits\ObjectsAssertionsTrait;
-    use \Splash\Tests\Tools\Traits\SuccessfulTestPHP7;
 
     /**
      * Boot Symfony & Setup First Server Connector For Testing
      *
      * @throws Exception
      */
-    protected function setUp()
+    protected function setUp():void
     {
         //====================================================================//
         // Boot Symfony Kernel

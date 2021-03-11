@@ -1,5 +1,20 @@
-services: 
-    
+services:
+    ########################################################################
+    # Connecteor Manager Link
+    splash.connectors.manager:
+        class: Splash\Bundle\Services\ConnectorsManager
+        lazy: false
+        public: true
+        arguments:
+            - "@=service('service_container').getParameter('splash')"
+            - !tagged "splash.connector"
+            - "@session"
+            - "@?security.authorization_checker"
+        tags:
+            - { name: kernel.event_listener, event: Splash\Bundle\Events\ObjectsCommitEvent,        method: onCommitEvent,  priority: 100 }
+            - { name: kernel.event_listener, event: Splash\Bundle\Events\ObjectFileEvent,           method: onGetFileEvent, priority: 100 }
+            - { name: kernel.event_listener, event: Splash\Bundle\Events\IdentifyServerEvent,       method: onIdentifyEvent,priority: 100 }
+            - { name: kernel.event_listener, event: Splash\Bundle\Events\UpdateConfigurationEvent,  method: onUpdateEvent,  priority: 100 }
     ########################################################################
     # Sylius Customer Object
     splash.sylius.object.customer:
