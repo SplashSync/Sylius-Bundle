@@ -30,6 +30,7 @@ use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository as Addresses;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository as Customers;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\OrderRepository as Orders;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ShipmentRepository as Shipment;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Resource\Factory\Factory;
 
@@ -125,12 +126,16 @@ class Order extends AbstractStandaloneObject
      * @param Manager   $manager
      * @param Factory   $factory
      * @param array     $configuration
+     * @param Shipment  $shipment
      */
-    public function __construct(Orders $repository, Channels $channels, Customers $customer, Addresses $address, Manager $manager, Factory $factory, array $configuration)
+    public function __construct(Orders $repository, Channels $channels, Customers $customer, Addresses $address, Manager $manager, Factory $factory, array $configuration, Shipment $shipment)
     {
         //====================================================================//
         // Link to Orders Repository
         $this->repository = $repository;
+        //====================================================================//
+        // Link to Shipment Repository
+        $this->shipment = $shipment;
         //====================================================================//
         // Setup Sylius Channels Repository
         $this->setChannelsRepository($channels, $configuration);

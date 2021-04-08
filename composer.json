@@ -1,5 +1,5 @@
 {
-    "name": "splash/sylius-bundle",
+    "name": "bigbizyou/sylius-bundle",
     "description": "Splash Bundle for Sylius E-Commerce Solution",
 
     "type":                 "symfony-bundle",
@@ -15,6 +15,10 @@
         {
             "name": "BadPixxel",
             "email": "eshop.bpaquier@gmail.com"
+        },
+        {
+            "name": "Bigbizyou",
+            "email": "samy@bigbizyou.agency"
         }
     ],
     
