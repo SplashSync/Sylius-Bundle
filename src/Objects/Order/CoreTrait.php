@@ -15,11 +15,21 @@
 
 namespace Splash\Sylius\Objects\Order;
 
+use Splash\Client\Splash;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ShipmentRepository as Shipment;
+
 /**
  * Sylius Order Core Fields
  */
 trait CoreTrait
 {
+
+
+    /**
+     * @var Shipment
+     */
+    protected Shipment $shipment;
+
     /**
      * Build Fields using FieldFactory
      */
@@ -57,6 +67,19 @@ trait CoreTrait
             ->Name("Last Name")
             ->MicroData("http://schema.org/Order", "orderDate")
             ->isListed();
+        //====================================================================//
+        // Shipping DateTime
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("collection_time_text")
+            ->Name("ClickNCollect")
+            ->isListed();
+
+        $this->fieldsFactory()->create(SPL_T_DATE)
+            ->Identifier("collection_time")
+            ->Name("Delivry Time")
+            ->MicroData("http://schema.org/Order", "orderDate")
+            ->isListed();
+
 
         //====================================================================//
         // Customer Billing Address
@@ -116,11 +139,25 @@ trait CoreTrait
             case 'number':
             case 'notes':
                 $this->getGeneric($fieldName);
-
                 break;
             case 'checkoutCompletedAt':
                 $this->getGenericDate($fieldName);
-
+                break;
+            case 'collection_time_text':
+                $result = $this->shipment->getCollectionTime($this->object->getid());
+                if($result != null)
+                    $this->out[$fieldName] = $result->format("d-m-Y H:i:s");
+                else
+                    $this->out[$fieldName] = null;
+                break;
+            case 'collection_time':
+                $result = $this->shipment->getCollectionTime($this->object->getid());
+                $dateTime = new \DateTime(null,$result->getTimezone());
+                $dateTime->setTimestamp($result->getTimestamp());
+                if($result != null)
+                    $this->out[$fieldName] = $dateTime->format("Y-m-d");
+                else
+                    $this->out[$fieldName] = null;
                 break;
             default:
                 return;
@@ -154,6 +191,9 @@ trait CoreTrait
             case 'checkoutCompletedAt':
                 $this->setGenericDate($fieldName, $fieldData);
 
+                break;
+            case 'collection_time':
+                $this->setGenericDateTime($fieldName,$fieldData,"shipment");
                 break;
             default:
                 return;
