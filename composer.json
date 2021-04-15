@@ -1,5 +1,5 @@
 {
-    "name": "bigbizyou/sylius-bundle",
+    "name": "bigbiz/sylius-bundle",
     "description": "Splash Bundle for Sylius E-Commerce Solution",
 
     "type":                 "symfony-bundle",
