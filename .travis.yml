@@ -6,7 +6,7 @@ matrix:
     include:
         
         - php: 7.4
-          env: SYLIUS_VERSION=1.9.1
+          env: SYLIUS_VERSION=1.7.1
           
         - php: 7.4
           env: SYLIUS_VERSION=""  
