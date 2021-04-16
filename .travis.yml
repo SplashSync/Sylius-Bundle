@@ -58,8 +58,8 @@ install:
 
     ################################################################################
     # Start Symfony WebServer
-    - echo "Start Web Srever"
-    - symfony server:start
+    # - echo "Start Web Srever"
+    # - symfony server:start
 
 ################################################################################
 # Run Tests Scripts
