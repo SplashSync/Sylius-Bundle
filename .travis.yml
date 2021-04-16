@@ -59,7 +59,7 @@ install:
     ################################################################################
     # Start Symfony WebServer
     - echo "Start Web Srever"
-    - php bin/console server:start --env=test
+    - symfony server:start
 
 ################################################################################
 # Run Tests Scripts
