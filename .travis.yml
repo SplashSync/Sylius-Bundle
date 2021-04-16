@@ -42,7 +42,7 @@ install:
     ################################################################################
     # Install Sylius Standard Project
     - echo "Install Sylius"
-    - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --prefer-dist
+    - composer create-project sylius/sylius-standard sylius $SYLIUS_VERSION --lock --prefer-dist
     - cd sylius
     - cp  ../travis/.env.dist ".env" 
     - php bin/console sylius:install --env=test --no-interaction --no-debug
