@@ -59,7 +59,7 @@ install:
     ################################################################################
     # Start Symfony WebServer
     # - echo "Start Web Srever"
-    # - symfony server:start
+    - php bin/console server:run 127.0.0.1:8080
 
 ################################################################################
 # Run Tests Scripts
