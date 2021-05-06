@@ -242,6 +242,7 @@ trait ItemsTrait
                 $taxRate = $taxCategory->getRates()->first()->getAmount() * 100;
             }
             $unitPrice = $orderItem->getUnitPrice();
+            $unitPrice = $unitPrice - (($unitPrice/(100+$taxRate))*$taxRate);
         }
         if ($orderItem instanceof Adjustment) {
             $unitPrice = $orderItem->getAmount();
