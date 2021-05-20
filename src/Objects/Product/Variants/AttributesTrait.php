@@ -54,30 +54,28 @@ trait AttributesTrait
 
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales() as $locale) {
-            //====================================================================//
-            // Product Variation Attribute Name
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("name")
-                ->Name("Name")
-                ->description("Attribute Name")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "VariantAttributeName")
-                ->setMultilang($locale->getCode())
-                ->InList("attributes")
-                ->isNotTested();
-            //====================================================================//
-            // Product Variation Attribute Value
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("value")
-                ->Name("Value")
-                ->description("Attribute Value")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "VariantAttributeValue")
-                ->setMultilang($locale->getCode())
-                ->InList("attributes")
-                ->isNotTested();
-        }
+        //====================================================================//
+        // Product Variation Attribute Name
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("name")
+            ->Name("Name")
+            ->description("Attribute Name")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "VariantAttributeName")
+            ->setDefaultLanguage("fr_FR")
+            ->InList("attributes")
+            ->isNotTested();
+        //====================================================================//
+        // Product Variation Attribute Value
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("value")
+            ->Name("Value")
+            ->description("Attribute Value")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "VariantAttributeValue")
+            ->setDefaultLanguage("fr_FR")
+            ->InList("attributes")
+            ->isNotTested();
     }
 
     //====================================================================//
@@ -87,7 +85,7 @@ trait AttributesTrait
     /**
      * Read requested Field
      *
-     * @param string $key       Input List Key
+     * @param string $key Input List Key
      * @param string $fieldName Field Identifier / Name
      */
     protected function getVariantsAttributesFields($key, $fieldName)
@@ -119,7 +117,7 @@ trait AttributesTrait
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param mixed $fieldData Field Data
      */
     protected function setVariantsAttributesFields($fieldName, $fieldData)
     {
@@ -177,7 +175,7 @@ trait AttributesTrait
      * Read requested Field
      *
      * @param Option $optionValue Sylius Product OptionValue Object
-     * @param string $fieldName   Field Identifier / Name
+     * @param string $fieldName Field Identifier / Name
      *
      * @return null|string
      */
@@ -189,7 +187,7 @@ trait AttributesTrait
         }
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales()  as $locale) {
+        foreach ($this->translations->getLocales() as $locale) {
             //====================================================================//
             // Decode Multilang Field Name
             $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);

@@ -33,74 +33,72 @@ trait DescriptionsTrait
     public function buildDescriptionsFields()
     {
         $groupName = "Descriptions";
-        $this->fieldsFactory()->setDefaultLanguage($this->translations->getDefaultLocaleCode());
+        $this->fieldsFactory()->setDefaultLanguage("fr_FR");
 
         //====================================================================//
         // Walk on All Available Languages
-        foreach ($this->translations->getLocales() as $locale) {
-            //====================================================================//
-            // Name without Options
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("name")
-                ->Name("Product Name without Options")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "alternateName")
-                ->setMultilang($locale->getCode())
-                ->isRequired();
+        //====================================================================//
+        // Name without Options
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("name")
+            ->Name("Product Name without Options")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "alternateName")
+            ->setDefaultLanguage('fr_FR')
+            ->isRequired();
 
-            //====================================================================//
-            // Name with Options
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("fullName")
-                ->Name("Product Name with Options")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "name")
-                ->setMultilang($locale->getCode())
-                ->isReadOnly();
+        //====================================================================//
+        // Name with Options
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("fullName")
+            ->Name("Product Name with Options")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "name")
+            ->setDefaultLanguage('fr_FR')
+            ->isReadOnly();
 
-            //====================================================================//
-            // Slug
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("slug")
-                ->Name("Slug (Url)")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "urlRewrite")
-                ->setMultilang($locale->getCode())
-                ->Association("name");
+        //====================================================================//
+        // Slug
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("slug")
+            ->Name("Slug (Url)")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "urlRewrite")
+            ->setDefaultLanguage('fr_FR')
+            ->Association("name");
 
-            //====================================================================//
-            // Long Description
-            $this->fieldsFactory()->create(SPL_T_TEXT)
-                ->Identifier("description")
-                ->Name("Description")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Article", "articleBody")
-                ->setMultilang($locale->getCode());
+        //====================================================================//
+        // Long Description
+        $this->fieldsFactory()->create(SPL_T_TEXT)
+            ->Identifier("description")
+            ->Name("Description")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Article", "articleBody")
+            ->setDefaultLanguage('fr_FR');
 
-            //====================================================================//
-            // Short Description
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("shortDescription")
-                ->Name("Short Description")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "description")
-                ->setMultilang($locale->getCode());
+        //====================================================================//
+        // Short Description
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("shortDescription")
+            ->Name("Short Description")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Product", "description")
+            ->setDefaultLanguage('fr_FR');
 
-            //====================================================================//
-            // Meta Description
-            $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("metaDescription")
-                ->Name("Meta Description")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Article", "headline")
-                ->setMultilang($locale->getCode());
-        }
+        //====================================================================//
+        // Meta Description
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->Identifier("metaDescription")
+            ->Name("Meta Description")
+            ->Group($groupName)
+            ->MicroData("http://schema.org/Article", "headline")
+            ->setDefaultLanguage('fr_FR');
     }
 
     /**
      * Read requested Field
      *
-     * @param string $key       Input List Key
+     * @param string $key Input List Key
      * @param string $fieldName Field Identifier / Name
      */
     public function getDescriptionsFields($key, $fieldName)
@@ -108,35 +106,38 @@ trait DescriptionsTrait
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales() as $locale) {
-            //====================================================================//
-            // Decode Multilang Field Name
-            $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
-            //====================================================================//
-            // READ Fields
-            switch ($baseFieldName) {
+            if ($locale->getCode() == "fr_FR") {
+
                 //====================================================================//
-                // Direct Readings
-                case 'name':
-                case 'slug':
-                case 'description':
-                case 'shortDescription':
-                case 'metaDescription':
-                    $this->out[$fieldName] = $this->translations
-                        ->getTranslated($this->object, $locale, $baseFieldName);
-                    unset($this->in[$key]);
+                // Decode Multilang Field Name
+                $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
+                //====================================================================//
+                // READ Fields
+                switch ($baseFieldName) {
+                    //====================================================================//
+                    // Direct Readings
+                    case 'name':
+                    case 'slug':
+                    case 'description':
+                    case 'shortDescription':
+                    case 'metaDescription':
+                        $this->out[$fieldName] = $this->translations
+                            ->getTranslated($this->object, $locale, $baseFieldName);
+                        unset($this->in[$key]);
 
-                    break;
-                case 'fullName':
-                    // Read Variant Name
-                    $this->out[$fieldName] = $this->translations
-                        ->getTranslated($this->object, $locale, 'name');
-                    // Complet Variant Name with Options Values
-                    $this->out[$fieldName] .= $this->attributes
-                        ->getOptionsNameString($this->object, $locale);
+                        break;
+                    case 'fullName':
+                        // Read Variant Name
+                        $this->out[$fieldName] = $this->translations
+                            ->getTranslated($this->object, $locale, 'name');
+                        // Complet Variant Name with Options Values
+                        $this->out[$fieldName] .= $this->attributes
+                            ->getOptionsNameString($this->object, $locale);
 
-                    unset($this->in[$key]);
+                        unset($this->in[$key]);
 
-                    break;
+                        break;
+                }
             }
         }
     }
@@ -145,39 +146,41 @@ trait DescriptionsTrait
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param mixed $fieldData Field Data
      */
     public function setDescriptionsFields($fieldName, $fieldData)
     {
         //====================================================================//
         // Walk on All Available Languages
         foreach ($this->translations->getLocales() as $locale) {
-            //====================================================================//
-            // Decode Multilang Field Name
-            $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
-            //====================================================================//
-            // READ Fields
-            switch ($baseFieldName) {
+            if ($locale->getCode() == "fr_FR") {
                 //====================================================================//
-                // Direct Readings
-                case 'name':
-                case 'slug':
-                case 'description':
-                case 'shortDescription':
-                case 'metaDescription':
-                    $updated = $this->translations->setTranslated(
-                        $this->object,
-                        $locale,
-                        $baseFieldName,
-                        $fieldData
-                    );
-                    unset($this->in[$fieldName]);
+                // Decode Multilang Field Name
+                $baseFieldName = $this->translations->fieldNameDecode($locale, $fieldName);
+                //====================================================================//
+                // READ Fields
+                switch ($baseFieldName) {
+                    //====================================================================//
+                    // Direct Readings
+                    case 'name':
+                    case 'slug':
+                    case 'description':
+                    case 'shortDescription':
+                    case 'metaDescription':
+                        $updated = $this->translations->setTranslated(
+                            $this->object,
+                            $locale,
+                            $baseFieldName,
+                            $fieldData
+                        );
+                        unset($this->in[$fieldName]);
 
-                    if ($updated) {
-                        $this->needUpdate("product");
-                    }
+                        if ($updated) {
+                            $this->needUpdate("product");
+                        }
 
-                    break;
+                        break;
+                }
             }
         }
     }

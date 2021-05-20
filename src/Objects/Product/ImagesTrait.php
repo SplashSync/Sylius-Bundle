@@ -150,10 +150,12 @@ trait ImagesTrait
             // PRODUCT IMAGES
             //====================================================================//
             case 'images':
-                $this->images->setImages($this->object, $fieldData);
-                $images = $this->product->getImages();
-                if (!($images instanceof PersistentCollection) || $images->isDirty()) {
-                    $this->needUpdate("product");
+                if(is_iterable($fieldData)) {
+                    $this->images->setImages($this->object, $fieldData);
+                    $images = $this->product->getImages();
+                    if (!($images instanceof PersistentCollection) || $images->isDirty()) {
+                        $this->needUpdate("product");
+                    }
                 }
 
                 break;
