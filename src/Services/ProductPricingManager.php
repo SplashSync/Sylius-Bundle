@@ -128,7 +128,7 @@ class ProductPricingManager
     public function setChannelPrice(Variant $variant, Channel $channel, bool $original, $fieldData): bool
     {
         $updated = false;
-        if (!is_iterable($fieldData) || !isset($fieldData["ht"])) {
+        if (!is_iterable($fieldData) || !isset($fieldData["ttc"])) {
             return $updated;
         }
         //====================================================================//
@@ -154,7 +154,7 @@ class ProductPricingManager
         }
         //====================================================================//
         // Init Channel Price
-        $newPrice = (int) (round($fieldData["ht"] * 100, 0, PHP_ROUND_HALF_UP));
+        $newPrice = (int) (round($fieldData["ttc"] * 100, 0, PHP_ROUND_HALF_UP));
         //====================================================================//
         // Get Current Price
         $currentPrice = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
