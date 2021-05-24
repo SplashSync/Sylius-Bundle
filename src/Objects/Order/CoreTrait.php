@@ -16,7 +16,6 @@
 namespace Splash\Sylius\Objects\Order;
 
 use Splash\Client\Splash;
-use Sylius\Bundle\CoreBundle\Doctrine\ORM\ShipmentRepository as Shipment;
 
 /**
  * Sylius Order Core Fields
@@ -24,11 +23,6 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\ShipmentRepository as Shipment;
 trait CoreTrait
 {
 
-
-    /**
-     * @var Shipment
-     */
-    protected Shipment $shipment;
 
     /**
      * Build Fields using FieldFactory
@@ -144,19 +138,26 @@ trait CoreTrait
                 $this->getGenericDate($fieldName);
                 break;
             case 'collection_time_text':
-                $result = $this->shipment->getCollectionTime($this->object->getid());
-                if($result != null)
-                    $this->out[$fieldName] = $result->format("d-m-Y H:i:s");
-                else
+                $shipment = null;
+                $shipments = $this->object->getShipments();
+                if(count($shipments) > 0) {
+                    if ($shipments[0]->isClickNCollect())
+                        $shipment = $shipments[0];
+                    if ($shipment != null)
+                        $this->out[$fieldName] = $shipment->getLocation()->getName() . " le " . $shipment->getcollectionTime()->format("d-m-Y");
+                }else
                     $this->out[$fieldName] = null;
                 break;
             case 'collection_time':
-                $result = $this->shipment->getCollectionTime($this->object->getid());
-                $dateTime = new \DateTime(null,$result->getTimezone());
-                $dateTime->setTimestamp($result->getTimestamp());
-                if($result != null)
+                $shipment = null;
+                $shipments = $this->object->getShipments();
+                if(count($shipments) > 0) {
+                    if($shipments[0]->isClickNCollect())
+                        $shipment = $shipments[0];
+                    $dateTime = new \DateTime(null, $shipment->getcollectionTime()->getTimezone());
+                    $dateTime->setTimestamp($shipment->getcollectionTime()->getTimestamp());
                     $this->out[$fieldName] = $dateTime->format("Y-m-d");
-                else
+                }else
                     $this->out[$fieldName] = null;
                 break;
             default:
