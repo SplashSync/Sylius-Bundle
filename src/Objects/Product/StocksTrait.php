@@ -15,6 +15,8 @@
 
 namespace Splash\Sylius\Objects\Product;
 
+use Sylius\Component\Core\Model\ProductVariant;
+
 /**
  * Sylius Product Stocks Fields
  */
@@ -86,8 +88,18 @@ trait StocksTrait
             //====================================================================//
             // Variant Writting
             case 'onHand':
-                $this->setGeneric($fieldName, (int) $fieldData);
-
+                if($this->object instanceof ProductVariant) {
+                    $item = $this->object->getProduct();
+                    $selectedVariant = $this->object;
+                    $selectedVariant->setOnHand((int)$selectedVariant->getOnHand() + (int)$fieldData);
+                    $selectedVariant->setOnHold((int)$selectedVariant->getOnHold() + (int)$fieldData);
+                    foreach ($item->getVariants() as $variant) {
+                        $variant->setOnHand((int)$variant->getOnHand() - (int)((int)$fieldData * $variant->getWeight()));
+                        $variant->setOnHold((int)$variant->getOnHold() - (int)((int)$fieldData * $variant->getWeight()));
+                    }
+                }else{
+                    $this->setGeneric($fieldName, (int) $fieldData);
+                }
                 break;
             default:
                 return;

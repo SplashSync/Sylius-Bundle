@@ -144,7 +144,7 @@ trait CoreTrait
                     if ($shipments[0]->isClickNCollect())
                         $shipment = $shipments[0];
                     if ($shipment != null)
-                        $this->out[$fieldName] = $shipment->getLocation()->getName() . " le " . $shipment->getcollectionTime()->format("d-m-Y");
+                        $this->out[$fieldName] = $shipment->getLocation()->getName() . " le " . $shipment->getcollectionTime()->format("d-m-Y H:i:s");
                 }else
                     $this->out[$fieldName] = null;
                 break;
@@ -181,8 +181,7 @@ trait CoreTrait
                 break;
             case 'billingAddress':
             case 'shippingAddress':
-                $this->setGenericObject($fieldName, $this->getAddress($fieldData));
-
+//                $this->setGenericObject($fieldName, $this->getAddress($fieldData));
                 break;
             case 'number':
             case 'notes':
@@ -193,8 +192,8 @@ trait CoreTrait
                 $this->setGenericDate($fieldName, $fieldData);
 
                 break;
-            case 'collection_time':
-                $this->setGenericDateTime($fieldName,$fieldData,"shipment");
+            case 'collection_time_text':
+//                $this->setGeneric('collection_time',$fieldData,"shipment");
                 break;
             default:
                 return;
