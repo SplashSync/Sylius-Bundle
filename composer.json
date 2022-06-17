@@ -34,8 +34,8 @@
     },
     
     "require": {
-        "php":                      "^7.2",
-        "splash/php-bundle":        "dev-master"
+        "php":                                          "^7.2",
+        "splash/php-bundle":                            "~1.0"
     },
     
     "require-dev": {
