@@ -1,9 +1,12 @@
 services: 
-    
+
+    _defaults:
+        autowire:   true
+
     ########################################################################
     # Sylius Customer Object
     splash.sylius.object.customer:
-        class:      Splash\Sylius\Objects\ThirdParty
+        class:      Splash\SyliusSplashPlugin\Objects\ThirdParty
         public:     true
         arguments:  
             - "@translator"
@@ -17,9 +20,9 @@ services:
     ########################################################################
     # Sylius Address Object
     splash.sylius.object.address:
-        class:      Splash\Sylius\Objects\Address
+        class:      Splash\SyliusSplashPlugin\Objects\Address
         public:     true
-        arguments:  
+        arguments:
             - "@translator"
             - "@sylius.manager.address"
             - "@sylius.repository.address"
@@ -32,7 +35,7 @@ services:
     ########################################################################
     # Sylius Product Object
     splash.sylius.object.product:
-        class:      Splash\Sylius\Objects\Product
+        class:      Splash\SyliusSplashPlugin\Objects\Product
         public:     true
         arguments:  
             - "@sylius.repository.product_variant"
@@ -48,7 +51,7 @@ services:
     ########################################################################
     # Sylius Products Crud Management
     splash.sylius.product.crud:
-        class:      Splash\Sylius\Services\ProductCrudManager
+        class:      Splash\SyliusSplashPlugin\Services\ProductCrudManager
         public:     false
         arguments:  
             - "@sylius.manager.product"
@@ -62,7 +65,7 @@ services:
     ########################################################################
     # Sylius Products Translations Management
     splash.sylius.product.translations:
-        class:      Splash\Sylius\Services\ProductTranslationsManager
+        class:      Splash\SyliusSplashPlugin\Services\ProductTranslationsManager
         public:     false
         arguments:  
             - "@sylius.factory.product_translation"
@@ -74,7 +77,7 @@ services:
     ########################################################################
     # Sylius Products Images Management
     splash.sylius.product.images:
-        class:      Splash\Sylius\Services\ProductImagesManager
+        class:      Splash\SyliusSplashPlugin\Services\ProductImagesManager
         public:     false
         arguments:  
             - "@router"
@@ -86,7 +89,7 @@ services:
     ########################################################################
     # Sylius Products Prices Management
     splash.sylius.product.pricing:
-        class:      Splash\Sylius\Services\ProductPricingManager
+        class:      Splash\SyliusSplashPlugin\Services\ProductPricingManager
         public:     false
         arguments:  
             - "@sylius.repository.channel"
@@ -97,7 +100,7 @@ services:
     ########################################################################
     # Sylius Products Attributes Management
     splash.sylius.product.attributes:
-        class:      Splash\Sylius\Services\ProductAttributesManager
+        class:      Splash\SyliusSplashPlugin\Services\ProductAttributesManager
         public:     false
         arguments:  
             - "@sylius.manager.product_option"            
@@ -110,7 +113,7 @@ services:
     ########################################################################
     # Sylius Orders Object
     splash.sylius.order:
-        class:      Splash\Sylius\Objects\Order
+        class:      Splash\SyliusSplashPlugin\Objects\Order
         arguments:  
             - "@sylius.repository.order"
             - "@sylius.repository.channel"
@@ -126,7 +129,7 @@ services:
     ########################################################################
     # Sylius Invoice Object
     splash.sylius.invoice:
-        class:      Splash\Sylius\Objects\Invoice
+        class:      Splash\SyliusSplashPlugin\Objects\Invoice
         arguments:  
             - "@sylius.repository.order"
             - "@sylius.repository.channel"
@@ -140,11 +143,11 @@ services:
             - { name: "splash.standalone.object", type : "Invoice" }  
             
     ########################################################################
-    # Sylius Additionnal Object Event Listener
-    # This Listner is Triggered on Any Object changes dont on ORM
+    # Sylius Additional Object Event Listener
+    # This Listener is Triggered on Any Object changes don't on ORM
     # It will detect impacted Splash Objects and Dispatch Commits to Splash Server
     splash.sylius.objects.listener:
-        class:      Splash\Sylius\EventListener\ObjectEventListener
+        class:      Splash\SyliusSplashPlugin\EventListener\ObjectEventListener
         arguments:  
             - "@splash.connectors.manager"        
         tags:
