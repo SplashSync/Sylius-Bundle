@@ -146,12 +146,8 @@ services:
     # Sylius Additional Object Event Listener
     # This Listener is Triggered on Any Object changes don't on ORM
     # It will detect impacted Splash Objects and Dispatch Commits to Splash Server
-    splash.sylius.objects.listener:
-        class:      Splash\SyliusSplashPlugin\EventListener\ObjectEventListener
-        arguments:  
-            - "@splash.connectors.manager"        
+    Splash\SyliusSplashPlugin\EventListener\ObjectEventListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist,  method: postPersist }
             - { name: doctrine.event_listener, event: postUpdate,   method: postUpdate }
             - { name: doctrine.event_listener, event: preRemove,    method: preRemove }
-            

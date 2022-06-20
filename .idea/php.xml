@@ -171,7 +171,6 @@
       <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
       <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
       <path value="$PROJECT_DIR$/vendor/sylius/mailer-bundle" />
-      <path value="$PROJECT_DIR$/vendor/sylius/calendar" />
       <path value="$PROJECT_DIR$/vendor/sylius/grid-bundle" />
       <path value="$PROJECT_DIR$/vendor/sylius/resource-bundle" />
       <path value="$PROJECT_DIR$/vendor/twig/intl-extra" />
@@ -251,6 +250,9 @@
       <path value="$PROJECT_DIR$/vendor/sebastian/phpcpd" />
       <path value="$PROJECT_DIR$/vendor/squizlabs/php_codesniffer" />
       <path value="$PROJECT_DIR$/vendor/badpixxel/php-sdk" />
+      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
+      <path value="$PROJECT_DIR$/vendor/polishsymfonycommunity/symfony-mocker-container" />
+      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />

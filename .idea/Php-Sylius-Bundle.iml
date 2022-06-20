@@ -161,7 +161,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/proxy-manager-lts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/mailer-bundle" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/calendar" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/grid-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sylius/resource-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/twig/intl-extra" />
@@ -241,6 +240,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/phpcpd" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/squizlabs/php_codesniffer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/badpixxel/php-sdk" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mockery/mockery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/polishsymfonycommunity/symfony-mocker-container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest/hamcrest-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

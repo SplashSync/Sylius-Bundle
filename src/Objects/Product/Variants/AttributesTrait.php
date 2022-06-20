@@ -59,10 +59,10 @@ trait AttributesTrait
                 ->identifier("name")
                 ->name("Name")
                 ->description("Attribute Name")
+                ->microData("http://schema.org/Product", "VariantAttributeName")
                 ->setMultilang($locale->getCode())
                 ->inList("attributes")
                 ->group($groupName)
-                ->microData("http://schema.org/Product", "VariantAttributeName")
                 ->isNotTested()
             ;
             //====================================================================//
@@ -71,10 +71,10 @@ trait AttributesTrait
                 ->identifier("value")
                 ->name("Value")
                 ->description("Attribute Value")
+                ->microData("http://schema.org/Product", "VariantAttributeValue")
                 ->setMultilang($locale->getCode())
                 ->inList("attributes")
                 ->group($groupName)
-                ->microData("http://schema.org/Product", "VariantAttributeValue")
                 ->isNotTested()
             ;
         }
