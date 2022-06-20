@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Address;
+namespace Splash\SyliusSplashPlugin\Objects\Address;
 
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\AddressInterface;
@@ -23,9 +21,12 @@ use Sylius\Component\Core\Model\AddressInterface;
  */
 trait CrudTrait
 {
-    use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
+    use \Splash\SyliusSplashPlugin\Helpers\Doctrine\CrudTrait;
 
-    private static $requiredFields = array(
+    /**
+     * @var string[]
+     */
+    private static array $requiredFields = array(
         "firstname",
         "lastname",
         "street",
@@ -37,9 +38,9 @@ trait CrudTrait
     /**
      * Create Request Object
      *
-     * @return AddressInterface|false
+     * @return null|AddressInterface
      */
-    public function create()
+    public function create(): ?AddressInterface
     {
         //====================================================================//
         // Stack Trace
@@ -47,25 +48,35 @@ trait CrudTrait
 
         //====================================================================//
         // Check Customer Id is given
-        if (empty($this->in["customer"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "customer");
+        if (empty($this->in["customer"]) || !is_string($this->in["customer"])) {
+            return Splash::log()->errNull(
+                "ErrLocalFieldMissing",
+                __CLASS__,
+                __FUNCTION__,
+                "customer"
+            );
         }
         //====================================================================//
         // Load Customer
         $customer = $this->customers->find((int) self::objects()->id($this->in["customer"]));
         if (empty($customer)) {
-            return Splash::log()->errTrace("Address : Unable Load Parent Customer");
+            return Splash::log()->errNull("Address : Unable Load Parent Customer");
         }
         //====================================================================//
         // Create New Entity
         $this->object = $this->factory->createNew();
         //====================================================================//
         // Setup required Fields
-        foreach (static::$requiredFields as $fieldName) {
+        foreach (self::$requiredFields as $fieldName) {
             //====================================================================//
             // Check Field is Not Empty
             if (empty($this->in[$fieldName])) {
-                return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, $fieldName);
+                return Splash::log()->errNull(
+                    "ErrLocalFieldMissing",
+                    __CLASS__,
+                    __FUNCTION__,
+                    $fieldName
+                );
             }
             //====================================================================//
             // Pre-Setup Field Field is Not Empty

@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,14 +11,16 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
+use Exception;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Order\Model\Adjustment;
+use Sylius\Component\Product\Model\ProductTranslationInterface;
 
 /**
  * Sylius Customer Order Items & Adjustements Field
@@ -30,67 +30,68 @@ trait ItemsTrait
     /**
      * Build Fields using FieldFactory
      */
-    protected function buildItemsFields()
+    protected function buildItemsFields(): void
     {
         //====================================================================//
         // Order Line Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("sku")
+            ->identifier("sku")
             ->InList("items")
-            ->Name("Product Sku")
-            ->MicroData("http://schema.org/partOfInvoice", "name")
-            ->Group("Products")
-            ->isReadOnly();
-
+            ->name("Product Sku")
+            ->microData("http://schema.org/partOfInvoice", "name")
+            ->group("Products")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Line Description
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("name")
-            ->InList("items")
-            ->Name("Description")
-            ->MicroData("http://schema.org/partOfInvoice", "description")
-            ->Group("Products")
-            ->isReadOnly();
-
+            ->identifier("name")
+            ->inList("items")
+            ->name("Description")
+            ->microData("http://schema.org/partOfInvoice", "description")
+            ->group("Products")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Line Product Identifier
-        $this->fieldsFactory()->create(self::objects()->Encode("Product", SPL_T_ID))
-            ->Identifier("productId")
-            ->InList("items")
-            ->Name("Product ID")
-            ->MicroData("http://schema.org/Product", "productID")
-            ->Group("Products")
-            ->isReadOnly();
-
+        $this->fieldsFactory()->create((string) self::objects()->encode("Product", SPL_T_ID))
+            ->identifier("productId")
+            ->inList("items")
+            ->name("Product ID")
+            ->microData("http://schema.org/Product", "productID")
+            ->group("Products")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Line Quantity
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("qty")
-            ->InList("items")
-            ->Name("Quantity")
-            ->MicroData("http://schema.org/QuantitativeValue", "value")
-            ->Group("Products")
-            ->isReadOnly();
-
+            ->identifier("qty")
+            ->inList("items")
+            ->name("Quantity")
+            ->microData("http://schema.org/QuantitativeValue", "value")
+            ->group("Products")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Line Unit Price
         $this->fieldsFactory()->create(SPL_T_PRICE)
-            ->Identifier("price")
-            ->InList("items")
-            ->Name("Unit Price")
-            ->MicroData("http://schema.org/PriceSpecification", "price")
-            ->Group("Products")
-            ->isReadOnly();
-
+            ->identifier("price")
+            ->inList("items")
+            ->name("Unit Price")
+            ->microData("http://schema.org/PriceSpecification", "price")
+            ->group("Products")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Line Discount
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("discount")
-            ->InList("items")
-            ->Name("Discount (%)")
-            ->MicroData("http://schema.org/Order", "discount")
-            ->Group("Products")
-            ->isReadOnly();
+            ->identifier("discount")
+            ->inList("items")
+            ->name("Discount (%)")
+            ->microData("http://schema.org/Order", "discount")
+            ->group("Products")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -99,11 +100,11 @@ trait ItemsTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getItemsFields($key, $fieldName)
+    protected function getItemsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->InitOutput($this->out, "items", $fieldName);
+        $fieldId = self::lists()->initOutput($this->out, "items", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -127,7 +128,7 @@ trait ItemsTrait
             }
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->out, "items", $fieldName, $index, $value);
+            self::lists()->insert($this->out, "items", $fieldName, $index, $value);
         }
         unset($this->in[$key]);
     }
@@ -150,7 +151,9 @@ trait ItemsTrait
     /**
      * Get Order Item Sku
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param Adjustment|object|OrderItemInterface $orderItem
+     *
+     * @throws Exception
      *
      * @return string
      */
@@ -169,7 +172,9 @@ trait ItemsTrait
     /**
      * Get Order Item Name
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param Adjustment|object|OrderItemInterface $orderItem
+     *
+     * @throws Exception
      *
      * @return string
      */
@@ -177,10 +182,13 @@ trait ItemsTrait
     {
         if ($orderItem instanceof OrderItemInterface) {
             $localCode = $this->getOrderItemOrder($orderItem)->getLocaleCode();
+            /** @var null|ProductTranslationInterface $translation */
+            $translation = $this->getOrderItemProduct($orderItem)
+                ->getTranslations()
+                ->get((string) $localCode)
+            ;
 
-            return $this->getOrderItemProduct($orderItem)
-                ->getTranslations()->get((string) $localCode)
-                ->getName();
+            return $translation ? (string) $translation->getName() : "";
         }
         if ($orderItem instanceof Adjustment) {
             return (string) $orderItem->getLabel();
@@ -194,9 +202,11 @@ trait ItemsTrait
      *
      * @param Adjustment|OrderItemInterface $orderItem
      *
+     * @throws Exception
+     *
      * @return null|string
      */
-    private function getOrderItemProductId($orderItem)
+    private function getOrderItemProductId($orderItem): ?string
     {
         if ($orderItem instanceof OrderItemInterface) {
             return self::objects()->encode(
@@ -211,7 +221,7 @@ trait ItemsTrait
     /**
      * Get Order Item Quantity
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param Adjustment|object|OrderItemInterface $orderItem
      *
      * @return int
      */
@@ -223,6 +233,8 @@ trait ItemsTrait
         if ($orderItem instanceof Adjustment) {
             return 1;
         }
+
+        return 1;
     }
 
     /**
@@ -230,16 +242,19 @@ trait ItemsTrait
      *
      * @param Adjustment|OrderItemInterface $orderItem
      *
-     * @return array|string
+     * @throws Exception
+     *
+     * @return null|array
      */
-    private function getOrderItemPrice($orderItem)
+    private function getOrderItemPrice($orderItem): ?array
     {
         $taxRate = 0.0;
         $unitPrice = 0.0;
         if ($orderItem instanceof OrderItemInterface) {
             $taxCategory = $this->getOrderItemVariant($orderItem)->getTaxCategory();
             if ($taxCategory) {
-                $taxRate = $taxCategory->getRates()->first()->getAmount() * 100;
+                $taxCategoryRate = $taxCategory->getRates()->first();
+                $taxRate = $taxCategoryRate ? $taxCategoryRate->getAmount() * 100 : 0.0;
             }
             $unitPrice = $orderItem->getUnitPrice();
         }
@@ -249,14 +264,16 @@ trait ItemsTrait
 
         //====================================================================//
         // Encode Splash Price Array
-        return self::prices()->encode(
-            doubleval($unitPrice / 100),            // No TAX Price
-            $taxRate,                               // TAX Percent
+        $price = self::prices()->encode(
+            doubleval($unitPrice / 100),           // No TAX Price
+            $taxRate,                                   // TAX Percent
             null,
             (string) $this->object->getCurrencyCode(),
             (string) $this->object->getCurrencyCode(),
             (string) $this->object->getCurrencyCode()
         );
+
+        return is_array($price) ? $price : null;
     }
 
     /**
@@ -271,15 +288,14 @@ trait ItemsTrait
         if (!($orderItem instanceof OrderItemInterface)) {
             return 0.0;
         }
-        if ($orderItem->getUnits()->isEmpty()) {
+        $firstUnit = $orderItem->getUnits()->first();
+        if (!$firstUnit) {
             return 0.0;
         }
-
-        $firtsUnit = $orderItem->getUnits()->first();
-        $discount = $firtsUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT);
-        $discount += $firtsUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT);
-        $discount += $firtsUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
-        $discount += $firtsUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
+        $discount = $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT);
+        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT);
+        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
+        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
 
         return doubleval(round(-100 * $discount / $orderItem->getUnitPrice(), 1, PHP_ROUND_HALF_UP));
     }
@@ -295,7 +311,7 @@ trait ItemsTrait
     {
         $order = $orderItem->getOrder();
         if (!($order instanceof OrderInterface)) {
-            throw new \Exception("Unable to Load Oder Item Order");
+            throw new Exception("Unable to Load Oder Item Order");
         }
 
         return $order;
@@ -312,7 +328,7 @@ trait ItemsTrait
     {
         $product = $this->getOrderItemVariant($orderItem)->getProduct();
         if (!($product instanceof ProductInterface)) {
-            throw new \Exception("Unable to Load Oder Item Product");
+            throw new Exception("Unable to Load Oder Item Product");
         }
 
         return $product;
@@ -329,7 +345,7 @@ trait ItemsTrait
     {
         $variant = $orderItem->getVariant();
         if (!($variant instanceof ProductVariantInterface)) {
-            throw new \Exception("Unable to Load Oder Item Product Variant");
+            throw new Exception("Unable to Load Oder Item Product Variant");
         }
 
         return $variant;

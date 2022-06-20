@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
+use Exception;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -22,21 +21,20 @@ use Sylius\Component\Core\Model\OrderInterface;
  */
 trait CrudTrait
 {
-    use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
+    use \Splash\SyliusSplashPlugin\Helpers\Doctrine\CrudTrait;
 
     /**
      * Create Request Object
      *
-     * @return false|OrderInterface
+     * @throws Exception
+     *
+     * @return null|OrderInterface
      */
-    public function create()
+    public function create(): ?OrderInterface
     {
         //====================================================================//
         // Load Default Channel
         $dfChannel = $this->getDefaultChannel();
-        if (empty($dfChannel)) {
-            return false;
-        }
         //====================================================================//
         // Create a New Object
         /** @var OrderInterface $order */

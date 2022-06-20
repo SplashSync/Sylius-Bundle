@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,10 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 use Doctrine\ORM\PersistentCollection;
-use Splash\Client\Splash;
 use Sylius\Component\Core\Model\ImagesAwareInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 
@@ -28,7 +25,7 @@ trait ImagesTrait
     /**
      * Build Fields using FieldFactory
      */
-    private function buildImagesFields()
+    private function buildImagesFields(): void
     {
         $groupName = "Images";
 
@@ -39,42 +36,43 @@ trait ImagesTrait
         //====================================================================//
         // Product Images List
         $this->fieldsFactory()->create(SPL_T_IMG)
-            ->Identifier("image")
-            ->InList("images")
-            ->Name("Image")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "image");
-
+            ->identifier("image")
+            ->inList("images")
+            ->name("Image")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "image")
+        ;
         //====================================================================//
         // Product Images => Position
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("position")
-            ->InList("images")
-            ->Name("Position")
-            ->MicroData("http://schema.org/Product", "positionImage")
-            ->Group($groupName)
+            ->identifier("position")
+            ->inList("images")
+            ->name("Position")
+            ->microData("http://schema.org/Product", "positionImage")
+            ->group($groupName)
             ->isReadOnly()
-            ->isNotTested();
-
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Images => Is Cover
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("cover")
-            ->InList("images")
-            ->Name("Cover")
-            ->MicroData("http://schema.org/Product", "isCover")
-            ->Group($groupName)
-            ->isNotTested();
-
+            ->identifier("cover")
+            ->inList("images")
+            ->name("Cover")
+            ->microData("http://schema.org/Product", "isCover")
+            ->group($groupName)
+            ->isNotTested()
+        ;
         //====================================================================//
         // Product Images => Is Visible Image
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("visible")
-            ->InList("images")
-            ->Name("Visible")
-            ->MicroData("http://schema.org/Product", "isVisibleImage")
-            ->Group($groupName)
-            ->isNotTested();
+            ->identifier("visible")
+            ->inList("images")
+            ->name("Visible")
+            ->microData("http://schema.org/Product", "isVisibleImage")
+            ->group($groupName)
+            ->isNotTested()
+        ;
     }
 
     /**
@@ -83,7 +81,7 @@ trait ImagesTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    private function getImagesFields($key, $fieldName)
+    private function getImagesFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -97,7 +95,7 @@ trait ImagesTrait
             return;
         }
         //====================================================================//
-        // For All Availables Product Images
+        // For All Available Product Images
         $isFirst = true;
         foreach ($this->product->getImages() as $index => $image) {
             //====================================================================//
@@ -138,10 +136,10 @@ trait ImagesTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string  $fieldName Field Identifier / Name
+     * @param array[] $fieldData Field Data
      */
-    private function setImagesFields($fieldName, $fieldData)
+    private function setImagesFields(string $fieldName, array $fieldData): void
     {
         //====================================================================//
         // WRITE Field

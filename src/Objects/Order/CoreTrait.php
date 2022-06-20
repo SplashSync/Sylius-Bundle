@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
+
+use Exception;
 
 /**
  * Sylius Order Core Fields
@@ -23,67 +23,69 @@ trait CoreTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildCoreFields()
+    public function buildCoreFields(): void
     {
         //====================================================================//
         // Customer
-        $this->fieldsFactory()->Create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
-            ->Identifier("customer")
-            ->Name("Customer")
-            ->MicroData("http://schema.org/Organization", "ID")
-            ->isRequired();
-
+        $this->fieldsFactory()
+            ->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+            ->identifier("customer")
+            ->name("Customer")
+            ->microData("http://schema.org/Organization", "ID")
+            ->isRequired()
+        ;
         //====================================================================//
         // Customer Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)
-            ->Identifier("email")
-            ->Name("Customer Email")
-            ->MicroData("http://schema.org/ContactPoint", "email")
-            ->isReadOnly();
-
+            ->identifier("email")
+            ->name("Customer Email")
+            ->microData("http://schema.org/ContactPoint", "email")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Number
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("number")
-            ->Name("Order Reference")
-            ->MicroData("http://schema.org/Order", "orderNumber")
+            ->identifier("number")
+            ->name("Order Reference")
+            ->microData("http://schema.org/Order", "orderNumber")
             ->isListed()
-            ->isReadOnly();
-
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("checkoutCompletedAt")
-            ->Name("Last Name")
-            ->MicroData("http://schema.org/Order", "orderDate")
-            ->isListed();
-
+            ->identifier("checkoutCompletedAt")
+            ->name("Last Name")
+            ->microData("http://schema.org/Order", "orderDate")
+            ->isListed()
+        ;
         //====================================================================//
         // Customer Billing Address
-        $this->fieldsFactory()->Create((string) self::objects()->encode("Address", SPL_T_ID))
-            ->Identifier("billingAddress")
-            ->Name("Billing Address")
-            ->MicroData("http://schema.org/Order", "billingAddress")
+        $this->fieldsFactory()
+            ->create((string) self::objects()->encode("Address", SPL_T_ID))
+            ->identifier("billingAddress")
+            ->name("Billing Address")
+            ->microData("http://schema.org/Order", "billingAddress")
             ->setPreferRead()
-            ->isNotTested();
-//            ->isRequired();
-
+            ->isNotTested()
+        ;
         //====================================================================//
         // Customer Shipping Address
-        $this->fieldsFactory()->Create((string) self::objects()->encode("Address", SPL_T_ID))
-            ->Identifier("shippingAddress")
-            ->Name("Shipping Address")
-            ->MicroData("http://schema.org/Order", "orderDelivery")
+        $this->fieldsFactory()
+            ->create((string) self::objects()->encode("Address", SPL_T_ID))
+            ->identifier("shippingAddress")
+            ->name("Shipping Address")
+            ->microData("http://schema.org/Order", "orderDelivery")
             ->setPreferRead()
-            ->isNotTested();
-//            ->isRequired();
-
+            ->isNotTested()
+        ;
         //====================================================================//
         // Order Note
         $this->fieldsFactory()->create(SPL_T_TEXT)
-            ->Identifier("notes")
-            ->Name("Order Note")
-            ->MicroData("http://schema.org/Order", "description");
+            ->identifier("notes")
+            ->name("Order Note")
+            ->microData("http://schema.org/Order", "description")
+        ;
     }
 
     /**
@@ -92,7 +94,7 @@ trait CoreTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getCoreFields($key, $fieldName)
+    public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -133,17 +135,25 @@ trait CoreTrait
      *
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
+     *
+     * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function setCoreFields($fieldName, $fieldData)
+    public function setCoreFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             case 'customer':
-                $this->setGenericObject($fieldName, $this->getCustomer($fieldData));
+                if ($fieldData && is_scalar($fieldData)) {
+                    $this->setGenericObject($fieldName, $this->getCustomer((string) $fieldData));
+                }
 
                 break;
             case 'billingAddress':
             case 'shippingAddress':
-                $this->setGenericObject($fieldName, $this->getAddress($fieldData));
+                if ($fieldData && is_scalar($fieldData)) {
+                    $this->setGenericObject($fieldName, $this->getAddress((string) $fieldData));
+                }
 
                 break;
             case 'number':

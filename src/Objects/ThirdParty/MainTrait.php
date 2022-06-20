@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,10 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\ThirdParty;
+namespace Splash\SyliusSplashPlugin\Objects\ThirdParty;
 
 use Splash\Client\Splash;
-use Sylius\Component\Core\Model\CustomerInterface;
+use Sylius\Component\Customer\Model\CustomerInterface;
 
 /**
  * Sylius Customers Main Fields
@@ -26,48 +24,49 @@ trait MainTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildMainFields()
+    public function buildMainFields(): void
     {
         //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phoneNumber")
-            ->Name("Phone")
+            ->identifier("phoneNumber")
+            ->name("Phone")
+            ->microData("http://schema.org/Person", "telephone")
+            ->isListed()
             ->isLogged()
-            ->MicroData("http://schema.org/Person", "telephone")
-            ->isListed();
-
+        ;
         //====================================================================//
         // Gender Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("gender")
-            ->Name("Social Title")
-            ->MicroData("http://schema.org/Person", "honorificPrefix")
-            ->isReadOnly();
-
+            ->identifier("gender")
+            ->name("Social Title")
+            ->microData("http://schema.org/Person", "honorificPrefix")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Gender Type
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("gender_type")
-            ->Name("Social Title (ID)")
-            ->MicroData("http://schema.org/Person", "gender")
-            ->Description("Social Title : 0 => Male // 1 => Female // 2 => Neutral")
+            ->identifier("gender_type")
+            ->name("Social Title (ID)")
+            ->microData("http://schema.org/Person", "gender")
+            ->description("Social Title : 0 => Male // 1 => Female // 2 => Neutral")
             ->addChoices(array("0" => "Male", "1" => "Female", "2" => "Unknown"))
-            ->isNotTested();
-
+            ->isNotTested()
+        ;
         //====================================================================//
         // Birth Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("birthday")
-            ->Name("Birthday")
-            ->MicroData("http://schema.org/Person", "birthDate");
-
+            ->identifier("birthday")
+            ->name("Birthday")
+            ->microData("http://schema.org/Person", "birthDate")
+        ;
         //====================================================================//
         // Newsletter
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("SubscribedToNewsletter")
-            ->Name("Newsletter")
-            ->MicroData("http://schema.org/Organization", "newsletter");
+            ->identifier("SubscribedToNewsletter")
+            ->name("Newsletter")
+            ->microData("http://schema.org/Organization", "newsletter")
+        ;
     }
 
     /**
@@ -76,7 +75,7 @@ trait MainTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getMainFields($key, $fieldName)
+    public function getMainFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -113,7 +112,7 @@ trait MainTrait
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
      */
-    public function setMainFields($fieldName, $fieldData)
+    public function setMainFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             case 'phoneNumber':
@@ -143,16 +142,15 @@ trait MainTrait
      *
      * @return string
      */
-    private function getGender()
+    private function getGender(): string
     {
         switch ($this->object->getGender()) {
             case CustomerInterface::MALE_GENDER:
                 return $this->translator->trans("sylius.gender.male", array(), "messages");
             case CustomerInterface::FEMALE_GENDER:
                 return $this->translator->trans("sylius.gender.female", array(), "messages");
-            case CustomerInterface::UNKNOWN_GENDER:
-                return $this->translator->trans("sylius.gender.unknown", array(), "messages");
             default:
+            case CustomerInterface::UNKNOWN_GENDER:
                 return $this->translator->trans("sylius.gender.unknown", array(), "messages");
         }
     }
@@ -162,7 +160,7 @@ trait MainTrait
      *
      * @return int
      */
-    private function getGenderType()
+    private function getGenderType(): int
     {
         switch ($this->object->getGender()) {
             case CustomerInterface::MALE_GENDER:
@@ -180,7 +178,7 @@ trait MainTrait
      *
      * @param mixed $gender
      */
-    private function setGenderType($gender)
+    private function setGenderType($gender): void
     {
         if ($gender == $this->getGenderType()) {
             return;

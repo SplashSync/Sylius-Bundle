@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product\Variants;
+namespace Splash\SyliusSplashPlugin\Objects\Product\Variants;
 
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\ProductInterface as Product;
@@ -30,7 +28,7 @@ trait CoreTrait
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
      */
-    public function setVariantsCoreFields($fieldName, $fieldData)
+    public function setVariantsCoreFields(string $fieldName, $fieldData): void
     {
         if (isset($this->in["variants"])) {
             unset($this->in["variants"]);
@@ -40,25 +38,27 @@ trait CoreTrait
     /**
      * Build Fields using FieldFactory
      */
-    protected function buildVariantsCoreFields()
+    protected function buildVariantsCoreFields(): void
     {
         //====================================================================//
         // Product Variation List - Product Link
         $this->fieldsFactory()->Create((string) self::objects()->Encode("Product", SPL_T_ID))
-            ->Identifier("id")
-            ->Name("Variants")
-            ->InList("variants")
-            ->MicroData("http://schema.org/Product", "Variants")
-            ->isNotTested();
+            ->identifier("id")
+            ->name("Variants")
+            ->inList("variants")
+            ->microData("http://schema.org/Product", "Variants")
+            ->isNotTested()
+        ;
 
         //====================================================================//
         // Product Variation List - Product SKU
         $this->fieldsFactory()->Create(SPL_T_VARCHAR)
-            ->Identifier("code")
-            ->Name("SKU")
-            ->InList("variants")
-            ->MicroData("http://schema.org/Product", "VariationName")
-            ->isReadOnly();
+            ->identifier("code")
+            ->name("SKU")
+            ->inList("variants")
+            ->microData("http://schema.org/Product", "VariationName")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -67,7 +67,7 @@ trait CoreTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getVariantsCoreFields($key, $fieldName)
+    protected function getVariantsCoreFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array

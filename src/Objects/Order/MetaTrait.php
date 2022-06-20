@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 use Sylius\Component\Core\OrderCheckoutStates;
 use Sylius\Component\Core\OrderPaymentStates;
@@ -27,46 +25,47 @@ trait MetaTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildMetaFields()
+    public function buildMetaFields(): void
     {
         //====================================================================//
         // Order is Draft
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isDraft")
-            ->Name("Is Draft")
-            ->MicroData("http://schema.org/OrderStatus", "OrderDraft")
+            ->identifier("isDraft")
+            ->name("Is Draft")
+            ->microData("http://schema.org/OrderStatus", "OrderDraft")
             ->group("Meta")
-            ->isReadOnly();
-
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isValidated")
-            ->Name("Is Completed")
+            ->identifier("isValidated")
+            ->name("Is Completed")
             ->description("Checkout Completed")
-            ->MicroData("http://schema.org/OrderStatus", "OrderProcessing")
+            ->microData("http://schema.org/OrderStatus", "OrderProcessing")
             ->group("Meta")
-            ->isReadOnly();
-
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order is Shipped
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isShipped")
-            ->Name("Is Shipped")
+            ->identifier("isShipped")
+            ->name("Is Shipped")
             ->description("Shipping Completed")
-            ->MicroData("http://schema.org/OrderStatus", "OrderDelivered")
+            ->microData("http://schema.org/OrderStatus", "OrderDelivered")
             ->group("Meta")
-            ->isReadOnly();
-
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order is Paid
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("isPaid")
-            ->Name("Is Paid")
+            ->identifier("isPaid")
+            ->name("Is Paid")
             ->description("Payment Completed")
-            ->MicroData("http://schema.org/OrderStatus", "OrderPaid")
+            ->microData("http://schema.org/OrderStatus", "OrderPaid")
             ->group("Meta")
-            ->isReadOnly();
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -75,7 +74,7 @@ trait MetaTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getMetaFields($key, $fieldName)
+    public function getMetaFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             case 'isDraft':

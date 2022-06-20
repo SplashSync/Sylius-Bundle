@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 /**
  * Sylius Product Core Fields
@@ -23,32 +21,35 @@ trait CoreTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildCoreFields()
+    public function buildCoreFields(): void
     {
         //====================================================================//
         // Company
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("code")
-            ->Name("Reference")
-            ->Description("Product reference")
-            ->MicroData("http://schema.org/Product", "model")
-            ->isRequired()->isListed()->isLogged();
-
+            ->identifier("code")
+            ->name("Reference")
+            ->description("Product reference")
+            ->microData("http://schema.org/Product", "model")
+            ->isRequired()
+            ->isListed()
+            ->isLogged()
+        ;
         //====================================================================//
         // Enable Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("enabled")
-            ->Name("Active")
-            ->MicroData("http://schema.org/Product", "offered")
-            ->isListed();
-
+            ->identifier("enabled")
+            ->name("Active")
+            ->microData("http://schema.org/Product", "offered")
+            ->isListed()
+        ;
         //====================================================================//
         // Product Variation Parent Link
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("parent_id")
-            ->Name("Parent")
-            ->MicroData("http://schema.org/Product", "isVariationOf")
-            ->isReadOnly();
+            ->identifier("parent_id")
+            ->name("Parent")
+            ->microData("http://schema.org/Product", "isVariationOf")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -57,7 +58,7 @@ trait CoreTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getCoreFields($key, $fieldName)
+    public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -85,23 +86,23 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|scalar $fieldData Field Data
      */
-    public function setCoreFields($fieldName, $fieldData)
+    public function setCoreFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             //====================================================================//
-            // Variant Writting
+            // Variant Writing
             case 'code':
                 if (!$this->product->getCode()) {
-                    $this->product->setCode($fieldData);
+                    $this->product->setCode((string) $fieldData);
                 }
                 $this->setGeneric($fieldName, $fieldData);
 
                 break;
             //====================================================================//
-            // Product Writting
+            // Product Writing
             case 'enabled':
                 $this->setGenericBool($fieldName, $fieldData, "product");
 

@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 use Sylius\Component\Payment\Model\PaymentInterface;
 
@@ -27,14 +25,14 @@ trait PaymentsTrait
      *
      * @var PaymentInterface
      */
-    protected $payment;
+    protected PaymentInterface $payment;
 
     /**
      * Known Payment Method Codes Names
      *
      * @var array
      */
-    protected static $knownMethods = array(
+    protected static array $knownMethods = array(
         "cash_on_delivery" => "COD",
 
         "bank_transfer" => "ByBankTransferInAdvance",
@@ -52,7 +50,7 @@ trait PaymentsTrait
      *
      * @var array
      */
-    protected static $completedStates = array(
+    protected static array $completedStates = array(
         PaymentInterface::STATE_AUTHORIZED,
         PaymentInterface::STATE_COMPLETED,
     );
@@ -60,63 +58,64 @@ trait PaymentsTrait
     /**
      * Build Fields using FieldFactory
      */
-    protected function buildPaymentsFields()
+    protected function buildPaymentsFields(): void
     {
         //====================================================================//
         // Payment Line Date
         $this->fieldsFactory()->create(SPL_T_DATE)
-            ->Identifier("createdAt")
-            ->InList("payments")
+            ->identifier("createdAt")
+            ->inList("payments")
             ->name("Date")
             ->description("Payment Date")
-            ->MicroData("http://schema.org/PaymentChargeSpecification", "validFrom")
-            ->Group("Payments")
-            ->isReadOnly();
-
+            ->microData("http://schema.org/PaymentChargeSpecification", "validFrom")
+            ->group("Payments")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Payment Line Payment Identifier
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("id")
-            ->InList("payments")
+            ->identifier("id")
+            ->inList("payments")
             ->name("Number")
             ->description("Payment Number")
-            ->MicroData("http://schema.org/Invoice", "paymentMethodId")
-            ->Group("Payments")
-            ->isReadOnly();
-
+            ->microData("http://schema.org/Invoice", "paymentMethodId")
+            ->group("Payments")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Payment Line Payment Method
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("method")
-            ->InList("payments")
+            ->identifier("method")
+            ->inList("payments")
             ->name("Method")
             ->description("Payment Method")
-            ->MicroData("http://schema.org/Invoice", "PaymentMethod")
-            ->Group("Payments")
-            ->AddChoices(array_flip(self::$knownMethods))
-            ->isReadOnly();
-
+            ->microData("http://schema.org/Invoice", "PaymentMethod")
+            ->group("Payments")
+            ->addChoices(array_flip(self::$knownMethods))
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Payment Line Amount
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("amount")
-            ->InList("payments")
+            ->identifier("amount")
+            ->inList("payments")
             ->name("Amount")
             ->description("Payment Amount")
-            ->MicroData("http://schema.org/PaymentChargeSpecification", "price")
-            ->Group("Payments")
-            ->isReadOnly();
-
+            ->microData("http://schema.org/PaymentChargeSpecification", "price")
+            ->group("Payments")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Payment Line Currency
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("currencyCode")
-            ->InList("payments")
+            ->identifier("currencyCode")
+            ->inList("payments")
             ->name("Currency")
             ->description("Payment Currency")
-            ->MicroData("http://schema.org/PaymentChargeSpecification", "priceCurrency")
-            ->Group("Payments")
-            ->isReadOnly();
+            ->microData("http://schema.org/PaymentChargeSpecification", "priceCurrency")
+            ->group("Payments")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -125,7 +124,7 @@ trait PaymentsTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getPaymentsFields($key, $fieldName)
+    protected function getPaymentsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -146,7 +145,7 @@ trait PaymentsTrait
                     break;
                 case 'id':
                 case 'currencyCode':
-                    $value = $payment->{'get'.ucfirst($fieldId)}();
+                    $value = (string) $payment->{'get'.ucfirst($fieldId)}();
 
                     break;
                 case 'method':

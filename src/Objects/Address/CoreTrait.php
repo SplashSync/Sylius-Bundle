@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,9 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Address;
-
-use Splash\Client\Splash;
+namespace Splash\SyliusSplashPlugin\Objects\Address;
 
 /**
  * Sylius Address Core Fields
@@ -25,99 +21,102 @@ trait CoreTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildCoreFields()
+    public function buildCoreFields(): void
     {
         //====================================================================//
         // Customer
-        $this->fieldsFactory()->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
-            ->Identifier("customer")
-            ->Name("Customer")
-            ->Description("Customer Link")
-            ->MicroData("http://schema.org/Organization", "ID")
-            ->isRequired();
-
+        $this->fieldsFactory()
+            ->create((string) self::objects()->encode("ThirdParty", SPL_T_ID))
+            ->identifier("customer")
+            ->name("Customer")
+            ->description("Customer Link")
+            ->microData("http://schema.org/Organization", "ID")
+            ->isRequired()
+        ;
         //====================================================================//
         // Firstname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("firstname")
-            ->Name("First Name")
-            ->MicroData("http://schema.org/Person", "familyName")
+            ->identifier("firstname")
+            ->name("First Name")
+            ->microData("http://schema.org/Person", "familyName")
             ->isListed()
-            ->isRequired();
-
+            ->isRequired()
+        ;
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("lastname")
-            ->Name("Last Name")
-            ->MicroData("http://schema.org/Person", "givenName")
+            ->identifier("lastname")
+            ->name("Last Name")
+            ->microData("http://schema.org/Person", "givenName")
             ->isListed()
-            ->isRequired();
-
+            ->isRequired()
+        ;
         //====================================================================//
         // Phone
         $this->fieldsFactory()->create(SPL_T_PHONE)
-            ->Identifier("phoneNumber")
-            ->Name("Phone")
+            ->identifier("phoneNumber")
+            ->name("Phone")
             ->isLogged()
-            ->MicroData("http://schema.org/Person", "telephone")
-            ->isListed();
+            ->microData("http://schema.org/Person", "telephone")
+            ->isListed()
+        ;
 
         //====================================================================//
         // Company
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("company")
-            ->Name("Company Name")
-            ->MicroData("http://schema.org/Organization", "legalName");
-
+            ->identifier("company")
+            ->name("Company Name")
+            ->microData("http://schema.org/Organization", "legalName")
+        ;
         //====================================================================//
         // Street
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("street")
-            ->Name("Street")
-            ->MicroData("http://schema.org/PostalAddress", "streetAddress")
-            ->isRequired();
-
+            ->identifier("street")
+            ->name("Street")
+            ->microData("http://schema.org/PostalAddress", "streetAddress")
+            ->isRequired()
+        ;
         //====================================================================//
         // City Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("city")
-            ->Name("City")
-            ->MicroData("http://schema.org/PostalAddress", "addressLocality")
+            ->identifier("city")
+            ->name("City")
+            ->microData("http://schema.org/PostalAddress", "addressLocality")
             ->isRequired()
-            ->isListed();
-
+            ->isListed()
+        ;
         //====================================================================//
         // Zip Code
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("postcode")
-            ->Name("Zip/Postal Code")
-            ->MicroData("http://schema.org/PostalAddress", "postalCode")
-            ->AddOption("maxLength", 12)
-            ->isRequired();
-
+            ->identifier("postcode")
+            ->name("Zip/Postal Code")
+            ->microData("http://schema.org/PostalAddress", "postalCode")
+            ->addOption("maxLength", 12)
+            ->isRequired()
+        ;
         //====================================================================//
         // Country ISO Code
         $this->fieldsFactory()->create(SPL_T_COUNTRY)
-            ->Identifier("countrycode")
-            ->Name("Country ISO Code")
-            ->MicroData("http://schema.org/PostalAddress", "addressCountry")
-            ->isRequired();
-
+            ->identifier("countrycode")
+            ->name("Country ISO Code")
+            ->microData("http://schema.org/PostalAddress", "addressCountry")
+            ->isRequired()
+        ;
         //====================================================================//
         // State Name
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("provinceName")
-            ->Name("Province Name")
-            ->isReadOnly();
-
+            ->identifier("provinceName")
+            ->name("Province Name")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // State Code
         $this->fieldsFactory()->create(SPL_T_STATE)
-            ->Identifier("provinceCode")
-            ->Name("Province Code")
-            ->MicroData("http://schema.org/PostalAddress", "addressRegion")
-            ->isReadOnly();
+            ->identifier("provinceCode")
+            ->name("Province Code")
+            ->microData("http://schema.org/PostalAddress", "addressRegion")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -128,7 +127,7 @@ trait CoreTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function getCoreFields($key, $fieldName)
+    public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -169,14 +168,16 @@ trait CoreTrait
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function setCoreFields($fieldName, $fieldData)
+    public function setCoreFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             case 'customer':
-                $this->setGenericObject(
-                    $fieldName,
-                    $this->customers->find((int) self::objects()->id($fieldData))
-                );
+                if ($fieldData && is_string($fieldData)) {
+                    $this->setGenericObject(
+                        $fieldName,
+                        $this->customers->find((int) self::objects()->id($fieldData))
+                    );
+                }
 
                 break;
             case 'firstname':
@@ -201,7 +202,7 @@ trait CoreTrait
      *
      * @return string
      */
-    private function getProvinceCode()
+    private function getProvinceCode(): string
     {
         if (null === $this->object->getCountryCode()) {
             return (string) $this->object->getProvinceCode();

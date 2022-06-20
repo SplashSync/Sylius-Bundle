@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,14 +11,13 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product\Variants;
+namespace Splash\SyliusSplashPlugin\Objects\Product\Variants;
 
-use Splash\Client\Splash;
 use Sylius\Component\Core\Model\ProductInterface as Product;
 use Sylius\Component\Product\Model\ProductOptionValueInterface as Option;
 
 /**
- * Sylius Products Variants Attibutes Fields
+ * Sylius Products Variants Attributes Fields
  */
 trait AttributesTrait
 {
@@ -31,7 +28,7 @@ trait AttributesTrait
     /**
      * Build Attributes Fields using FieldFactory
      */
-    protected function buildVariantsAttributesFields()
+    protected function buildVariantsAttributesFields(): void
     {
         $groupName = "Attributes";
         $this->fieldsFactory()->setDefaultLanguage($this->translations->getDefaultLocaleCode());
@@ -43,14 +40,15 @@ trait AttributesTrait
         //====================================================================//
         // Product Variation Attribute Code (Default Language Only)
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("code")
+            ->identifier("code")
             ->name("Code")
             ->description("Attribute Code")
-            ->InList("attributes")
-            ->Group($groupName)
+            ->inList("attributes")
+            ->group($groupName)
             ->addOption("isLowerCase", true)
-            ->MicroData("http://schema.org/Product", "VariantAttributeCode")
-            ->isNotTested();
+            ->microData("http://schema.org/Product", "VariantAttributeCode")
+            ->isNotTested()
+        ;
 
         //====================================================================//
         // Walk on All Available Languages
@@ -58,25 +56,27 @@ trait AttributesTrait
             //====================================================================//
             // Product Variation Attribute Name
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("name")
-                ->Name("Name")
+                ->identifier("name")
+                ->name("Name")
                 ->description("Attribute Name")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "VariantAttributeName")
                 ->setMultilang($locale->getCode())
-                ->InList("attributes")
-                ->isNotTested();
+                ->inList("attributes")
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "VariantAttributeName")
+                ->isNotTested()
+            ;
             //====================================================================//
             // Product Variation Attribute Value
             $this->fieldsFactory()->create(SPL_T_VARCHAR)
-                ->Identifier("value")
-                ->Name("Value")
+                ->identifier("value")
+                ->name("Value")
                 ->description("Attribute Value")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "VariantAttributeValue")
                 ->setMultilang($locale->getCode())
-                ->InList("attributes")
-                ->isNotTested();
+                ->inList("attributes")
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "VariantAttributeValue")
+                ->isNotTested()
+            ;
         }
     }
 
@@ -90,7 +90,7 @@ trait AttributesTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getVariantsAttributesFields($key, $fieldName)
+    protected function getVariantsAttributesFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // Check if List field & Init List Array
@@ -112,21 +112,21 @@ trait AttributesTrait
     }
 
     //====================================================================//
-    // Fields Writting Functions
+    // Fields Writing Functions
     //====================================================================//
 
     /**
      * Write Given Fields
      *
      * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param array  $fieldData Field Data
      */
-    protected function setVariantsAttributesFields($fieldName, $fieldData)
+    protected function setVariantsAttributesFields(string $fieldName, array $fieldData): void
     {
         //====================================================================//
         // Check is Attribute Field
         if (("attributes" !== $fieldName)) {
-            return false;
+            return;
         }
         //====================================================================//
         // Identify Product Variant Attributes
@@ -143,18 +143,12 @@ trait AttributesTrait
             //====================================================================//
             // Identify or Add Attribute
             $option = $this->attributes->touchProductOption($attrItem);
-            if (empty($option)) {
-                continue;
-            }
             //====================================================================//
             // Update Attribute Names in Extra Languages
             $this->attributes->updateProductOption($option, $attrItem);
             //====================================================================//
             // Identify or Add Attribute Id
             $optionValue = $this->attributes->touchProductOptionValue($option, $attrItem);
-            if (empty($optionValue)) {
-                continue;
-            }
             //====================================================================//
             // Update Attribute Value Names in Extra Languages
             $this->attributes->updateProductOptionValue($optionValue, $attrItem);
@@ -181,7 +175,7 @@ trait AttributesTrait
      *
      * @return null|string
      */
-    private function getVariantsAttributesField(Option $optionValue, $fieldName): ?string
+    private function getVariantsAttributesField(Option $optionValue, string $fieldName): ?string
     {
         $option = $optionValue->getOption();
         if (empty($option)) {
