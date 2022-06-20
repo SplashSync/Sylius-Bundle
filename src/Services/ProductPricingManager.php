@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,12 +11,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Sylius\Services;
+namespace   Splash\SyliusSplashPlugin\Services;
 
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Models\Objects\PricesTrait;
-use Splash\Sylius\Helpers\ChannelsAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
 use Sylius\Component\Core\Model\ChannelInterface as Channel;
 use Sylius\Component\Core\Model\ChannelPricingInterface as ChannelPricing;
@@ -39,17 +37,17 @@ class ProductPricingManager
      *
      * @var Manager
      */
-    protected $entityManager;
+    protected Manager $entityManager;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Service Constructor
@@ -87,15 +85,14 @@ class ProductPricingManager
     public function getChannelPrice(Variant $variant, Channel $channel, bool $original)
     {
         //====================================================================//
-        // Retreive Price Currency
+        // Retrieve Price Currency
         $currency = $channel->getBaseCurrency();
         //====================================================================//
         // TODO : Select Default TaxZone in Parameters
-        // Retreive Price TAX Percentile
+        // Retrieve Price TAX Percentile
         $taxCategory = $variant->getTaxCategory();
-        $taxRate = $taxCategory
-            ? $taxCategory->getRates()->first()->getAmount() * 100
-            : 0.0;
+        $taxCategoryRate = $taxCategory ? $taxCategory->getRates()->first() : null;
+        $taxRate = $taxCategoryRate ? $taxCategoryRate->getAmount() * 100 : 0.0;
         //====================================================================//
         // Identify Default Channel Price
         $price = 0;
@@ -125,11 +122,11 @@ class ProductPricingManager
      *
      * @return bool
      */
-    public function setChannelPrice(Variant $variant, Channel $channel, bool $original, $fieldData): bool
+    public function setChannelPrice(Variant $variant, Channel $channel, bool $original, ?array $fieldData): bool
     {
         $updated = false;
         if (!is_iterable($fieldData) || !isset($fieldData["ht"])) {
-            return $updated;
+            return false;
         }
         //====================================================================//
         // Identify Default Channel Price

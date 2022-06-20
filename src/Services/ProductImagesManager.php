@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Sylius\Services;
+namespace   Splash\SyliusSplashPlugin\Services;
 
 use ArrayObject;
 use Doctrine\Common\Collections\Collection;
@@ -43,36 +41,36 @@ class ProductImagesManager
     /**
      * @var Router
      */
-    protected $router;
+    protected Router $router;
 
     /**
      * Doctrine Entity Manager
      *
      * @var Manager
      */
-    protected $manager;
+    protected Manager $manager;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     /**
      * @var CacheManager
      */
-    protected $cache;
+    protected CacheManager $cache;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Product Current Images Collection
      *
      * @var Collection
      */
-    private $currentImages;
+    private Collection $currentImages;
 
     /**
      * Service Constructor
@@ -83,8 +81,13 @@ class ProductImagesManager
      * @param CacheManager $cache
      * @param array        $configuration
      */
-    public function __construct(Router $router, Manager $manager, Factory $factory, CacheManager $cache, array $configuration)
-    {
+    public function __construct(
+        Router $router,
+        Manager $manager,
+        Factory $factory,
+        CacheManager $cache,
+        array $configuration
+    ) {
         //====================================================================//
         // Symfony Router
         $this->router = $router;
@@ -95,7 +98,7 @@ class ProductImagesManager
         // Sylius Images Factory
         $this->factory = $factory;
         //====================================================================//
-        // Liiop Images Cache Manager
+        // Liip Images Cache Manager
         $this->cache = $cache;
         //====================================================================//
         // Store Bundle Configuration
@@ -160,16 +163,18 @@ class ProductImagesManager
      * Set Product Images
      *
      * @param ProductVariantInterface $variant
-     * @param array|ArrayObject       $fieldData
+     * @param array[]                 $fieldData
+     *
+     * @throws Exception
      *
      * @return bool
      */
-    public function setImages(ProductVariantInterface $variant, iterable $fieldData)
+    public function setImages(ProductVariantInterface $variant, array $fieldData): bool
     {
         //====================================================================//
         // Get Current product Images Collection
         $product = $variant->getProduct();
-        if (!$product || !($product instanceof ImagesAwareInterface)) {
+        if (!($product instanceof ImagesAwareInterface)) {
             return false;
         }
         $this->currentImages = $product->getImages();
@@ -181,7 +186,7 @@ class ProductImagesManager
         foreach ($fieldData as $inImage) {
             //====================================================================//
             // Safety Check: Image Array is here
-            if (!isset($inImage["image"]) || empty($inImage["image"])) {
+            if (empty($inImage["image"])) {
                 continue;
             }
 
@@ -199,7 +204,7 @@ class ProductImagesManager
             // Update Image File Contents
             $this->updateImage($productImage, $inImage["image"]);
             //====================================================================//
-            // Update Image Visiblity for this Variant
+            // Update Image Visibility for this Variant
             $this->updateVisibility($productImage, $variant, $inImage);
             //====================================================================//
             // Load Next Image
@@ -209,6 +214,7 @@ class ProductImagesManager
         //====================================================================//
         // Remove on List Remaining Items
         while ($productImage) {
+            /** @var ProductImageInterface $productImage */
             //====================================================================//
             // Remove Image
             $this->removeImage($productImage);
@@ -285,12 +291,15 @@ class ProductImagesManager
      *
      * @param ProductImageInterface   $productImage
      * @param ProductVariantInterface $variant
-     * @param array|ArrayObject       $inImage
+     * @param array                   $inImage
      *
      * @return bool True if Something Changed
      */
-    private function updateVisibility(ProductImageInterface &$productImage, ProductVariantInterface $variant, iterable $inImage): bool
-    {
+    private function updateVisibility(
+        ProductImageInterface &$productImage,
+        ProductVariantInterface $variant,
+        array $inImage
+    ): bool {
         //====================================================================//
         // Safety Check
         if (!isset($inImage["visible"])) {
@@ -319,6 +328,8 @@ class ProductImagesManager
      *
      * @param ProductVariantInterface $variant
      * @param array|ArrayObject       $inImage
+     *
+     * @throws Exception
      *
      * @return ProductImageInterface
      */
@@ -383,11 +394,16 @@ class ProductImagesManager
     private function isSearchedImage(ProductImageInterface $productImage, string $inMd5)
     {
         //====================================================================//
-        // Read Image CheckSum
-        $imgMd5 = md5_file($this->config["images_folder"].$productImage->getPath());
+        // Build Image FullPath
+        $imagePath = $this->config["images_folder"].$productImage->getPath();
         //====================================================================//
-        // If CheckSum are Similar => Unset & return Image
-        return ($imgMd5 == $inMd5);
+        // Safety Checks
+        if (!is_file($imagePath)) {
+            return false;
+        }
+        //====================================================================//
+        // If CheckSum are Similar
+        return (md5_file($imagePath) == $inMd5);
     }
 
     /**

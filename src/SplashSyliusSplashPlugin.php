@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,8 +11,9 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius;
+namespace Splash\SyliusSplashPlugin;
 
+use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -22,6 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * Manage Access to All Splash Sylius Objects
  */
-class SplashSyliusBundle extends Bundle
+final class SplashSyliusSplashPlugin extends Bundle
 {
+    use SyliusPluginTrait;
 }
