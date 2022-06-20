@@ -83,49 +83,48 @@ quality:v1.08-php-7.4:
   <<: *quality
 
 ################################################################
-# Tests on Sylius V1.6
-quality:v1.6-php-7.4:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-    variables:
-        SYLIUS_VERSION:   "~1.6.0"
-    <<: *quality
-
-################################################################
 # Functional Tests
 ################################################################
 
-#.core_tests:    &core_tests
-#    stage:      tests
-#    tags:
-#        - Dedicated
-#    services:
-#        - name: mysql:8.0
-#          command: ['--default-authentication-plugin=mysql_native_password']
-#        - name: elasticsearch:7.5.1
-#          alias: elasticsearch
-#          command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
-#    artifacts:
-#        when: always
-#        reports:
-#            junit: "$CI_PROJECT_DIR/*-report.xml"
-#
-#    ################################################################################
-#    # Install & Configure Environnement
-#    before_script:
-#        ################################################################################
-#        # Install Akeneo Community Dev Project
-#        - sh ci/install_akeneo.sh
-#        ################################################################################
-#        # Install Splash Bundle for Akeneo
-#        - sh ci/install_splash.sh
-#    ################################################################################
-#    # Run Test Script
-#    script:
-#      # Execute PhpUnit Tests
-#      - cd akeneo
-#      - php vendor/bin/phpunit --version
+.core_tests:    &core_tests
+    stage:      tests
+    tags:
+        - Dedicated
+    services:
+        - name: mysql:8.0
+    artifacts:
+        when: always
+        reports:
+            junit: "$CI_PROJECT_DIR/*-report.xml"
+    ################################################################################
+    # Install & Configure Environnement
+    before_script:
+      ################################################################################
+      # Check if Sylius Core is Installed
+      - sh /builds/SplashSync/Sylius-Bundle/docker/scripts/install-sylius-core.sh
+      ################################################################################
+      # Check if Sylius Database is Installed
+      - sh /builds/SplashSync/Sylius-Bundle/docker/scripts/install-sylius-db.sh
+      ################################################################################
+      # Check if Splash Dev Module is Installed
+      - sh /builds/SplashSync/Sylius-Bundle/docker/scripts/install-dev-module.sh
+    ################################################################################
+    # Run Test Script
+    script:
+      # Execute PhpUnit Tests
+      - cd /var/www/html
+      - php vendor/bin/phpunit --version
 #      - php vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/main-report.xml
 #
+
+################################################################
+# Tests on Sylius V1.11
+tests:v1.11-php-8.0:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
+    variables:
+        SYLIUS_VERSION:   "~1.11.0"
+    <<: *core_tests
+
 #tests:v4-php-7.3:
 #    image: akeneo/pim-php-dev:4.0
 #    variables:
