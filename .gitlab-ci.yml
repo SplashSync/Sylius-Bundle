@@ -114,8 +114,7 @@ quality:v1.08-php-7.4:
       # Execute PhpUnit Tests
       - cd /var/www/html
       - php vendor/bin/phpunit --version
-#      - php vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/main-report.xml
-#
+      - php vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/main-report.xml
 
 ################################################################
 # Tests on Sylius V1.11
