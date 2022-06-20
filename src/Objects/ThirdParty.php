@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,11 +11,10 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects;
+namespace Splash\SyliusSplashPlugin\Objects;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Splash\Bundle\Models\AbstractStandaloneObject;
-use Splash\Client\Splash;
 use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
@@ -25,7 +22,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
 use Sylius\Component\Resource\Factory\Factory;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sylius Customer Object
@@ -49,43 +46,43 @@ class ThirdParty extends AbstractStandaloneObject
     //====================================================================//
 
     /**
-     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
+     * {@inheritdoc}
      */
-//    protected static    $DISABLED        =  True;
+    protected static string $name = "Customer";
 
     /**
-     *  Object Name (Translated by Module)
+     * {@inheritdoc}
      */
-    protected static $NAME = "Customer";
+    protected static string $description = 'Sylius Customer Object';
 
     /**
-     *  Object Description (Translated by Module).
+     * {@inheritdoc}
      */
-    protected static $DESCRIPTION = 'Sylius Customer Object';
+    protected static string $ico = 'fa fa-user';
 
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag).
+     * {@inheritdoc}
      */
-    protected static $ICO = 'fa fa-user';
+    protected static bool $enablePushCreated = false;
 
     //====================================================================//
     // Private variables
     //====================================================================//
 
     /**
-     * @var CustomerInterface
+     * @phpstan-var CustomerInterface
      */
-    protected $object;
+    protected object $object;
 
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     //====================================================================//
     // Service Constructor
@@ -99,8 +96,12 @@ class ThirdParty extends AbstractStandaloneObject
      * @param CustomerRepository     $repository
      * @param Factory                $factory
      */
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager, CustomerRepository $repository, Factory $factory)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        CustomerRepository $repository,
+        Factory $factory
+    ) {
         //====================================================================//
         // Link to Symfony Translator
         $this->translator = $translator;

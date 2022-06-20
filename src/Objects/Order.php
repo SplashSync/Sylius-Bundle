@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects;
+namespace Splash\SyliusSplashPlugin\Objects;
 
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Bundle\Models\AbstractStandaloneObject;
@@ -23,9 +21,9 @@ use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\PricesTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
-use Splash\Sylius\Helpers\AddressAwareTrait;
-use Splash\Sylius\Helpers\ChannelsAwareTrait;
-use Splash\Sylius\Helpers\CustomersAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\AddressAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\CustomersAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository as Addresses;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository as Customers;
@@ -66,50 +64,43 @@ class Order extends AbstractStandaloneObject
     //====================================================================//
 
     /**
-     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
+     * {@inheritdoc}
      */
-//    protected static    $DISABLED        =  True;
+    protected static string $name = "Order";
 
     /**
-     *  Object Name (Translated by Module)
+     * {@inheritdoc}
      */
-    protected static $NAME = "Order";
+    protected static string $description = 'Sylius Order Object';
 
     /**
-     *  Object Description (Translated by Module).
+     * {@inheritdoc}
      */
-    protected static $DESCRIPTION = 'Sylius Order Object';
+    protected static string $ico = 'fa fa-shopping-cart';
 
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag).
+     * {@inheritdoc}
      */
-    protected static $ICO = 'fa fa-shopping-cart';
+    protected static bool $enablePushCreated = false;
 
     /**
-     * Object Synchronistion Recommended Configuration
-     *
-     * @codingStandardsIgnoreStart
+     * {@inheritdoc}
      */
-
-    // Enable Creation Of New Local Objects when Not Existing
-    protected static $ENABLE_PUSH_CREATED = false;
-    // Enable Delete Of Existing Local Objects when Deleted Remotly
-    protected static $ENABLE_PUSH_DELETED = false;
-    /** @codingStandardsIgnoreEnd */
+    protected static bool $enablePushDeleted = false;
 
     //====================================================================//
     // Private variables
     //====================================================================//
 
     /**
-     * @var OrderInterface
+     * @phpstan-var OrderInterface
      */
-    protected $object;
+    protected object $object;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     //====================================================================//
     // Service Constructor
@@ -126,8 +117,15 @@ class Order extends AbstractStandaloneObject
      * @param Factory   $factory
      * @param array     $configuration
      */
-    public function __construct(Orders $repository, Channels $channels, Customers $customer, Addresses $address, Manager $manager, Factory $factory, array $configuration)
-    {
+    public function __construct(
+        Orders $repository,
+        Channels $channels,
+        Customers $customer,
+        Addresses $address,
+        Manager $manager,
+        Factory $factory,
+        array $configuration
+    ) {
         //====================================================================//
         // Link to Orders Repository
         $this->repository = $repository;

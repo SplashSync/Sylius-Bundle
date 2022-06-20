@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects;
+namespace Splash\SyliusSplashPlugin\Objects;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Splash\Bundle\Models\AbstractStandaloneObject;
@@ -25,12 +23,10 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Factory\AddressFactory as Factory;
 use Sylius\Component\Core\Model\AddressInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sylius Address Object
- *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Address extends AbstractStandaloneObject
 {
@@ -51,56 +47,48 @@ class Address extends AbstractStandaloneObject
     //====================================================================//
 
     /**
-     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
+     * {@inheritdoc}
      */
-//    protected static    $DISABLED        =  True;
+    protected static string $name = "Address";
 
     /**
-     *  Object Name (Translated by Module)
+     * {@inheritdoc}
      */
-    protected static $NAME = "Address";
+    protected static string $description = 'Sylius Address Object';
 
     /**
-     *  Object Description (Translated by Module).
+     * {@inheritdoc}
      */
-    protected static $DESCRIPTION = 'Sylius Address Object';
+    protected static string $ico = 'fa fa-envelope';
 
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag).
+     * {@inheritdoc}
      */
-    protected static $ICO = 'fa fa-envelope';
-
-    /**
-     * Enable Creation Of New Local Objects when Not Existing
-     *
-     * @codingStandardsIgnoreStart
-     */
-    protected static $ENABLE_PUSH_CREATED = false;
-    /** @codingStandardsIgnoreEnd */
+    protected static bool $enablePushCreated = false;
 
     //====================================================================//
     // Private variables
     //====================================================================//
 
     /**
-     * @var AddressInterface
+     * @phpstan-var AddressInterface
      */
-    protected $object;
+    protected object $object;
 
     /**
      * @var TranslatorInterface
      */
-    protected $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * @var CustomerRepository
      */
-    protected $customers;
+    protected CustomerRepository $customers;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     //====================================================================//
     // Service Constructor
@@ -115,8 +103,13 @@ class Address extends AbstractStandaloneObject
      * @param Factory                $factory
      * @param CustomerRepository     $customers
      */
-    public function __construct(TranslatorInterface $trans, EntityManagerInterface $manager, AddressRepository $repo, Factory $factory, CustomerRepository $customers)
-    {
+    public function __construct(
+        TranslatorInterface $trans,
+        EntityManagerInterface $manager,
+        AddressRepository $repo,
+        Factory $factory,
+        CustomerRepository $customers
+    ) {
         //====================================================================//
         // Link to Symfony Translator
         $this->translator = $trans;
