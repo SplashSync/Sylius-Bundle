@@ -74,7 +74,6 @@ quality:v1.10-php-7.4:
         SYLIUS_VERSION:   "~1.10.0"
     <<: *quality
 
-
 ################################################################
 # Tests on Sylius V1.08
 quality:v1.08-php-7.4:
@@ -85,11 +84,11 @@ quality:v1.08-php-7.4:
 
 ################################################################
 # Tests on Sylius V1.6
-#quality:v1.6-php-7.4:
-#    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-#    variables:
-#        SYLIUS_VERSION:   "~1.6.0"
-#    <<: *quality
+quality:v1.6-php-7.4:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+    variables:
+        SYLIUS_VERSION:   "~1.6.0"
+    <<: *quality
 
 ################################################################
 # Functional Tests
