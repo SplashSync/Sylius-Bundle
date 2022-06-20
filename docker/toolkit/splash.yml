@@ -19,6 +19,7 @@ splash:
             host:               false
             connector:          soap
             config:
+                Extended:           true
                 WsIdentifier:       ThisIsSyliusWsId
                 WsEncryptionKey:    ThisIsSyliusWsEncryptionKey
                 WsHost:             http://latest.sylius.local
