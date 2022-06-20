@@ -46,7 +46,7 @@ stages:
   before_script:
       ################################################################################
       # Run Composer
-      - composer require sylius/sylius $SYLIUS_VERSION --no-interaction --prefer-dist --no-suggest --no-scripts --no-plugins
+      - composer require sylius/sylius $SYLIUS_VERSION -W --no-interaction --prefer-dist --no-suggest --no-scripts --no-plugins
   ################################################################################
   # Run Test Script
   script:
