@@ -65,6 +65,14 @@ quality:v1.11-php-8.0:
         SYLIUS_VERSION:   "~1.11"
     <<: *quality
 
+################################################################
+# Tests on Sylius V1.06
+quality:v1.06-php-7.4:
+  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+  variables:
+    SYLIUS_VERSION:   "~1.06"
+  <<: *quality
+
 #quality:v5-php-7.4:
 #    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
 #    variables:
