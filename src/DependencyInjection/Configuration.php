@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\DependencyInjection;
+namespace Splash\SyliusSplashPlugin\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -26,20 +24,17 @@ class Configuration implements ConfigurationInterface
     /**
      * @return TreeBuilder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('splash_sylius');
+        $treeBuilder = new TreeBuilder('splash_sylius_splash');
+        $rootNode = $treeBuilder->getRootNode();
 
+        // @phpstan-ignore-next-line
         $rootNode
             ->children()
-                //====================================================================//
-                // COMMON Parameters
-                //====================================================================//
             ->scalarNode('default_channel')
-            ->isRequired()
-            ->cannotBeEmpty()
             ->defaultValue("default")
+            ->cannotBeEmpty()
             ->info('Default Channel for association with new Products.')
             ->end()
             ->end()

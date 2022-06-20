@@ -1,9 +1,7 @@
 <?php
 
 /*
- *  This file is part of SplashSync Project.
- *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) BadPixxel <www.badpixxel.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +11,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\EventListener;
+namespace Splash\SyliusSplashPlugin\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Exception;
@@ -63,7 +61,7 @@ class ObjectEventListener
      *
      * @var ConnectorsManager
      */
-    private $manager;
+    private ConnectorsManager $manager;
 
     //====================================================================//
     //  CONSTRUCTOR
@@ -85,6 +83,8 @@ class ObjectEventListener
      * On Entity Created Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function postPersist(LifecycleEventArgs $eventArgs): void
     {
@@ -103,6 +103,8 @@ class ObjectEventListener
      * On Entity Updated Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function postUpdate(LifecycleEventArgs $eventArgs): void
     {
@@ -124,7 +126,7 @@ class ObjectEventListener
         //====================================================================//
         // After Updates on Product
         if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
-            Splash::Object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
+            Splash::object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
         }
     }
 
@@ -132,6 +134,8 @@ class ObjectEventListener
      * On Entity Before Deleted Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function preRemove(LifecycleEventArgs $eventArgs): void
     {
@@ -147,11 +151,13 @@ class ObjectEventListener
     }
 
     /**
-     * Execut Splahs Commit for Sylius Objects
+     * Execute Splash Commit for Sylius Objects
      *
      * @param string       $objectType
      * @param array|string $objectIds
      * @param string       $action
+     *
+     * @throws Exception
      */
     private function doCommit(string $objectType, $objectIds, string $action): void
     {
@@ -160,12 +166,9 @@ class ObjectEventListener
         if (empty($objectIds)) {
             return;
         }
-        if (!is_scalar($objectIds) && !is_array($objectIds)) {
-            return;
-        }
         //====================================================================//
         // Locked (Just created) => Skip
-        if ((SPL_A_UPDATE == $action) && Splash::Object($objectType)->isLocked()) {
+        if ((SPL_A_UPDATE == $action) && Splash::object($objectType)->isLocked()) {
             return;
         }
         //====================================================================//
@@ -185,7 +188,7 @@ class ObjectEventListener
             //====================================================================//
             //  Prepare Commit Parameters
             $user = 'Sylius Bundle';
-            $msg = 'Change Commited on Sylius for '.$objectType;
+            $msg = 'Change Committed on Sylius for '.$objectType;
             //====================================================================//
             //  Execute Commit
             $connector->commit($objectType, $objectIds, $action, $user, $msg);
@@ -233,7 +236,7 @@ class ObjectEventListener
     }
 
     /**
-     * Safe Get Envent Doctrine Entity Id
+     * Safe Get Event Doctrine Entity ID
      *
      * @param LifecycleEventArgs $eventArgs
      *
@@ -260,6 +263,8 @@ class ObjectEventListener
      * Also Detect Entity Type Name
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      *
      * @return null|array
      */
@@ -302,11 +307,13 @@ class ObjectEventListener
     }
 
     /**
-     * Check if Invoice Object Should be Commited Too
+     * Check if Invoice Object Should be Committed Too
      *
      * @param string       $objectType
      * @param array|string $objectIds
      * @param string       $action
+     *
+     * @throws Exception
      *
      * @return bool
      */

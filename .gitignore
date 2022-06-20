@@ -5,3 +5,5 @@
 /.directory
 /.php_cs.cache
 /coverage/
+/.php-cs-fixer.cache
+/.gh-pages/
