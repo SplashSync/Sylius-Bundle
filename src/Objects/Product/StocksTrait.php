@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 /**
  * Sylius Product Stocks Fields
@@ -23,27 +23,28 @@ trait StocksTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildStocksFields()
+    public function buildStocksFields(): void
     {
         $groupName = "Stocks";
 
         //====================================================================//
         // Stock Reel
         $this->fieldsFactory()->create(SPL_T_INT)
-            ->Identifier("onHand")
-            ->Name("Stock on Hands")
-            ->MicroData("http://schema.org/Offer", "inventoryLevel")
-            ->Group($groupName)
-            ->isListed();
-
+            ->identifier("onHand")
+            ->name("Stock on Hands")
+            ->microData("http://schema.org/Offer", "inventoryLevel")
+            ->group($groupName)
+            ->isListed()
+        ;
         //====================================================================//
         // Out of Stock Flag
         $this->fieldsFactory()->create(SPL_T_BOOL)
-            ->Identifier("outofstock")
-            ->Name("Out of stock")
-            ->MicroData("http://schema.org/ItemAvailability", "OutOfStock")
-            ->Group($groupName)
-            ->isReadOnly();
+            ->identifier("outofstock")
+            ->name("Out of stock")
+            ->microData("http://schema.org/ItemAvailability", "OutOfStock")
+            ->group($groupName)
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -52,7 +53,7 @@ trait StocksTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getStocksFields($key, $fieldName)
+    public function getStocksFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -62,10 +63,10 @@ trait StocksTrait
 
                 break;
             case 'outofstock':
-                if ($this->object->isTracked()) {
-                    $this->out[$fieldName] = ($this->object->getOnHand() > 0) ? false : true;
-                }
                 $this->out[$fieldName] = false;
+                if ($this->object->isTracked()) {
+                    $this->out[$fieldName] = !(($this->object->getOnHand() > 0));
+                }
 
                 break;
             default:
@@ -77,14 +78,14 @@ trait StocksTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|scalar $fieldData Field Data
      */
-    public function setStocksFields($fieldName, $fieldData)
+    public function setStocksFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             //====================================================================//
-            // Variant Writting
+            // Variant Writing
             case 'onHand':
                 $this->setGeneric($fieldName, (int) $fieldData);
 

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects;
+namespace Splash\SyliusSplashPlugin\Objects;
 
 /**
  * Sylius Invoice Object
@@ -27,45 +27,51 @@ class Invoice extends Order
     //====================================================================//
 
     /**
-     *  Object Name (Translated by Module)
+     * {@inheritdoc}
      */
-    protected static $NAME = "Invoice";
+    protected static string $name = "Invoice";
 
     /**
-     *  Object Description (Translated by Module).
+     * {@inheritdoc}
      */
-    protected static $DESCRIPTION = 'Sylius Invoice Object';
+    protected static string $description = 'Sylius Invoice Object';
 
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag).
+     * {@inheritdoc}
      */
-    protected static $ICO = 'fa fa-money';
+    protected static string $ico = 'fa fa-money';
+
+    //====================================================================//
+    // Object Default Configuration
+    //====================================================================//
 
     /**
-     *  Object Synchronistion Limitations
-     *
-     *  This Flags are Used by Splash Server to Prevent Unexpected Operations on Remote Server
-     *
-     * @codingStandardsIgnoreStart
+     * {@inheritdoc}
      */
-
-    // Allow Creation Of New Local Objects
-    protected static $ALLOW_PUSH_CREATED = false;
-    // Allow Update Of Existing Local Objects
-    protected static $ALLOW_PUSH_UPDATED = false;
-    // Allow Delete Of Existing Local Objects
-    protected static $ALLOW_PUSH_DELETED = false;
+    protected static bool $allowPushCreated = false;
 
     /**
-     *  Object Synchronistion Recommended Configuration
+     * {@inheritdoc}
      */
+    protected static bool $allowPushUpdated = false;
 
-    // Enable Creation Of New Local Objects when Not Existing
-    protected static $ENABLE_PUSH_CREATED = false;
-    // Enable Update Of Existing Local Objects when Modified Remotly
-    protected static $ENABLE_PUSH_UPDATED = false;
-    // Enable Delete Of Existing Local Objects when Deleted Remotly
-    protected static $ENABLE_PUSH_DELETED = false;
+    /**
+     * {@inheritdoc}
+     */
+    protected static bool $allowPushDeleted = false;
 
-    /** @codingStandardsIgnoreEnd */
+    /**
+     * {@inheritdoc}
+     */
+    protected static bool $enablePushCreated = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static bool $enablePushUpdated = false;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected static bool $enablePushDeleted = false;
 }

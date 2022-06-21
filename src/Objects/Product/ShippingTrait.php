@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 /**
  * Sylius Product Shipping Fields
@@ -23,38 +23,42 @@ trait ShippingTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildShippingFields()
+    public function buildShippingFields(): void
     {
         $groupName = "Shipping";
 
         //====================================================================//
         // Weight
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("weight")
-            ->Name("Weight")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "weight");
+            ->identifier("weight")
+            ->name("Weight")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "weight")
+        ;
         //====================================================================//
         // Height
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("height")
-            ->Name("Height")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "height");
+            ->identifier("height")
+            ->name("Height")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "height")
+        ;
         //====================================================================//
         // Depth
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("depth")
-            ->Name("Depth")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "depth");
+            ->identifier("depth")
+            ->name("Depth")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "depth")
+        ;
         //====================================================================//
         // Width
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
-            ->Identifier("width")
-            ->Name("Width")
-            ->Group($groupName)
-            ->MicroData("http://schema.org/Product", "width");
+            ->identifier("width")
+            ->name("Width")
+            ->group($groupName)
+            ->microData("http://schema.org/Product", "width")
+        ;
     }
 
     /**
@@ -63,7 +67,7 @@ trait ShippingTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getShippingFields($key, $fieldName)
+    public function getShippingFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -87,7 +91,7 @@ trait ShippingTrait
      * @param string $fieldName Field Identifier / Name
      * @param mixed  $fieldData Field Data
      */
-    public function setShippingFields($fieldName, $fieldData)
+    public function setShippingFields(string $fieldName, $fieldData): void
     {
         switch ($fieldName) {
             //====================================================================//

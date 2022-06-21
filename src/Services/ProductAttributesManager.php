@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,12 +13,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Sylius\Services;
+namespace   Splash\SyliusSplashPlugin\Services;
 
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Core\SplashCore      as Splash;
-use Splash\Sylius\Services\ProductTranslationsManager as Translations;
+use Splash\SyliusSplashPlugin\Services\ProductTranslationsManager as Translations;
 use Sylius\Bundle\ProductBundle\Doctrine\ORM\ProductOptionRepository as Options;
 use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 use Sylius\Component\Locale\Model\LocaleInterface;
@@ -37,39 +37,39 @@ class ProductAttributesManager
      *
      * @var Manager
      */
-    protected $manager;
+    protected Manager $manager;
 
     /**
      * @var Options
      */
-    protected $options;
+    protected Options $options;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     /**
      * @var Factory
      */
-    protected $valuesFactory;
+    protected Factory $valuesFactory;
 
     /**
      * @var Translations
      */
-    protected $translations;
+    protected ProductTranslationsManager $translations;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * List of Required Attributes Fields
      *
      * @var array
      */
-    private static $requiredFields = array(
+    private static array $requiredFields = array(
         "code" => "Attribute Code",
         "name" => "Attribute Name",
         "value" => "Attribute Value Name",
@@ -85,8 +85,14 @@ class ProductAttributesManager
      * @param Translations $translations
      * @param array        $configuration
      */
-    public function __construct(Manager $manager, Options $options, Factory $factory, Factory $values, Translations $translations, array $configuration)
-    {
+    public function __construct(
+        Manager $manager,
+        Options $options,
+        Factory $factory,
+        Factory $values,
+        Translations $translations,
+        array $configuration
+    ) {
         //====================================================================//
         // Setup Products Options Repository
         $this->options = $options;
@@ -132,11 +138,11 @@ class ProductAttributesManager
     /**
      * Check if Attribute Array is Valid for Writing
      *
-     * @param array|ArrayObject $fieldData Attribute Array
+     * @param array $fieldData Attribute Array
      *
      * @return bool
      */
-    public function isValidDefinition(iterable $fieldData): bool
+    public function isValidDefinition(array $fieldData): bool
     {
         //====================================================================//
         // Check Attribute is Array
@@ -145,7 +151,7 @@ class ProductAttributesManager
         }
         //====================================================================//
         // Check Required Attributes Data are Given
-        foreach (static::$requiredFields as $key => $name) {
+        foreach (self::$requiredFields as $key => $name) {
             if (!isset($fieldData[$key])) {
                 return Splash::log()->errTrace("Product ".$name." is Missing.");
             }
@@ -175,6 +181,7 @@ class ProductAttributesManager
         }
         //====================================================================//
         // Create Product Option
+        /** @var ProductOptionInterface $newOption */
         $newOption = $this->factory->createNew();
         //====================================================================//
         // Setup Option Code
@@ -231,6 +238,7 @@ class ProductAttributesManager
 
         //====================================================================//
         // Create Product Option Value
+        /** @var ProductOptionValueInterface $newValue */
         $newValue = $this->valuesFactory->createNew();
         //====================================================================//
         // Setup Option Value Name

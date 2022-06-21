@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 /**
  * Sylius Customer Order Status Field
@@ -23,19 +23,20 @@ trait StatusTrait
     /**
      * Build Customer Order Status Fields using FieldFactory
      */
-    protected function buildStatusFields()
+    protected function buildStatusFields(): void
     {
         //====================================================================//
         // Order Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("status")
-            ->Name("Order Status")
-            ->MicroData("http://schema.org/Order", "orderStatus")
-            ->AddChoice("OrderDraft", "Draft")
-            ->AddChoice("OrderInTransit", "Shippment Done")
-            ->AddChoice("OrderProcessing", "Processing")
-            ->AddChoice("OrderDelivered", "Delivered")
-            ->isReadOnly();
+            ->identifier("status")
+            ->name("Order Status")
+            ->microData("http://schema.org/Order", "orderStatus")
+            ->addChoice("OrderDraft", "Draft")
+            ->addChoice("OrderInTransit", "Shippment Done")
+            ->addChoice("OrderProcessing", "Processing")
+            ->addChoice("OrderDelivered", "Delivered")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -44,7 +45,7 @@ trait StatusTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getStatusFields($key, $fieldName)
+    protected function getStatusFields(string $key, string $fieldName): void
     {
         if ("status" != $fieldName) {
             return;
@@ -59,7 +60,7 @@ trait StatusTrait
      *
      * @return string
      */
-    private function getOrderStatus()
+    private function getOrderStatus(): string
     {
         if ($this->isDraft()) {
             return "OrderDraft";

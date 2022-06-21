@@ -1,0 +1,26 @@
+
+splash:
+
+    # Allow Notifications for Generic Users
+    notify: ["ROLE_USER"]
+    
+################################################################################    
+# List of Available Connector Connections
+################################################################################    
+
+    connections:
+        
+        ########################################################################
+        # Faker Server
+        sylius-latest:
+            id:                 ThisIsSyliusWsId
+            key:                ThisIsSyliusWsEncryptionKey
+            name:               Sylius Latest
+            host:               false
+            connector:          soap
+            config:
+                Extended:           true
+                WsIdentifier:       ThisIsSyliusWsId
+                WsEncryptionKey:    ThisIsSyliusWsEncryptionKey
+                WsHost:             http://latest.sylius.local
+                WsPath:             /public/ws/splash

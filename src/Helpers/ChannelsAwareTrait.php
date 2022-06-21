@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Helpers;
+namespace Splash\SyliusSplashPlugin\Helpers;
 
 use Exception;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
@@ -27,30 +27,34 @@ trait ChannelsAwareTrait
     /**
      * @var ChannelRepository
      */
-    private $channels;
+    private ChannelRepository $channels;
 
     /**
      * @var string
      */
-    private $defaultChannelCode;
+    private string $defaultChannelCode;
 
     /**
-     * @var ChannelInterface
+     * @var null|ChannelInterface
      */
-    private $defaultChannel;
+    private ?ChannelInterface $defaultChannel;
 
     /**
      * Get Default Channel Code
+     *
+     * @throws Exception
      *
      * @return string
      */
     public function getDefaultChannelCode(): string
     {
-        return (string) $this->defaultChannel->getCode();
+        return (string) $this->getDefaultChannel()->getCode();
     }
 
     /**
      * Get Default Channel Code
+     *
+     * @throws Exception
      *
      * @return ChannelInterface
      */
@@ -82,6 +86,7 @@ trait ChannelsAwareTrait
      */
     public function getChannels(): array
     {
+        /** @phpstan-ignore-next-line  */
         return $this->channels->findAll();
     }
 

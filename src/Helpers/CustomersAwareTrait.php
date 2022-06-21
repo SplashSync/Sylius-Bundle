@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Helpers;
+namespace Splash\SyliusSplashPlugin\Helpers;
 
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -26,7 +26,7 @@ trait CustomersAwareTrait
     /**
      * @var CustomerRepository
      */
-    private $customers;
+    private CustomerRepository $customers;
 
     /**
      * Get Customers from Splash Field Data
@@ -37,9 +37,10 @@ trait CustomersAwareTrait
      */
     public function getCustomer(string $fieldData): ?CustomerInterface
     {
+        /** @var null|CustomerInterface $customer */
         $customer = $this->customers->find((int) self::objects()->id($fieldData));
 
-        return $customer ? $customer : null;
+        return $customer ?: null;
     }
 
     /**

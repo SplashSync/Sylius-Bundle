@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,13 +13,15 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\EventListener;
+namespace Splash\SyliusSplashPlugin\EventListener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Exception;
 use Splash\Bundle\Connectors\Standalone;
+use Splash\Bundle\Models\AbstractConnector;
 use Splash\Bundle\Services\ConnectorsManager;
 use Splash\Client\Splash;
+use Splash\Local\Local;
 use Sylius\Component\Core\Model\AddressInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -63,7 +65,7 @@ class ObjectEventListener
      *
      * @var ConnectorsManager
      */
-    private $manager;
+    private ConnectorsManager $manager;
 
     //====================================================================//
     //  CONSTRUCTOR
@@ -85,24 +87,20 @@ class ObjectEventListener
      * On Entity Created Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function postPersist(LifecycleEventArgs $eventArgs): void
     {
-        //====================================================================//
-        // Check if Entity is managed by Splash Sylius Bundle
-        $objectType = $this->isManagedEntity($eventArgs, false);
-        if (null == $objectType) {
-            return;
-        }
-        //====================================================================//
-        // Do Object Change Commit
-        $this->doCommit($objectType, $this->getEventEntityId($eventArgs), SPL_A_CREATE);
+        $this->doGenericCommit($eventArgs, SPL_A_CREATE);
     }
 
     /**
      * On Entity Updated Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function postUpdate(LifecycleEventArgs $eventArgs): void
     {
@@ -113,59 +111,58 @@ class ObjectEventListener
             return;
         }
         //====================================================================//
-        // Get Impacted Object Ids
-        $objectIds = $this->getEntityIds($eventArgs);
-        if (null == $objectIds) {
-            return;
+        //  Search in Configured Servers using Standalone Connector
+        $servers = $this->manager->getConnectorConfigurations(Standalone::NAME);
+        //====================================================================//
+        //  Walk on Configured Servers
+        foreach (array_keys($servers) as $serverId) {
+            //====================================================================//
+            //  Setup Splash Local Class
+            $this->getLocalClass()->setServerId($serverId);
+            //====================================================================//
+            // Get Impacted Object Ids
+            $objectIds = $this->getEntityIds($eventArgs);
+            if (null == $objectIds) {
+                return;
+            }
+            //====================================================================//
+            // Commit Object Change
+            $this->doCommit($this->getLocalClass()->getConnector(), $objectType, $objectIds, SPL_A_UPDATE);
+            //====================================================================//
+            // After Updates on Product
+            if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
+                Splash::object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
+            }
         }
         //====================================================================//
-        // Commit Object Change
-        $this->doCommit($objectType, $objectIds, SPL_A_UPDATE);
-        //====================================================================//
-        // After Updates on Product
-        if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
-            Splash::Object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
-        }
+        // Catch Splash Logs
+        $this->manager->pushLogToSession(true);
     }
 
     /**
      * On Entity Before Deleted Doctrine Event
      *
      * @param LifecycleEventArgs $eventArgs
+     *
+     * @throws Exception
      */
     public function preRemove(LifecycleEventArgs $eventArgs): void
+    {
+        $this->doGenericCommit($eventArgs, SPL_A_DELETE);
+    }
+
+    /**
+     * @param LifecycleEventArgs $eventArgs
+     * @param string             $action
+     *
+     * @throws Exception
+     */
+    private function doGenericCommit(LifecycleEventArgs $eventArgs, string $action): void
     {
         //====================================================================//
         // Check if Entity is managed by Splash Sylius Bundle
         $objectType = $this->isManagedEntity($eventArgs, false);
         if (null == $objectType) {
-            return;
-        }
-        //====================================================================//
-        // Do Object Change Commit
-        $this->doCommit($objectType, $this->getEventEntityId($eventArgs), SPL_A_DELETE);
-    }
-
-    /**
-     * Execut Splahs Commit for Sylius Objects
-     *
-     * @param string       $objectType
-     * @param array|string $objectIds
-     * @param string       $action
-     */
-    private function doCommit(string $objectType, $objectIds, string $action): void
-    {
-        //====================================================================//
-        // Safety Check
-        if (empty($objectIds)) {
-            return;
-        }
-        if (!is_scalar($objectIds) && !is_array($objectIds)) {
-            return;
-        }
-        //====================================================================//
-        // Locked (Just created) => Skip
-        if ((SPL_A_UPDATE == $action) && Splash::Object($objectType)->isLocked()) {
             return;
         }
         //====================================================================//
@@ -175,27 +172,54 @@ class ObjectEventListener
         //  Walk on Configured Servers
         foreach (array_keys($servers) as $serverId) {
             //====================================================================//
-            //  Load Connector
-            $connector = $this->manager->get((string) $serverId);
+            //  Setup Splash Local Class
+            $this->getLocalClass()->setServerId($serverId);
             //====================================================================//
-            //  Safety Check
-            if (null === $connector) {
-                continue;
-            }
-            //====================================================================//
-            //  Prepare Commit Parameters
-            $user = 'Sylius Bundle';
-            $msg = 'Change Commited on Sylius for '.$objectType;
-            //====================================================================//
-            //  Execute Commit
-            $connector->commit($objectType, $objectIds, $action, $user, $msg);
-            if ($this->isInvoiceCommitRequired($objectType, $objectIds, $action)) {
-                $connector->commit("Invoice", $objectIds, $action, $user, $msg);
-            }
+            // Do Object Change Commit
+            $this->doCommit(
+                $this->getLocalClass()->getConnector(),
+                $objectType,
+                $this->getEventEntityId($eventArgs),
+                $action
+            );
         }
         //====================================================================//
         // Catch Splash Logs
         $this->manager->pushLogToSession(true);
+    }
+
+    /**
+     * Execute Splash Commit for Sylius Objects
+     *
+     * @param AbstractConnector $connector
+     * @param string            $objectType
+     * @param array|string      $objectIds
+     * @param string            $action
+     *
+     * @throws Exception
+     */
+    private function doCommit(AbstractConnector $connector, string $objectType, $objectIds, string $action): void
+    {
+        //====================================================================//
+        // Safety Check
+        if (empty($objectIds)) {
+            return;
+        }
+        //====================================================================//
+        // Locked (Just created) => Skip
+        if ((SPL_A_UPDATE == $action) && Splash::object($objectType)->isLocked()) {
+            return;
+        }
+        //====================================================================//
+        //  Prepare Commit Parameters
+        $user = 'Sylius Bundle';
+        $msg = 'Change Committed on Sylius for '.$objectType;
+        //====================================================================//
+        //  Execute Commit
+        $connector->commit($objectType, $objectIds, $action, $user, $msg);
+        if ($this->isInvoiceCommitRequired($objectType, $objectIds, $action)) {
+            $connector->commit("Invoice", $objectIds, $action, $user, $msg);
+        }
     }
 
     /**
@@ -233,7 +257,7 @@ class ObjectEventListener
     }
 
     /**
-     * Safe Get Envent Doctrine Entity Id
+     * Safe Get Event Doctrine Entity ID
      *
      * @param LifecycleEventArgs $eventArgs
      *
@@ -261,6 +285,8 @@ class ObjectEventListener
      *
      * @param LifecycleEventArgs $eventArgs
      *
+     * @throws Exception
+     *
      * @return null|array
      */
     private function getEntityIds(LifecycleEventArgs $eventArgs): ?array
@@ -279,7 +305,7 @@ class ObjectEventListener
         //====================================================================//
         // Update on Product Main
         if (is_a($entity, ProductInterface::class)) {
-            if (Splash::Object('Product')->isLocked('Base-'.$entity->getId())) {
+            if (Splash::object('Product')->isLocked('Base-'.$entity->getId())) {
                 return null;
             }
             $objectIds = array();
@@ -302,11 +328,26 @@ class ObjectEventListener
     }
 
     /**
-     * Check if Invoice Object Should be Commited Too
+     * Get Splash Bundle Local Class
+     *
+     * @throws Exception
+     *
+     * @return Local
+     */
+    private function getLocalClass(): Local
+    {
+        /** @phpstan-ignore-next-line  */
+        return Splash::local();
+    }
+
+    /**
+     * Check if Invoice Object Should be Committed Too
      *
      * @param string       $objectType
      * @param array|string $objectIds
      * @param string       $action
+     *
+     * @throws Exception
      *
      * @return bool
      */

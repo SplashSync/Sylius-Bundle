@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,21 +13,20 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Sylius\Services;
+namespace   Splash\SyliusSplashPlugin\Services;
 
 use ArrayObject;
 use Doctrine\ORM\EntityManagerInterface as Manager;
 use Splash\Core\SplashCore      as Splash;
 use Splash\Models\Objects\ObjectsTrait;
-use Splash\Sylius\Helpers\ChannelsAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository as Products;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
 use Sylius\Component\Core\Model\ProductInterface as Product;
-use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 use Sylius\Component\Product\Factory\ProductFactory;
 use Sylius\Component\Product\Factory\ProductVariantFactory;
-use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Product\Model\ProductVariantInterface as Variant;
 
 /**
  * Product CRUD Manager
@@ -43,32 +42,32 @@ class ProductCrudManager
      *
      * @var Manager
      */
-    protected $entityManager;
+    protected Manager $entityManager;
 
     /**
      * @var Products
      */
-    protected $products;
+    protected Products $products;
 
     /**
      * @var Variants
      */
-    protected $variants;
+    protected Variants $variants;
 
     /**
      * @var ProductFactory
      */
-    protected $productFactory;
+    protected ProductFactory $productFactory;
 
     /**
      * @var ProductVariantFactory
      */
-    protected $variantFactory;
+    protected ProductVariantFactory $variantFactory;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
      * Service Constructor
@@ -81,8 +80,15 @@ class ProductCrudManager
      * @param ProductVariantFactory $vFactory
      * @param array                 $configuration
      */
-    public function __construct(Manager $manager, Products $products, Variants $variants, Channels $channels, ProductFactory $pFactory, ProductVariantFactory $vFactory, array $configuration)
-    {
+    public function __construct(
+        Manager $manager,
+        Products $products,
+        Variants $variants,
+        Channels $channels,
+        ProductFactory $pFactory,
+        ProductVariantFactory $vFactory,
+        array $configuration
+    ) {
         //====================================================================//
         // Sylius Product Manager
         $this->entityManager = $manager;
@@ -120,7 +126,7 @@ class ProductCrudManager
         $variant = $this->variants->find($objectId);
         //====================================================================//
         // Check Object Entity was Found
-        if (!$variant) {
+        if (!$variant instanceof Variant) {
             Splash::log()->errTrace('Unable to load Product variant '.$objectId);
 
             return null;
@@ -174,7 +180,7 @@ class ProductCrudManager
         $this->entityManager->persist($newProduct);
         //====================================================================//
         // Return a Product First Variant
-        return  $newProduct->getVariants()->first();
+        return  $newProduct->getVariants()->first() ?: null;
     }
 
     /**

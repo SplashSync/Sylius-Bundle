@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\ThirdParty;
+namespace Splash\SyliusSplashPlugin\Objects\ThirdParty;
 
 use Splash\Client\Splash;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -23,14 +23,14 @@ use Sylius\Component\Core\Model\CustomerInterface;
  */
 trait CrudTrait
 {
-    use \Splash\Sylius\Helpers\Doctrine\CrudTrait;
+    use \Splash\SyliusSplashPlugin\Helpers\Doctrine\CrudTrait;
 
     /**
      * Create Request Object
      *
-     * @return CustomerInterface|false
+     * @return null|CustomerInterface
      */
-    public function create()
+    public function create(): ?CustomerInterface
     {
         //====================================================================//
         // Stack Trace
@@ -38,8 +38,8 @@ trait CrudTrait
 
         //====================================================================//
         // Check Customer Email is given
-        if (empty($this->in["email"])) {
-            return Splash::log()->err("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
+        if (empty($this->in["email"]) || !is_string($this->in["email"])) {
+            return Splash::log()->errNull("ErrLocalFieldMissing", __CLASS__, __FUNCTION__, "email");
         }
 
         //====================================================================//

@@ -1,0 +1,108 @@
+################################################################################
+#
+#  This file is part of SplashSync Project.
+# 
+#  Copyright (C) Splash Sync <www.splashsync.com>
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# 
+#  For the full copyright and license information, please view the LICENSE
+#  file that was distributed with this source code.
+# 
+#  @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# Docker Compose File
+#
+# This Docker File intend to Create a Complete Dev Environment
+# for Splash Modules on Prestashop
+#
+# To us different PS Version configured, you need to add hosts to /etc/hosts
+# 
+#    172.122.0.99        latest.sylius.local
+#    172.122.0.100       toolkit.sylius.local
+#    172.122.0.200       phpmyadmin.sylius.local
+#
+################################################################################
+
+
+version: '3'
+
+services:
+    
+    ################################################################################
+    # Sylius Latest
+    latest:
+        image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
+        container_name: latest.sylius.local
+        depends_on:
+            - mysql
+        volumes:
+            - "./:/builds/SplashSync/Sylius-Bundle:ro"
+        environment:
+            - DATABASE_URL=mysql://root:admin@mysql/sylius
+            - SYLIUS_VERSION=1.11
+        command: sh /builds/SplashSync/Sylius-Bundle/docker/docker-entrypoint.sh
+        networks:
+            sylius:         { ipv4_address: 172.122.0.99 }
+            splashsync:     { aliases: [ latest.sylius.local ] }
+
+    ################################################################################
+    # MySQL Container
+    mysql:
+        image: mysql:5.7
+        container_name: mysql.sylius.local
+        logging: { driver: "none" }
+        environment:
+            - "MYSQL_ROOT_PASSWORD=admin"
+            - "MYSQL_DATABASE=sylius"
+        networks:
+            - sylius
+
+    ################################################################################
+    # Splash Toolkit Container
+    toolkit:
+        image: 'splashsync/toolkit'
+        container_name: toolkit.sylius.local
+        logging: { driver: "none" }
+        volumes:
+            # Specify Local Configuration File
+            - './docker/toolkit/splash.yml:/app/config/packages/splash.yml:ro'
+        hostname:           toolkit.sylius.local
+        command:            ["php", "/app/bin/console", "server:run", "172.122.0.100:80"]
+        networks:
+            sylius:         { ipv4_address: 172.122.0.100, aliases: [ toolkit.sylius.local ] }
+            splashsync:     { aliases: [ toolkit.sylius.local ] }
+
+    ################################################################################
+    # PhpMyAdmin Container
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:5
+        container_name: phpmyadmin.sylius.local
+        logging: { driver: "none" }
+        depends_on:
+            - mysql
+        environment:
+            - PMA_HOST=mysql
+            - MYSQL_USER=admin
+            - MYSQL_ROOT_PASSWORD=admin
+            - MYSQL_PASSWORD=admin
+        networks:
+            sylius:         { ipv4_address: 172.122.0.200, aliases: [ phpmyadmin.sylius.local ] }
+
+networks:
+    ################################################################################
+    # Default Private Network
+    sylius:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.122.0.0/24
+    ################################################################################
+    # External Splash Network
+    splashsync:
+        external: true

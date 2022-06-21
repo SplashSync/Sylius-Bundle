@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 /**
  * Sylius Product Prices Fields
@@ -23,7 +23,7 @@ trait PricingTrait
     /**
      * Build Fields using FieldFactory
      */
-    protected function buildPricesFields()
+    protected function buildPricesFields(): void
     {
         $groupName = "Pricing";
 
@@ -41,20 +41,21 @@ trait PricingTrait
             //====================================================================//
             // Product Selling Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("price".$suffix)
-                ->Name("Price (".$channel->getCode().")")
+                ->identifier("price".$suffix)
+                ->name("Price (".$channel->getCode().")")
                 ->description("Selling Price Tax excl.(".$channel->getName().")")
-                ->MicroData("http://schema.org/Product", "price".$suffix)
-                ->Group($groupName);
-
+                ->microData("http://schema.org/Product", "price".$suffix)
+                ->group($groupName)
+            ;
             //====================================================================//
             // WholeSale Price
             $this->fieldsFactory()->create(SPL_T_PRICE)
-                ->Identifier("originalPrice".$suffix)
-                ->Name("Wholesale Price (".$channel->getCode().")")
+                ->identifier("originalPrice".$suffix)
+                ->name("Wholesale Price (".$channel->getCode().")")
                 ->description("Wholesale Price Tax excl.(".$channel->getName().")")
-                ->Group($groupName)
-                ->MicroData("http://schema.org/Product", "wholesalePrice".$suffix);
+                ->group($groupName)
+                ->microData("http://schema.org/Product", "wholesalePrice".$suffix)
+            ;
         }
     }
 
@@ -64,7 +65,7 @@ trait PricingTrait
      * @param null|string $key       Input List Key
      * @param string      $fieldName Field Identifier / Name
      */
-    protected function getPricesFields($key, $fieldName)
+    protected function getPricesFields(?string $key, string $fieldName): void
     {
         //====================================================================//
         // reduce Load By Checking Field Name
@@ -105,10 +106,10 @@ trait PricingTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string     $fieldName Field Identifier / Name
+     * @param null|array $fieldData Field Data
      */
-    protected function setPricesFields($fieldName, $fieldData)
+    protected function setPricesFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // reduce Load By Checking Field Name

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Order;
+namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 /**
  * Sylius Customer Order Totals Field
@@ -23,21 +23,22 @@ trait TotalsTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildTotalsFields()
+    public function buildTotalsFields(): void
     {
         //====================================================================//
         // Order Total Amount
         $this->fieldsFactory()->Create(SPL_T_DOUBLE)
-            ->Identifier("total")
-            ->Name("Total Tax Excl.")
-            ->isReadOnly();
-
+            ->identifier("total")
+            ->name("Total Tax Excl.")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order Currency Code
         $this->fieldsFactory()->create(SPL_T_CURRENCY)
-            ->Identifier("currencyCode")
-            ->Name("Currency")
-            ->isReadOnly();
+            ->identifier("currencyCode")
+            ->name("Currency")
+            ->isReadOnly()
+        ;
     }
 
     /**
@@ -46,7 +47,7 @@ trait TotalsTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    private function getTotalsFields($key, $fieldName)
+    private function getTotalsFields(string $key, string $fieldName): void
     {
         //====================================================================//
         // READ Fields

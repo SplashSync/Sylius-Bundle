@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,7 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace   Splash\Sylius\Services;
+namespace   Splash\SyliusSplashPlugin\Services;
 
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Product\Model\ProductOptionInterface;
@@ -64,8 +64,13 @@ class ProductTranslationsManager
      * @param array   $locales       List or Available Locales
      * @param array   $configuration Splash Sylius Bundle Configuration
      */
-    public function __construct(Factory $factory, Factory $options, Factory $values, array $locales, array $configuration)
-    {
+    public function __construct(
+        Factory $factory,
+        Factory $options,
+        Factory $values,
+        array $locales,
+        array $configuration
+    ) {
         //====================================================================//
         // Sylius Translations Factory
         $this->factory = $factory;
@@ -128,7 +133,7 @@ class ProductTranslationsManager
     }
 
     /**
-     * Decode Multilang FieldName with ISO Code
+     * Decode Multi-lang FieldName with ISO Code
      *
      * @param LocaleInterface $locale    Sylius Locale Object
      * @param string          $fieldName Complete Field Name
@@ -185,8 +190,12 @@ class ProductTranslationsManager
      *
      * @return bool
      */
-    public function setTranslated(ProductVariantInterface $variant, LocaleInterface $locale, string $fieldName, string $fieldData): bool
-    {
+    public function setTranslated(
+        ProductVariantInterface $variant,
+        LocaleInterface $locale,
+        string $fieldName,
+        string $fieldData
+    ): bool {
         //====================================================================//
         // Load Product Translations
         $isoCode = $locale->getCode();
@@ -222,8 +231,11 @@ class ProductTranslationsManager
      *
      * @return bool
      */
-    public function setOptionTranslation(ProductOptionInterface $option, LocaleInterface $locale, string $fieldData): bool
-    {
+    public function setOptionTranslation(
+        ProductOptionInterface $option,
+        LocaleInterface $locale,
+        string $fieldData
+    ): bool {
         //====================================================================//
         // Load Product Translations
         $isoCode = $locale->getCode();
@@ -233,9 +245,10 @@ class ProductTranslationsManager
         if (!isset($translations[$isoCode])) {
             $translations[$isoCode] = $this->createOptionTranslation($option, $locale);
         }
+        /** @var ProductOptionTranslationInterface[] $translations */
         //====================================================================//
         // Compare Values
-        $current = $translations[$locale->getCode()]->getName();
+        $current = $translations[$isoCode]->getName();
         if ($current == $fieldData) {
             return false;
         }
@@ -255,8 +268,11 @@ class ProductTranslationsManager
      *
      * @return bool
      */
-    public function setOptionValueTranslation(ProductOptionValueInterface $optionValue, LocaleInterface $locale, string $fieldData): bool
-    {
+    public function setOptionValueTranslation(
+        ProductOptionValueInterface $optionValue,
+        LocaleInterface $locale,
+        string $fieldData
+    ): bool {
         //====================================================================//
         // Load Product Translations
         $isoCode = $locale->getCode();
@@ -266,6 +282,7 @@ class ProductTranslationsManager
         if (!isset($translations[$isoCode])) {
             $translations[$isoCode] = $this->createOptionValueTranslation($optionValue, $locale);
         }
+        /** @var ProductOptionValueTranslationInterface[] $translations */
         //====================================================================//
         // Compare Values
         $current = $translations[$locale->getCode()]->getValue();
@@ -287,8 +304,10 @@ class ProductTranslationsManager
      *
      * @return ProductTranslationInterface
      */
-    private function createTranslation(ProductVariantInterface $variant, LocaleInterface $locale): ProductTranslationInterface
-    {
+    private function createTranslation(
+        ProductVariantInterface $variant,
+        LocaleInterface $locale
+    ): ProductTranslationInterface {
         //====================================================================//
         // Create New Translation
         /** @var ProductTranslationInterface $translation */
@@ -309,8 +328,10 @@ class ProductTranslationsManager
      *
      * @return ProductOptionTranslationInterface
      */
-    private function createOptionTranslation(ProductOptionInterface $option, LocaleInterface $locale): ProductOptionTranslationInterface
-    {
+    private function createOptionTranslation(
+        ProductOptionInterface $option,
+        LocaleInterface $locale
+    ): ProductOptionTranslationInterface {
         //====================================================================//
         // Create New Option Translation
         /** @var ProductOptionTranslationInterface $translation */
@@ -329,8 +350,10 @@ class ProductTranslationsManager
      *
      * @return ProductOptionValueTranslationInterface
      */
-    private function createOptionValueTranslation(ProductOptionValueInterface $optionValue, LocaleInterface $locale): ProductOptionValueTranslationInterface
-    {
+    private function createOptionValueTranslation(
+        ProductOptionValueInterface $optionValue,
+        LocaleInterface $locale
+    ): ProductOptionValueTranslationInterface {
         //====================================================================//
         // Create New Option Value Translation
         /** @var ProductOptionValueTranslationInterface $translation */

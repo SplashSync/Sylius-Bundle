@@ -19,7 +19,7 @@
         <testsuite name="All">
             <directory>vendor/splash/phpcore/Tests/*</directory>
             <directory>vendor/splash/php-bundle/tests/*</directory>
-            <!--<directory>tests/Controller</directory>-->
+            <directory>vendor/splash/splash/sylius-splash-plugin/tests/*</directory>
         </testsuite>
     </testsuites>
 
@@ -36,11 +36,24 @@
     </logging> 
 
     <php>
-        <server name="KERNEL_CLASS" value="Kernel" />
-        <env    name="SYMFONY_DEPRECATION_HELPER" value="disabled" />
-        <server name="SERVER_NAME" value="http://localhost:8000"/>        
+        <env    name="APP_ENV" value="test" />
+        <env    name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
+        <env    name="APP_SECRET" value="ThisIsNotSecret" />
+        <server name="KERNEL_CLASS" value="App\Kernel" />
+        <server name="SERVER_NAME" value="http://localhost:8000"/>
         <const  name="SPLASH_DEBUG" value="true" />
         <server name="SPLASH_TRAVIS" value="true" />
+
+        <!-- Only Test Specified Types -->
+        <!--<const  name="SPLASH_TYPES"     value="Address" />-->
+        <!--<const  name="SPLASH_TYPES"     value="ThirdParty" />-->
+        <!--<const  name="SPLASH_TYPES"     value="Product" />-->
+        <!--<const  name="SPLASH_TYPES"     value="Order" />-->
+        <!--<const  name="SPLASH_TYPES"     value="Invoice" />-->
+
+        <!-- Only Test Specified Fields -->
+        <!--<const  name="SPLASH_FIELDS"    value="image@images" />-->
+
     </php>
     
 </phpunit>

@@ -15,7 +15,21 @@
 #
 ################################################################################
 
-#############################################        
-# Import Config. from Generic Bundle
+#############################################
+# Override Default Config.
+parameters:
+    mode:           "splashsync"
+    # For Building Splash Module
+    mod-enable:     false
+    # For Building Splash Documentation
+    doc-contents:   ["php-docker", "splash-faq"]
+    # For Building Splash Manifest
+    yml-enable:     false
+
+
+#############################################
+# Import Generic + Splash Console Configs
 imports:
-    - { resource: "./vendor/splash/php-bundle/src/Resources/grumphp/grumphp.base.yml" }
+    - { resource: "./vendor/badpixxel/php-sdk/grumphp/generic.yml" }
+    - { resource: "./vendor/badpixxel/php-sdk/grumphp/extras.yml" }
+#    - { resource: "./splash/vendor/splash/console/src/Resources/grumphp/*.yml" }

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,18 +13,18 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects;
+namespace Splash\SyliusSplashPlugin\Objects;
 
 use Splash\Bundle\Models\AbstractStandaloneObject;
 use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\SimpleFieldsTrait;
-use Splash\Sylius\Services\ProductAttributesManager as Attributes;
-use Splash\Sylius\Services\ProductCrudManager as Crud;
-use Splash\Sylius\Services\ProductImagesManager as Images;
-use Splash\Sylius\Services\ProductPricingManager as Pricing;
-use Splash\Sylius\Services\ProductTranslationsManager as Translations;
+use Splash\SyliusSplashPlugin\Services\ProductAttributesManager as Attributes;
+use Splash\SyliusSplashPlugin\Services\ProductCrudManager as Crud;
+use Splash\SyliusSplashPlugin\Services\ProductImagesManager as Images;
+use Splash\SyliusSplashPlugin\Services\ProductPricingManager as Pricing;
+use Splash\SyliusSplashPlugin\Services\ProductTranslationsManager as Translations;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
@@ -60,33 +60,33 @@ class Product extends AbstractStandaloneObject
     //====================================================================//
 
     /**
-     *  Object Disable Flag. Uncomment thius line to Override this flag and disable Object.
+     * {@inheritdoc}
      */
-//    protected static    $DISABLED        =  True;
+    protected static string $name = "Product";
 
     /**
-     *  Object Name (Translated by Module)
+     * {@inheritdoc}
      */
-    protected static $NAME = "Product";
+    protected static string $description = 'Sylius Product Object';
 
     /**
-     *  Object Description (Translated by Module).
+     * {@inheritdoc}
      */
-    protected static $DESCRIPTION = 'Sylius Product Object';
+    protected static string $ico = 'fa fa-product-hunt';
 
     /**
-     *  Object Icon (FontAwesome or Glyph ico tag).
+     * {@inheritdoc}
      */
-    protected static $ICO = 'fa fa-product-hunt';
+    protected static bool $enablePushCreated = false;
 
     //====================================================================//
     // Private variables
     //====================================================================//
 
     /**
-     * @var ProductVariantInterface
+     * @phpstan-var ProductVariantInterface
      */
-    protected $object;
+    protected object $object;
 
     /**
      * @var ProductInterface
@@ -96,32 +96,32 @@ class Product extends AbstractStandaloneObject
     /**
      * @var Crud
      */
-    protected $crud;
+    protected Crud $crud;
 
     /**
      * @var Translations
      */
-    protected $translations;
+    protected Translations $translations;
 
     /**
      * @var Images
      */
-    protected $images;
+    protected Images $images;
 
     /**
      * @var Pricing
      */
-    protected $pricing;
+    protected Pricing $pricing;
 
     /**
      * @var Attributes
      */
-    protected $attributes;
+    protected Attributes $attributes;
 
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     //====================================================================//
     // Service Constructor
@@ -137,8 +137,14 @@ class Product extends AbstractStandaloneObject
      * @param Pricing      $pricing
      * @param Attributes   $attributes
      */
-    public function __construct(Variants $variants, Crud $crudService, Translations $translations, Images $images, Pricing $pricing, Attributes $attributes)
-    {
+    public function __construct(
+        Variants $variants,
+        Crud $crudService,
+        Translations $translations,
+        Images $images,
+        Pricing $pricing,
+        Attributes $attributes
+    ) {
         //====================================================================//
         // Link to Product Variants Repository
         $this->repository = $variants;

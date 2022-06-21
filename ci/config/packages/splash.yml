@@ -1,0 +1,17 @@
+
+splash:
+    connections:
+        sylius:    
+            name:           Sylius Server
+            id:             ThisIsSyliusWsId
+            key:            ThisIsSyliusWsEncryptionKey
+            host:           http://toolkit.sylius.local/ws/soap
+            config:
+                infos:
+                    logo:       /public/assets/shop/img/logo.png
+    test:
+        VAT:                0
+        
+splash_sylius_splash:
+    default_channel:    FASHION_WEB
+    

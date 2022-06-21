@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,9 +13,7 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\ThirdParty;
-
-use Splash\Client\Splash;
+namespace Splash\SyliusSplashPlugin\Objects\ThirdParty;
 
 /**
  * Sylius Customers Core Fields
@@ -25,44 +23,45 @@ trait CoreTrait
     /**
      * Build Fields using FieldFactory
      */
-    public function buildCoreFields()
+    public function buildCoreFields(): void
     {
         //====================================================================//
         // Company
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("user_id")
-            ->Name("User Id")
-            ->Description("User Id")
-            ->MicroData("http://schema.org/Organization", "legalName")
-            ->isReadOnly();
-
+            ->identifier("user_id")
+            ->name("User Id")
+            ->description("User Id")
+            ->microData("http://schema.org/Organization", "legalName")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Firstname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("firstname")
-            ->Name("First Name")
-            ->MicroData("http://schema.org/Person", "familyName")
+            ->identifier("firstname")
+            ->name("First Name")
+            ->microData("http://schema.org/Person", "familyName")
             ->isListed()
-            ->isLogged();
-
+            ->isLogged()
+        ;
         //====================================================================//
         // Lastname
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->Identifier("lastname")
-            ->Name("Last Name")
-            ->MicroData("http://schema.org/Person", "givenName")
+            ->identifier("lastname")
+            ->name("Last Name")
+            ->microData("http://schema.org/Person", "givenName")
             ->isListed()
-            ->isLogged();
-
+            ->isLogged()
+        ;
         //====================================================================//
         // Email
         $this->fieldsFactory()->create(SPL_T_EMAIL)
-            ->Identifier("email")
-            ->Name("Email")
-            ->MicroData("http://schema.org/ContactPoint", "email")
+            ->identifier("email")
+            ->name("Email")
+            ->microData("http://schema.org/ContactPoint", "email")
             ->isRequired()
             ->isLogged()
-            ->isListed();
+            ->isListed()
+        ;
     }
 
     /**
@@ -71,7 +70,7 @@ trait CoreTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    public function getCoreFields($key, $fieldName)
+    public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
             //====================================================================//
@@ -97,10 +96,10 @@ trait CoreTrait
     /**
      * Write Given Fields
      *
-     * @param string $fieldName Field Identifier / Name
-     * @param mixed  $fieldData Field Data
+     * @param string      $fieldName Field Identifier / Name
+     * @param null|string $fieldData Field Data
      */
-    public function setCoreFields($fieldName, $fieldData)
+    public function setCoreFields(string $fieldName, ?string $fieldData): void
     {
         switch ($fieldName) {
             case 'firstname':
@@ -110,7 +109,7 @@ trait CoreTrait
                 break;
             case 'email':
                 $this->setGeneric($fieldName, $fieldData);
-                $this->object->setEmailCanonical(strtolower($fieldData));
+                $this->object->setEmailCanonical(strtolower((string) $fieldData));
 
                 break;
             default:

@@ -1,0 +1,35 @@
+################################################################################
+#
+# * This file is part of SplashSync Project.
+# *
+# * Copyright (C) Splash Sync <www.splashsync.com>
+# *
+# * This program is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# *
+# * For the full copyright and license information, please view the LICENSE
+# * file that was distributed with this source code.
+# *
+# * @author Bernard Paquier <contact@splashsync.com>
+#
+################################################################################
+
+################################################################################
+# LOCAL DOC CONFIGURATION
+################################################################################
+
+# Title of the Bundle / Module
+title:          Sylius Plugin
+# Subtitle of the Site (Generally DOC)
+subtitle:       DOC
+# the sub-path of your site, e.g. /blog
+baseurl:        "/Sylius-Bundle"
+# Description of the Bundle/Module
+description:    "Welcome to the Splash Sylius Plugin's Documentation
+
+                This module implement Splash Sync connector for Sylius, the E-Commerce Solution for Symfony Framework. 
+                It provides access to multiples Objects for automated synchronization through Splash Sync dedicated protocol."
+# Package Code on Packagist
+package:        "splash/sylius-splash-plugin"
+

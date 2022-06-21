@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,12 +13,12 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Objects\Product;
+namespace Splash\SyliusSplashPlugin\Objects\Product;
 
 use Splash\Client\Splash;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Product\Model\ProductVariantInterface as Variant;
 
 /**
  * Sylius Product CRUD
@@ -28,16 +28,16 @@ trait CrudTrait
     /**
      * @var ProductVariantRepository
      */
-    protected $repository;
+    protected ProductVariantRepository $repository;
 
     /**
      * Load Request Object
      *
      * @param string $objectId Object id
      *
-     * @return false|object
+     * @return null|Variant
      */
-    public function load($objectId)
+    public function load(string $objectId): ?Variant
     {
         //====================================================================//
         // Stack Trace
@@ -48,7 +48,7 @@ trait CrudTrait
         //====================================================================//
         // Check Object Entity was Found
         if (null == $variant) {
-            return false;
+            return null;
         }
         //====================================================================//
         // Load Parent Product Entity
@@ -63,15 +63,15 @@ trait CrudTrait
     /**
      * Create Request Object
      *
-     * @return false|ProductVariantInterface
+     * @return null|Variant
      */
     public function create()
     {
         //====================================================================//
         // Create New Product Variant Entity
         $variant = $this->crud->createVariant($this->in);
-        if (!($variant instanceof ProductVariantInterface)) {
-            return false;
+        if (!($variant instanceof Variant)) {
+            return null;
         }
         //====================================================================//
         // Load Parent Product Entity
@@ -86,11 +86,11 @@ trait CrudTrait
     /**
      * Update Request Object
      *
-     * @param array $needed Is This Update Needed
+     * @param bool $needed Is This Update Needed
      *
-     * @return string Object Id
+     * @return null|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed): ?string
     {
         //====================================================================//
         // Save
@@ -104,7 +104,7 @@ trait CrudTrait
     /**
      * {@inheritdoc}
      */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
         return $this->crud->delete($objectId);
     }
@@ -112,10 +112,10 @@ trait CrudTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
         if (empty($this->object)) {
-            return false;
+            return null;
         }
 
         return (string) $this->object->getId();

@@ -3,7 +3,7 @@
 /*
  *  This file is part of SplashSync Project.
  *
- *  Copyright (C) 2015-2019 Splash Sync  <www.splashsync.com>
+ *  Copyright (C) Splash Sync  <www.splashsync.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -13,10 +13,11 @@
  *  file that was distributed with this source code.
  */
 
-namespace Splash\Sylius\Helpers\Doctrine;
+namespace Splash\SyliusSplashPlugin\Helpers\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Splash\Client\Splash;
+use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 /**
@@ -29,21 +30,21 @@ trait CrudTrait
      *
      * @var EntityManagerInterface
      */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * @var RepositoryInterface
      */
-    protected $repository;
+    protected RepositoryInterface $repository;
 
     /**
      * Load Request Object
      *
      * @param string $objectId Object id
      *
-     * @return false|object
+     * @return null|ResourceInterface
      */
-    public function load($objectId)
+    public function load(string $objectId): ?ResourceInterface
     {
         //====================================================================//
         // Stack Trace
@@ -53,8 +54,8 @@ trait CrudTrait
         $entity = $this->repository->find($objectId);
         //====================================================================//
         // Check Object Entity was Found
-        if (empty($entity)) {
-            return Splash::log()->errTrace(static::$NAME.' : Unable to load '.$objectId);
+        if (!$entity instanceof ResourceInterface) {
+            return Splash::log()->errNull(static::$name.' : Unable to load '.$objectId);
         }
 
         return $entity;
@@ -63,11 +64,11 @@ trait CrudTrait
     /**
      * Update Request Object
      *
-     * @param array $needed Is This Update Needed
+     * @param bool $needed Is This Update Needed
      *
-     * @return string Object Id
+     * @return null|string Object ID
      */
-    public function update($needed)
+    public function update(bool $needed): ?string
     {
         //====================================================================//
         // Save
@@ -81,15 +82,15 @@ trait CrudTrait
     /**
      * {@inheritdoc}
      */
-    public function delete($objectId = null)
+    public function delete(string $objectId): bool
     {
         //====================================================================//
         // Try Loading Object to Check if Exists
-        $this->object = $this->load($objectId);
-        if ($this->object) {
+        $object = $this->load($objectId);
+        if ($object) {
             //====================================================================//
             // Delete
-            $this->repository->remove($this->object);
+            $this->repository->remove($object);
         }
 
         return true;
@@ -98,10 +99,10 @@ trait CrudTrait
     /**
      * {@inheritdoc}
      */
-    public function getObjectIdentifier()
+    public function getObjectIdentifier(): ?string
     {
         if (empty($this->object)) {
-            return false;
+            return null;
         }
 
         return (string) $this->object->getId();
