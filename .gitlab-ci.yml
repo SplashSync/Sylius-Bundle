@@ -124,17 +124,21 @@ tests:v1.11-php-8.0:
         SYLIUS_VERSION:   "~1.11.0"
     <<: *core_tests
 
-#tests:v4-php-7.3:
-#    image: akeneo/pim-php-dev:4.0
-#    variables:
-#        AKENEO_VERSION:   4.0.97
-#    <<: *core_tests
-#
-#tests:v5-php-7.4:
-#  image: akeneo/pim-php-dev:5.0
-#  variables:
-#    AKENEO_VERSION:   5.0.18
-#  <<: *core_tests
+################################################################
+# Tests on Sylius V1.10
+tests:v1.10-php-7.4:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+    variables:
+        SYLIUS_VERSION:   "~1.10.0"
+    <<: *core_tests
+
+################################################################
+# Tests on Sylius V1.08
+tests:v1.08-php-7.4:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+    variables:
+        SYLIUS_VERSION:   "~1.08.0"
+    <<: *core_tests
 #
 ##################################################################
 ### Build Documentation
