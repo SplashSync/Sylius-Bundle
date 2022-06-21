@@ -18,14 +18,11 @@
 #############################################
 # Override Default Config.
 parameters:
-#    mode:           "splashsync"
-#    # Php Stan
-#    stan-config:    "%core_dir%/phpstan/sf.%mode%.neon"
+    mode:           "splashsync"
     # For Building Splash Module
     mod-enable:     false
     # For Building Splash Documentation
-    doc-enable:     false
-#    doc-contents:   ["splash-faq"]
+    doc-contents:   ["php-docker", "splash-faq"]
     # For Building Splash Manifest
     yml-enable:     false
 

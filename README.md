@@ -6,19 +6,19 @@ Splash Bundle for Sylius E-Commerce Solution
 # Splash Sync Bundle for Sylius E-Commerce
 Splash Bundle for Sylius E-Commerce Solution
 
-This module implement Splash Sync connector for Sylius, the E-Commerce Solution for Symfony Framework. It provide access to multiples Objects for automated synchonization through Splash Sync dedicated protocol.
+This module implement Splash Sync connector for Sylius, the E-Commerce Solution for Symfony Framework. 
+It provides access to multiples Objects for automated synchronization through Splash Sync dedicated protocol.
 
-[![Build Status](https://travis-ci.org/SplashSync/Sylius-Bundle.svg?branch=master)](https://travis-ci.org/SplashSync/Sylius-Bundle)
-[![Latest Stable Version](https://poser.pugx.org/splash/sylius-bundle/v/stable)](https://packagist.org/packages/splash/sylius-bundle)
-[![Total Downloads](https://poser.pugx.org/splash/sylius-bundle/downloads)](https://packagist.org/packages/splash/sylius-bundle)
-[![License](https://poser.pugx.org/splash/sylius-bundle/license)](https://packagist.org/packages/splash/sylius-bundle)
+[![Latest Stable Version](https://poser.pugx.org/splash/sylius-bundle/v/stable)](https://packagist.org/packages/splash/sylius-splash-plugin)
+[![Total Downloads](https://poser.pugx.org/splash/sylius-bundle/downloads)](https://packagist.org/packages/splash/sylius-splash-plugin)
+[![License](https://poser.pugx.org/splash/sylius-bundle/license)](https://packagist.org/packages/splash/sylius-splash-plugin)
 
 ## Installation via Composer
 
 Download Sylius-Bundle and its dependencies to the vendor directory. You can use Composer for the automated process:
 
 ```bash
-$ php composer.phar require splash/sylius-bundle
+$ php composer.phar require splash/sylius-splash-plugin
 ```
 
 Composer will install the bundle to `vendor/splash` directory.
@@ -33,8 +33,8 @@ public function registerBundles()
 {
     $bundles = array(
         // ...
-            new \Splash\Bundle\SplashBundle(),          // Splash Sync Core PHP Bundle 
-            new \Splash\Sylius\SplashSyliusBundle(),    // Splash Bundle for Sylius
+            new \Splash\Bundle\SplashBundle(),                          // Splash Sync Core PHP Bundle 
+            new \Splash\SyliusSplashPlugin\SplashSyliusSplashPlugin(),  // Splash Bundle for Sylius
         // ...
     );
 }
@@ -48,18 +48,18 @@ Here is the default configuration for Splash bundles:
 ```yml
 
     splash:
-        id:             812b124aa746e04c                                        # Your Splash Server Id
-        key:            NTdlMDI2YWQ1NTQ5NjAuOTI3OTgxMTQ1N2UwMjZhZDU1NjFiMS      # Your Server Secret Encryption Key
+        id:             ThisIsSyliusWsId                # Your Splash Server ID
+        key:            ThisIsSyliusWsEncryptionKey     # Your Server Secret Encryption Key
 
-    splash_sylius:
-        default_channel:    US_WEB      # Select here you shop's default channel
+    splash_sylius_splash:
+        default_channel:    FASHION_WEB                 # Select here your shop default channel
 
 ```
 
 ## Requirements
 
-* PHP 7.0+
-* Sylius 1.0+
+* PHP 7.4+
+* Sylius 1.6+
 * An active Splash Sync User Account
 
 ## Documentation

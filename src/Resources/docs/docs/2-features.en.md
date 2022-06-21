@@ -1,3 +1,8 @@
+---
+lang: en
+permalink: docs/features
+title: Synchronize your apps with Sylius
+---
 
 ## Sylius, The first framework for tailored eCommerce solutions
 
@@ -7,11 +12,11 @@ Splash Plugin for Sylius provide access to all E-Commerce data : Customers, Prod
 
 #### Sylius - Share your key E-Commerce data across all your apps
 
-This module was designed to share your financial informations with all your business organization.
+This module was designed to share your financial information with all your business organization.
 
-Your Symfony based Sylius webshop will become one of your "sales channels".  
+Your Symfony based Sylius e-shop will become one of your "sales channels".  
 
-By using Splash for exporting and synchronizing all your sales informations, you can access all you sales in a single place.
+By using Splash for exporting and synchronizing all your sales information, you can access all you sales in a single place.
 
 #### Synchronize Sylius Products Stocks
 
@@ -20,7 +25,7 @@ Products stocks are critical for your business! Avoid errors by synchronizing yo
 #### Merge all your customers data
 
 Once all your modules connected, use the Object Linked to identify and merge all your customers profiles into a single Splash entity. 
-This way, all similar informations will be shared and synchronized anywhere, from CRM (i.e. Wordpress), ERP (i.e. Dolibarr), to other E-Commerce (i.e. WooCommerce, Prestashop).
+This way, all similar information will be shared and synchronized anywhere, from CRM (i.e. Wordpress), ERP (i.e. Dolibarr), to other E-Commerce (i.e. WooCommerce, Prestashop).
 
 #### Consolidate & Simplify your Financial Analytic
 
