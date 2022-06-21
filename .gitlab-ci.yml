@@ -132,16 +132,6 @@ tests:v1.10-php-7.4:
         SYLIUS_VERSION:   "~1.10.0"
     <<: *core_tests
 
-################################################################
-# Tests on Sylius V1.08
-tests:v1.08-php-7.4:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-    <<: *core_tests
-    variables:
-        SYLIUS_VERSION:   "~1.08.0"
-    services:
-      - name: mysql:5.7
-
 ##################################################################
 ### Build Documentation
 ##################################################################
