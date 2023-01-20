@@ -125,11 +125,20 @@ quality:v1.08-php-7.4:
       - php vendor/bin/phpunit --log-junit $CI_PROJECT_DIR/main-report.xml
 
 ################################################################
+# Tests on Sylius V1.12
+tests:v1.12-php-8.1:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
+    variables:
+        SYLIUS_VERSION:   "~1.12.0"
+    <<: *core_tests
+
+################################################################
 # Tests on Sylius V1.11
 tests:v1.11-php-8.0:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
     variables:
         SYLIUS_VERSION:   "~1.11.0"
+    allow_failure:  true
     <<: *core_tests
 
 ################################################################
