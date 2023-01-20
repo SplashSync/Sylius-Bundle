@@ -23,7 +23,7 @@ if [ ! -f /home/core.installed.lock ]; then
     ################################################################################
     # Install Sylius Standard Project
     echo "Install Sylius $SYLIUS_VERSION"
-    composer create-project sylius/sylius-standard /var/www/html $SYLIUS_VERSION
+    composer create-project sylius/sylius-standard /var/www/html $SYLIUS_VERSION --no-plugins
 
     mkdir -p var/cache var/log public/media
     chmod -Rf 777 var public/media
