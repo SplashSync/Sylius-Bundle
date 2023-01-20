@@ -90,14 +90,10 @@ trait CoreTrait
             //====================================================================//
             // Read Products Variants Infos
             switch ($fieldId) {
-                //====================================================================//
-                // Variant Readings
                 case 'id':
                     $value = (string) self::objects()->encode("Product", $variant->getId());
 
                     break;
-                //====================================================================//
-                // Product Readings
                 case 'code':
                     $value = $variant->getCode();
 

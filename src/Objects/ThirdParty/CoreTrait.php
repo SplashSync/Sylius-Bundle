@@ -73,14 +73,10 @@ trait CoreTrait
     public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
-            //====================================================================//
-            // Static Id Readings
             case 'user_id':
                 $this->out[$fieldName] = "Sylius".$this->object->getId();
 
                 break;
-            //====================================================================//
-            // Direct Readings
             case 'firstname':
             case 'lastname':
             case 'email':

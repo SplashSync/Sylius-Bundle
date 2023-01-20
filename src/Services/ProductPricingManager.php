@@ -82,7 +82,7 @@ class ProductPricingManager
      * @param Channel $channel
      * @param bool    $original
      *
-     * @return array|string
+     * @return null|array
      */
     public function getChannelPrice(Variant $variant, Channel $channel, bool $original)
     {
@@ -105,8 +105,8 @@ class ProductPricingManager
         //====================================================================//
         // Encode Splash Price Array
         return self::prices()->encode(
-            doubleval($price / 100),        // No TAX Price
-            $taxRate,                       // TAX Percent
+            doubleval($price / 100),
+            $taxRate,
             null,
             $currency ? (string) $currency->getCode() : "",
             $currency ? (string) $currency->getCode() : "",

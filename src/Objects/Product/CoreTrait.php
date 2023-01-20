@@ -63,14 +63,10 @@ trait CoreTrait
     public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
-            //====================================================================//
-            // Variant Readings
             case 'code':
                 $this->getGeneric($fieldName);
 
                 break;
-            //====================================================================//
-            // Product Readings
             case 'enabled':
                 $this->getGenericBool($fieldName, "product");
 
@@ -103,8 +99,8 @@ trait CoreTrait
                 $this->setGeneric($fieldName, $fieldData);
 
                 break;
-            //====================================================================//
-            // Product Writing
+                //====================================================================//
+                // Product Writing
             case 'enabled':
                 $this->setGenericBool($fieldName, $fieldData, "product");
 

@@ -94,7 +94,7 @@ trait CrudTrait
     {
         //====================================================================//
         // Save
-        $this->crud->update((bool) $needed, (bool) $this->isUpdated("product"));
+        $this->crud->update($needed, $this->isToUpdate("product"));
 
         //====================================================================//
         // Return Object Id
