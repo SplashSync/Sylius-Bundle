@@ -52,14 +52,10 @@ trait TotalsTrait
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
-            //====================================================================//
-            // Direct Readings
             case 'currencyCode':
                 $this->getGeneric($fieldName);
 
                 break;
-            //====================================================================//
-            // Order Total Amount
             case 'total':
                 $this->out[$fieldName] = doubleval($this->object->getTotal() / 100);
 

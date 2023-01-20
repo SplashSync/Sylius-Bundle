@@ -132,14 +132,10 @@ trait CoreTrait
     public function getCoreFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
-            //====================================================================//
-            // Static Id Readings
             case 'customer':
                 $this->getGenericObject($fieldName, "ThirdParty");
 
                 break;
-            //====================================================================//
-            // Direct Readings
             case 'firstname':
             case 'lastname':
             case 'company':
@@ -149,6 +145,8 @@ trait CoreTrait
             case 'postcode':
             case 'countrycode':
             case 'provinceName':
+                //====================================================================//
+                // Direct Readings
                 $this->getGeneric($fieldName);
 
                 break;

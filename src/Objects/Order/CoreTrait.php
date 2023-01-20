@@ -115,15 +115,13 @@ trait CoreTrait
                 $this->getGenericObject($fieldName, "Address");
 
                 break;
-            //====================================================================//
-            // Direct Readings
+            case 'checkoutCompletedAt':
+                $this->getGenericDate($fieldName);
+
+                break;
             case 'number':
             case 'notes':
                 $this->getGeneric($fieldName);
-
-                break;
-            case 'checkoutCompletedAt':
-                $this->getGenericDate($fieldName);
 
                 break;
             default:
