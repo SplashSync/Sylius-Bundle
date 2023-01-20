@@ -25,7 +25,7 @@ if [ ! -f /home/module.installed.lock ]; then
     composer config extra.symfony.allow-contrib true
     composer config repositories.splash '{ "type": "path", "url": "/builds/SplashSync/Sylius-Bundle", "options": { "symlink": true, "versions": { "splash/sylius-splash-plugin": "dev-local" }}}'
     composer config minimum-stability dev
-    COMPOSER_MEMORY_LIMIT=-1 composer require splash/sylius-splash-plugin:dev-local --no-scripts --no-progress --no-suggest --no-plugins
+    COMPOSER_MEMORY_LIMIT=-1 composer require splash/sylius-splash-plugin:dev-local --no-scripts --no-progress --no-suggest
 
     echo "YEP" > /home/module.installed.lock
 else
