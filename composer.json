@@ -41,7 +41,8 @@
 
     "config": {
         "allow-plugins": {
-            "phpro/grumphp": true
+            "phpro/grumphp": true,
+            "symfony/thanks": false
         }
     }
 }
