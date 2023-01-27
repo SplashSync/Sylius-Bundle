@@ -64,7 +64,7 @@ Add Splash Bundle routes to your configuration:
 
 Once your server is created in your account, you need to declare it.
 
-To do so, open your web browser and touch "http://my.webshop.com/ws/soap-test" url.
+To do so, open your web browser and touch "http://my.webshop.com/ws/splash-test" url.
 
 ![](https://splashsync.gitlab.io/Sylius-Bundle/assets/img/screenshot_1.png)
 
