@@ -35,5 +35,9 @@ sh /builds/SplashSync/Sylius-Bundle/docker/scripts/install-dev-module.sh
 echo "Enable Mod Rewrite"
 a2enmod rewrite
 
+################################################################################
+echo "Update Apache Root Dir"
+sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+
 echo "Serving App..."
 exec apache2-foreground

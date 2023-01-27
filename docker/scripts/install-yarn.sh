@@ -19,11 +19,7 @@
 ################################################################################
 # Check if Yarn is Installed
 if [ ! -f /home/yarn.installed.lock ]; then
-    echo "Install Yarn for Ubuntu"
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-    apt update && apt install yarn -y
-
+    wall-e auto --ansi
     echo "YEP" > /home/yarn.installed.lock
 else
     echo "SKIP >> Yarn for Ubuntu Already Installed"

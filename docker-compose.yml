@@ -44,8 +44,11 @@ services:
         volumes:
             - "./:/builds/SplashSync/Sylius-Bundle:ro"
         environment:
-            - DATABASE_URL=mysql://root:admin@mysql/sylius
-            - SYLIUS_VERSION=1.11
+            NODEJS_VERSION:         "16"
+            YARN_VERSION:           any
+            APACHE_DOCUMENT_ROOT:   /var/www/html/public
+            DATABASE_URL:           mysql://root:admin@mysql/sylius
+            SYLIUS_VERSION:         ~1.11
         command: sh /builds/SplashSync/Sylius-Bundle/docker/docker-entrypoint.sh
         networks:
             sylius:         { ipv4_address: 172.122.0.99 }
