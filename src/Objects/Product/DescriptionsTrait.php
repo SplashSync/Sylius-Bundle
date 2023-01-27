@@ -67,6 +67,7 @@ trait DescriptionsTrait
                 ->microData("http://schema.org/Product", "urlRewrite")
                 ->setMultilang($locale->getCode())
                 ->association("name")
+                ->isIndexed()
             ;
             //====================================================================//
             // Long Description

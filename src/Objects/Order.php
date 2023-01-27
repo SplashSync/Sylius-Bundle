@@ -22,6 +22,7 @@ use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
 use Splash\Models\Objects\PricesTrait;
+use Splash\Models\Objects\PrimaryKeysAwareInterface;
 use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\SyliusSplashPlugin\Helpers\AddressAwareTrait;
 use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
@@ -36,9 +37,9 @@ use Sylius\Component\Resource\Factory\Factory;
 /**
  * Sylius Order Object
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @property Orders $repository
  */
-class Order extends AbstractStandaloneObject
+class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterface
 {
     use AddressAwareTrait;
     use CustomersAwareTrait;
@@ -53,6 +54,7 @@ class Order extends AbstractStandaloneObject
 
     // Order Traits
     use Order\CrudTrait;
+    use Order\PrimaryTrait;
     use Order\CoreTrait;
     use Order\MetaTrait;
     use Order\ItemsTrait;

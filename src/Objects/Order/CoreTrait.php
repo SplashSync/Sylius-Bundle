@@ -43,6 +43,7 @@ trait CoreTrait
             ->name("Customer Email")
             ->microData("http://schema.org/ContactPoint", "email")
             ->isReadOnly()
+            ->isIndexed()
         ;
         //====================================================================//
         // Order Number
@@ -50,6 +51,7 @@ trait CoreTrait
             ->identifier("number")
             ->name("Order Reference")
             ->microData("http://schema.org/Order", "orderNumber")
+            ->isPrimary()
             ->isListed()
             ->isReadOnly()
         ;

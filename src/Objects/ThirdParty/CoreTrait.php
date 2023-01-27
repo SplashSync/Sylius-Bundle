@@ -59,6 +59,7 @@ trait CoreTrait
             ->name("Email")
             ->microData("http://schema.org/ContactPoint", "email")
             ->isRequired()
+            ->isPrimary()
             ->isLogged()
             ->isListed()
         ;

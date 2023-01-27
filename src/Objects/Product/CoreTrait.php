@@ -33,6 +33,7 @@ trait CoreTrait
             ->description("Product reference")
             ->microData("http://schema.org/Product", "model")
             ->isRequired()
+            ->isPrimary()
             ->isListed()
             ->isLogged()
         ;

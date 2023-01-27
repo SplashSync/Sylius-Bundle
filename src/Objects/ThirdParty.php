@@ -20,6 +20,7 @@ use Splash\Bundle\Models\AbstractStandaloneObject;
 use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\PrimaryKeysAwareInterface;
 use Splash\Models\Objects\SimpleFieldsTrait;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository;
 use Sylius\Component\Core\Model\CustomerInterface;
@@ -28,8 +29,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Sylius Customer Object
+ *
+ * @property CustomerRepository $repository
  */
-class ThirdParty extends AbstractStandaloneObject
+class ThirdParty extends AbstractStandaloneObject implements PrimaryKeysAwareInterface
 {
     // Splash Php Core Traits
     use IntelParserTrait;
@@ -39,6 +42,7 @@ class ThirdParty extends AbstractStandaloneObject
 
     // ThirdParty Traits
     use ThirdParty\CrudTrait;
+    use ThirdParty\PrimaryTrait;
     use ThirdParty\ObjectsListTrait;
     use ThirdParty\CoreTrait;
     use ThirdParty\MainTrait;

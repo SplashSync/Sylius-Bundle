@@ -19,6 +19,7 @@ use Splash\Bundle\Models\AbstractStandaloneObject;
 use Splash\Models\Objects\GenericFieldsTrait;
 use Splash\Models\Objects\IntelParserTrait;
 use Splash\Models\Objects\ListsTrait;
+use Splash\Models\Objects\PrimaryKeysAwareInterface;
 use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\SyliusSplashPlugin\Services\ProductAttributesManager as Attributes;
 use Splash\SyliusSplashPlugin\Services\ProductCrudManager as Crud;
@@ -33,7 +34,7 @@ use Sylius\Component\Product\Factory\ProductFactory as Factory;
 /**
  * Sylius Product Object
  */
-class Product extends AbstractStandaloneObject
+class Product extends AbstractStandaloneObject implements PrimaryKeysAwareInterface
 {
     // Splash Php Core Traits
     use IntelParserTrait;
@@ -43,6 +44,7 @@ class Product extends AbstractStandaloneObject
 
     // Product Traits
     use Product\CrudTrait;
+    use Product\PrimaryTrait;
     use Product\ObjectsListTrait;
     use Product\CoreTrait;
     use Product\ShippingTrait;

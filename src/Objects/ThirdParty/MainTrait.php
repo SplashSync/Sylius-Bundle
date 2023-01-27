@@ -34,6 +34,7 @@ trait MainTrait
             ->identifier("phoneNumber")
             ->name("Phone")
             ->microData("http://schema.org/Person", "telephone")
+            ->isIndexed()
             ->isListed()
             ->isLogged()
         ;
