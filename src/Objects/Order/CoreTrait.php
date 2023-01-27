@@ -16,6 +16,7 @@
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 use Exception;
+use Splash\Client\Splash;
 
 /**
  * Sylius Order Core Fields
@@ -54,7 +55,7 @@ trait CoreTrait
             ->isPrimary()
             ->isRequired()
             ->isListed()
-            ->isReadOnly()
+            ->isReadOnly(!Splash::isTravisMode())
         ;
         //====================================================================//
         // Order Date
