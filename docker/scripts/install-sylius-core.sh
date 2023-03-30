@@ -23,7 +23,10 @@ if [ ! -f /home/core.installed.lock ]; then
 
     ################################################################################
     # FIX Allowed Plugins
-    composer config --no-plugins allow-plugins.symfony/thanks true
+    echo "Configure Composer Plugins"
+    composer config --global --no-plugins allow-plugins.symfony/thanks false
+    composer config --global --no-plugins allow-plugins
+
     ################################################################################
     # Install Sylius Standard Project
     echo "Install Sylius $SYLIUS_VERSION"
