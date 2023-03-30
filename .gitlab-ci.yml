@@ -63,7 +63,7 @@ stages:
 quality:v1.12-php-8.1:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
     variables:
-        SYLIUS_VERSION:   "~1.12.0"
+        SYLIUS_VERSION:   "~1.12.6"
     <<: *quality
 
 ################################################################
@@ -71,7 +71,7 @@ quality:v1.12-php-8.1:
 quality:v1.11-php-8.0:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
     variables:
-        SYLIUS_VERSION:   "~1.11.0"
+        SYLIUS_VERSION:   "~1.11.15"
     <<: *quality
 
 ################################################################
@@ -129,7 +129,7 @@ quality:v1.08-php-7.4:
 tests:v1.12-php-8.1:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.1
     variables:
-        SYLIUS_VERSION:   "~1.12.0"
+        SYLIUS_VERSION:   "~1.12.6"
     <<: *core_tests
 
 ################################################################
@@ -137,7 +137,16 @@ tests:v1.12-php-8.1:
 tests:v1.11-php-8.0:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
     variables:
-        SYLIUS_VERSION:   "~1.11.0"
+        SYLIUS_VERSION:   "~1.11.15"
+    allow_failure:  true
+    <<: *core_tests
+
+################################################################
+# Tests on Sylius V1.10
+tests:v1.10-php-8.0:
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-8.0
+    variables:
+        SYLIUS_VERSION:   "~1.10.14"
     allow_failure:  true
     <<: *core_tests
 
