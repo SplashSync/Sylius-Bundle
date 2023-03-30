@@ -15,10 +15,8 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
-use Splash\Client\Splash;
 use Splash\Models\Objects\Order\Status as OrderStatus;
 use Splash\SyliusSplashPlugin\Helpers\OrderStatusIdentifier;
-use Sylius\Component\Order\Model\OrderInterface;
 
 /**
  * Sylius Customer Order Status Field

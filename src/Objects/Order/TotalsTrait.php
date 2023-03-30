@@ -15,8 +15,6 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
-use Splash\Client\Splash;
-
 /**
  * Sylius Customer Order Totals Field
  */
@@ -79,7 +77,7 @@ trait TotalsTrait
                 $orderTotal = $this->object->getTotal();
                 $this->out[$fieldName] = self::prices()->encode(
                     null,
-                    self::toVatPercents($orderTotal- $this->object->getTaxTotal(), $orderTotal),
+                    self::toVatPercents($orderTotal - $this->object->getTaxTotal(), $orderTotal),
                     (double) ($orderTotal / 100),
                     $this->object->getCurrencyCode() ?? "USD",
                 );
