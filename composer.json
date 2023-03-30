@@ -31,7 +31,7 @@
 
     "require": {
         "php":                                          "^7.4|^8.0",
-        "splash/php-bundle":                            "dev-master",
+        "splash/php-bundle":                            "^2.0",
         "sylius/sylius":                                "^1.0"
     },
     
