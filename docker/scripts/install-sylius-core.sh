@@ -20,15 +20,16 @@
 ################################################################################
 # Check if Sylius Database is Installed
 if [ ! -f /home/core.installed.lock ]; then
+
+    ################################################################################
+    # FIX Allowed Plugins
+    composer config --no-plugins allow-plugins.symfony/thanks true
     ################################################################################
     # Install Sylius Standard Project
     echo "Install Sylius $SYLIUS_VERSION"
     composer create-project sylius/sylius-standard /var/www/html $SYLIUS_VERSION
-
     mkdir -p var/cache var/log public/media
     chmod -Rf 777 var public/media
-    # FIX Allowed Plugins
-    composer config --no-plugins allow-plugins.symfony/thanks true
     composer update --no-interaction --no-plugins
 
     echo "YEP" > /home/core.installed.lock
