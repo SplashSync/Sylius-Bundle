@@ -149,15 +149,6 @@ tests:v1.10-php-7.4:
     <<: *core_tests
 
 ################################################################
-# Tests on Sylius V1.8
-tests:v1.8-php-7.4:
-    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-    variables:
-        SYLIUS_VERSION:   "~1.8.9"
-    allow_failure:  true
-    <<: *core_tests
-
-################################################################
 # Build Documentation
 ################################################################
 pages:
