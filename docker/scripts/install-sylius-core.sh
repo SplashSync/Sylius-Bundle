@@ -27,6 +27,8 @@ if [ ! -f /home/core.installed.lock ]; then
 
     mkdir -p var/cache var/log public/media
     chmod -Rf 777 var public/media
+    # FIX Allowed Plugins
+    composer config --no-plugins allow-plugins.symfony/thanks true
     composer update --no-interaction --no-plugins
 
     echo "YEP" > /home/core.installed.lock
