@@ -16,6 +16,7 @@
 namespace Splash\SyliusSplashPlugin\Objects;
 
 use Doctrine\ORM\EntityManagerInterface as Manager;
+use SM\Factory\Factory as SmFactory;
 use Splash\Bundle\Models\AbstractStandaloneObject;
 use Splash\Client\Splash;
 use Splash\Models\Objects\GenericFieldsTrait;
@@ -32,7 +33,7 @@ use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository as Addresses;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository as Customers;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\OrderRepository as Orders;
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 
 /**
  * Sylius Order Object
@@ -52,15 +53,21 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
     use PricesTrait;
     use GenericFieldsTrait;
 
+    // Common Traits
+    use Common\TimestampTrait;
+
     // Order Traits
     use Order\CrudTrait;
     use Order\PrimaryTrait;
     use Order\CoreTrait;
-    use Order\MetaTrait;
+    use Order\StatusMetaTrait;
     use Order\ItemsTrait;
     use Order\PaymentsTrait;
-    use Order\StatusTrait;
+    use Order\StatusOrderTrait;
+    use Order\StatusShippingTrait;
     use Order\TotalsTrait;
+    use Order\ShipmentTrait;
+    use Order\ShipmentsTrait;
     use Order\ObjectsListTrait;
 
     //====================================================================//
@@ -102,9 +109,14 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
     protected object $object;
 
     /**
-     * @var Factory
+     * @var FactoryInterface
      */
-    protected Factory $factory;
+    protected FactoryInterface $factory;
+
+    /**
+     * @var SmFactory
+     */
+    private SmFactory $stateMachine;
 
     //====================================================================//
     // Service Constructor
@@ -113,13 +125,14 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
     /**
      * Service Constructor
      *
-     * @param Orders    $repository
-     * @param Channels  $channels
-     * @param Customers $customer
-     * @param Addresses $address
-     * @param Manager   $manager
-     * @param Factory   $factory
-     * @param array     $configuration
+     * @param Orders           $repository
+     * @param Channels         $channels
+     * @param Customers        $customer
+     * @param Addresses        $address
+     * @param Manager          $manager
+     * @param FactoryInterface $factory
+     * @param SmFactory        $stateMachine
+     * @param array            $configuration
      */
     public function __construct(
         Orders $repository,
@@ -127,7 +140,8 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
         Customers $customer,
         Addresses $address,
         Manager $manager,
-        Factory $factory,
+        FactoryInterface $factory,
+        SmFactory $stateMachine,
         array $configuration
     ) {
         //====================================================================//
@@ -143,10 +157,23 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
         // Setup Sylius Customers Repository
         $this->setCustomersRepository($customer);
         //====================================================================//
+        // Setup Sylius State Machine
+        $this->stateMachine = $stateMachine;
+        //====================================================================//
         // Link to Doctrine Entity Manager Services
         $this->entityManager = $manager;
         //====================================================================//
         // Link to Customers Factory
         $this->factory = $factory;
+    }
+
+    /**
+     * Check if Logistic Mode is Enabled
+     */
+    protected function isLogisticMode(): bool
+    {
+        return !($this instanceof Invoice)
+            && !empty($this->getParameter("logistic", false))
+        ;
     }
 }

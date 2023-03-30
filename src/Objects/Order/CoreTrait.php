@@ -36,6 +36,7 @@ trait CoreTrait
             ->name("Customer")
             ->microData("http://schema.org/Organization", "ID")
             ->isRequired()
+            ->isReadOnly(!Splash::isTravisMode())
         ;
         //====================================================================//
         // Customer Email
@@ -61,8 +62,9 @@ trait CoreTrait
         // Order Date
         $this->fieldsFactory()->create(SPL_T_DATE)
             ->identifier("checkoutCompletedAt")
-            ->name("Last Name")
+            ->name("Order Date")
             ->microData("http://schema.org/Order", "orderDate")
+            ->isReadOnly()
             ->isListed()
         ;
         //====================================================================//

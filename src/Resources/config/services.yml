@@ -121,7 +121,8 @@ services:
             - "@sylius.repository.address"
             - "@sylius.manager.order"
             - "@sylius.factory.order"
-            - "%splash_sylius%"     
+            - "@sm.factory"
+            - "%splash_sylius%"
         tags:
             # Register as Standalone Connector Object           
             - { name: "splash.standalone.object", type : "Order" }  
@@ -137,6 +138,7 @@ services:
             - "@sylius.repository.address"
             - "@sylius.manager.order"
             - "@sylius.factory.order"
+            - "@sm.factory"
             - "%splash_sylius%"     
         tags:
             # Register as Standalone Connector Object           

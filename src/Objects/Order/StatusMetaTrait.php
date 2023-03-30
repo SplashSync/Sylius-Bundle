@@ -15,20 +15,27 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
-use Sylius\Component\Core\OrderCheckoutStates;
-use Sylius\Component\Core\OrderPaymentStates;
-use Sylius\Component\Core\OrderShippingStates;
+use Splash\SyliusSplashPlugin\Helpers\OrderStatusIdentifier;
 
 /**
  * Sylius Order Meta Fields
  */
-trait MetaTrait
+trait StatusMetaTrait
 {
     /**
      * Build Fields using FieldFactory
      */
     public function buildMetaFields(): void
     {
+        //====================================================================//
+        // Order is Cancelled
+        $this->fieldsFactory()->create(SPL_T_BOOL)
+            ->identifier("isCanceled")
+            ->name("Is Canceled")
+            ->microData("http://schema.org/OrderStatus", "OrderCanceled")
+            ->group("Meta")
+            ->isReadOnly()
+        ;
         //====================================================================//
         // Order is Draft
         $this->fieldsFactory()->create(SPL_T_BOOL)
@@ -42,8 +49,18 @@ trait MetaTrait
         // Order is Validated
         $this->fieldsFactory()->create(SPL_T_BOOL)
             ->identifier("isValidated")
-            ->name("Is Completed")
+            ->name("Is Validated")
             ->description("Checkout Completed")
+            ->microData("http://schema.org/OrderStatus", "OrderProcessing")
+            ->group("Meta")
+            ->isReadOnly()
+        ;
+        //====================================================================//
+        // Order is Processing
+        $this->fieldsFactory()->create(SPL_T_BOOL)
+            ->identifier("isProcessing")
+            ->name("Is Processing")
+            ->description("Waiting for Shipment")
             ->microData("http://schema.org/OrderStatus", "OrderProcessing")
             ->group("Meta")
             ->isReadOnly()
@@ -79,60 +96,33 @@ trait MetaTrait
     public function getMetaFields(string $key, string $fieldName): void
     {
         switch ($fieldName) {
+            case 'isCanceled':
+                $this->out[$fieldName] = OrderStatusIdentifier::isCanceled($this->object);
+
+                break;
             case 'isDraft':
+                $this->out[$fieldName] = OrderStatusIdentifier::isDraft($this->object);
+
+                break;
             case 'isValidated':
+                $this->out[$fieldName] = OrderStatusIdentifier::isValidated($this->object);
+
+                break;
+            case 'isProcessing':
+                $this->out[$fieldName] = OrderStatusIdentifier::isProcessing($this->object);
+
+                break;
             case 'isShipped':
+                $this->out[$fieldName] = OrderStatusIdentifier::isShipped($this->object);
+
+                break;
             case 'isPaid':
-                $this->out[$fieldName] = $this->{$fieldName}();
+                $this->out[$fieldName] = OrderStatusIdentifier::isPaid($this->object);
 
                 break;
             default:
                 return;
         }
         unset($this->in[$key]);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDraft() : bool
-    {
-        return (OrderCheckoutStates::STATE_COMPLETED !== $this->object->getCheckoutState());
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValidated(): bool
-    {
-        return (OrderCheckoutStates::STATE_COMPLETED === $this->object->getCheckoutState());
-    }
-
-    /**
-     * @return bool
-     */
-    public function isShipped(): bool
-    {
-        return in_array(
-            $this->object->getShippingState(),
-            array(OrderShippingStates::STATE_PARTIALLY_SHIPPED, OrderShippingStates::STATE_SHIPPED),
-            true
-        );
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPaid(): bool
-    {
-        return  in_array(
-            $this->object->getPaymentState(),
-            array(
-                OrderPaymentStates::STATE_PAID,
-                OrderPaymentStates::STATE_PARTIALLY_REFUNDED,
-                OrderPaymentStates::STATE_REFUNDED,
-            ),
-            true
-        );
     }
 }

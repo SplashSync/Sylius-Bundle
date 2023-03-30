@@ -15,26 +15,36 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
+use Splash\Client\Splash;
+use Splash\Models\Objects\Order\Status as OrderStatus;
+use Splash\SyliusSplashPlugin\Helpers\OrderStatusIdentifier;
+use Sylius\Component\Order\Model\OrderInterface;
+
 /**
  * Sylius Customer Order Status Field
  */
-trait StatusTrait
+trait StatusOrderTrait
 {
     /**
      * Build Customer Order Status Fields using FieldFactory
      */
-    protected function buildStatusFields(): void
+    protected function buildOrderStatusFields(): void
     {
+        $isLogistic = $this->isLogisticMode();
         //====================================================================//
         // Order Current Status
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("status")
             ->name("Order Status")
-            ->microData("http://schema.org/Order", "orderStatus")
-            ->addChoice("OrderDraft", "Draft")
-            ->addChoice("OrderInTransit", "Shippment Done")
-            ->addChoice("OrderProcessing", "Processing")
-            ->addChoice("OrderDelivered", "Delivered")
+            ->microData(
+                "http://schema.org/Order",
+                $isLogistic ? "mainStatus" : "orderStatus"
+            )
+            ->addChoice(OrderStatus::CANCELED, "Cancelled")
+            ->addChoice(OrderStatus::DRAFT, "Draft")
+            ->addChoice(OrderStatus::PROCESSING, "Processing")
+            ->addChoice(OrderStatus::IN_TRANSIT, "Shipment Done")
+            ->addChoice(OrderStatus::DELIVERED, "Delivered")
             ->isReadOnly()
         ;
     }
@@ -45,39 +55,13 @@ trait StatusTrait
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
      */
-    protected function getStatusFields(string $key, string $fieldName): void
+    protected function getOrderStatusFields(string $key, string $fieldName): void
     {
         if ("status" != $fieldName) {
             return;
         }
 
-        $this->out[$fieldName] = $this->getOrderStatus();
+        $this->out[$fieldName] = OrderStatusIdentifier::toSplash($this->object);
         unset($this->in[$key]);
-    }
-
-    /**
-     * Get Order Status Encode Splash Name
-     *
-     * @return string
-     */
-    private function getOrderStatus(): string
-    {
-        if ($this->isDraft()) {
-            return "OrderDraft";
-        }
-
-        if ($this->isValidated() && $this->isShipped() && $this->isPaid()) {
-            return "OrderDelivered";
-        }
-
-        if ($this->isValidated() && $this->isPaid()) {
-            return "OrderInTransit";
-        }
-
-        if ($this->isValidated()) {
-            return "OrderProcessing";
-        }
-
-        return "Unknown";
     }
 }

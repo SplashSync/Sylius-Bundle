@@ -29,10 +29,9 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('splash_sylius_splash');
-        $rootNode = $treeBuilder->getRootNode();
 
         // @phpstan-ignore-next-line
-        $rootNode
+        $treeBuilder->getRootNode()
             ->children()
             ->scalarNode('default_channel')
             ->defaultValue("default")

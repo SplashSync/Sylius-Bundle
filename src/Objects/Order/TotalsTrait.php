@@ -15,6 +15,8 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
+use Splash\Client\Splash;
+
 /**
  * Sylius Customer Order Totals Field
  */
@@ -26,12 +28,33 @@ trait TotalsTrait
     public function buildTotalsFields(): void
     {
         //====================================================================//
-        // Order Total Amount
-        $this->fieldsFactory()->Create(SPL_T_DOUBLE)
-            ->identifier("total")
-            ->name("Total Tax Excl.")
+        // Order Total Price
+        $this->fieldsFactory()->create(SPL_T_PRICE)
+            ->identifier("price_total")
+            ->name("Order Total")
+            ->microData("http://schema.org/Invoice", "total")
+            ->group("Totals")
             ->isReadOnly()
         ;
+        //====================================================================//
+        // Order Total Shipping
+        $this->fieldsFactory()->create(SPL_T_PRICE)
+            ->identifier("price_shipping")
+            ->name("Order Shipping")
+            ->microData("http://schema.org/Invoice", "totalShipping")
+            ->group("Totals")
+            ->isReadOnly()
+        ;
+        //====================================================================//
+        // Order Total Shipping
+        $this->fieldsFactory()->create(SPL_T_PRICE)
+            ->identifier("price_discount")
+            ->name("Order Discounts")
+            ->microData("http://schema.org/Invoice", "totalDiscount")
+            ->group("Totals")
+            ->isReadOnly()
+        ;
+
         //====================================================================//
         // Order Currency Code
         $this->fieldsFactory()->create(SPL_T_CURRENCY)
@@ -52,17 +75,57 @@ trait TotalsTrait
         //====================================================================//
         // READ Fields
         switch ($fieldName) {
-            case 'currencyCode':
-                $this->getGeneric($fieldName);
+            case 'price_total':
+                $orderTotal = $this->object->getTotal();
+                $this->out[$fieldName] = self::prices()->encode(
+                    null,
+                    self::toVatPercents($orderTotal- $this->object->getTaxTotal(), $orderTotal),
+                    (double) ($orderTotal / 100),
+                    $this->object->getCurrencyCode() ?? "USD",
+                );
 
                 break;
-            case 'total':
-                $this->out[$fieldName] = doubleval($this->object->getTotal() / 100);
+            case 'price_shipping':
+                $this->out[$fieldName] = self::prices()->encode(
+                    (double) ($this->object->getShippingTotal() / 100),
+                    0.0,
+                    null,
+                    $this->object->getCurrencyCode() ?? "USD",
+                );
+
+                break;
+            case 'price_discount':
+                $this->out[$fieldName] = self::prices()->encode(
+                    (double) ($this->object->getOrderPromotionTotal() / 100),
+                    0.0,
+                    null,
+                    $this->object->getCurrencyCode() ?? "USD",
+                );
+
+                break;
+            case 'currencyCode':
+                $this->getGeneric($fieldName);
 
                 break;
             default:
                 return;
         }
         unset($this->in[$key]);
+    }
+
+    /**
+     * Compute Vat Percentile from Both Price Values
+     *
+     * @param float $priceTaxExcl
+     * @param float $priceTaxIncl
+     *
+     * @return float
+     */
+    private static function toVatPercents(float $priceTaxExcl, float $priceTaxIncl): float
+    {
+        return (($priceTaxExcl > 0) && ($priceTaxIncl > 0) && ($priceTaxExcl <= $priceTaxIncl))
+            ? 100 * ($priceTaxIncl - $priceTaxExcl) / $priceTaxExcl
+            : 0.0
+        ;
     }
 }
