@@ -79,16 +79,16 @@ quality:v1.11-php-8.0:
 quality:v1.10-php-7.4:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
     variables:
-        SYLIUS_VERSION:   "~1.10.0"
+        SYLIUS_VERSION:   "~1.10.14"
     <<: *quality
 
 ################################################################
 # Tests on Sylius V1.08
 quality:v1.08-php-7.4:
-  image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
-  variables:
-    SYLIUS_VERSION:   "~1.08.0"
-  <<: *quality
+    image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
+    variables:
+        SYLIUS_VERSION:   "~1.08.12"
+    <<: *quality
 
 ################################################################
 # Functional Tests
@@ -146,7 +146,7 @@ tests:v1.11-php-8.0:
 tests:v1.10-php-7.4:
     image: registry.gitlab.com/badpixxel-projects/php-sdk:php-7.4
     variables:
-        SYLIUS_VERSION:   "~1.10.0"
+        SYLIUS_VERSION:   "~1.10.14"
     allow_failure:  true
     <<: *core_tests
 
