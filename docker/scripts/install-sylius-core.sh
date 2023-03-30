@@ -26,6 +26,7 @@ if [ ! -f /home/core.installed.lock ]; then
     echo "Configure Composer Plugins"
     composer config --global --no-plugins allow-plugins.symfony/thanks false
     composer config --global --no-plugins allow-plugins.symfony/flex true
+    composer config --global --no-plugins allow-plugins.phpstan/extension-installer true
     composer config --global --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer false
     composer config --global --no-plugins allow-plugins
 
