@@ -27,7 +27,7 @@ if [ ! -f /home/core.installed.lock ]; then
 
     mkdir -p var/cache var/log public/media
     chmod -Rf 777 var public/media
-    composer update --prefer-dist --no-interaction --no-plugins
+    composer update --no-interaction --no-plugins
 
     echo "YEP" > /home/core.installed.lock
 else
