@@ -8,7 +8,8 @@ splash:
             host:           http://toolkit.sylius.local/ws/soap
             config:
                 infos:
-                    logo:       /public/assets/shop/img/logo.png
+                    ico:    https://sylius.com/wp-content/themes/sylius-v5/assets/src/media/img/fav/favicon-196x196.png
+                    logo:   https://sylius.com/wp-content/uploads/2021/03/sylius-logo_sylius-logo-light-1024x422.jpg
     test:
         VAT:                0
         
