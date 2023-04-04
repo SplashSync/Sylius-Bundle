@@ -19,14 +19,15 @@
     ],
     
     "autoload": {
-        "files":    [
-            "vendor/splash/phpcore/inc/Splash.Inc.php",
-            "vendor/splash/php-bundle/src/Tests/KernelTestCase.php"
-        ],
         "psr-4": {
             "Splash\\SyliusSplashPlugin\\":     "src/",
             "Test\\Splash\\SyliusSplashPlugin\\":     "tests/"
         }
+    },
+    "autoload-dev": {
+        "files":    [
+            "vendor/splash/phpcore/inc/Splash.Inc.php"
+        ]
     },
 
     "require": {

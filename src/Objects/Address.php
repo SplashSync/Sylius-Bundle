@@ -42,7 +42,6 @@ class Address extends AbstractStandaloneObject
     use Address\CrudTrait;
     use Address\ObjectsListTrait;
     use Address\CoreTrait;
-//    use Address\MainTrait;
 
     //====================================================================//
     // Object Definition Parameters

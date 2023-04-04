@@ -32,4 +32,3 @@ parameters:
 imports:
     - { resource: "./vendor/badpixxel/php-sdk/grumphp/generic.yml" }
     - { resource: "./vendor/badpixxel/php-sdk/grumphp/extras.yml" }
-#    - { resource: "./splash/vendor/splash/console/src/Resources/grumphp/*.yml" }
