@@ -15,6 +15,7 @@
 
 namespace   Splash\SyliusSplashPlugin\Services;
 
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Sylius\Component\Locale\Model\LocaleInterface;
 use Sylius\Component\Product\Model\ProductOptionInterface;
 use Sylius\Component\Product\Model\ProductOptionTranslationInterface;
@@ -58,17 +59,17 @@ class ProductTranslationsManager
     /**
      * Service Constructor
      *
-     * @param Factory $factory       Product Translations Factory
-     * @param Factory $options       Product Options Translations Factory
-     * @param Factory $values        Product Options Values Translations Factory
-     * @param array   $locales       List or Available Locales
-     * @param array   $configuration Splash Sylius Bundle Configuration
+     * @param Factory          $factory           Product Translations Factory
+     * @param Factory          $options           Product Options Translations Factory
+     * @param Factory          $values            Product Options Values Translations Factory
+     * @param EntityRepository $localesRepository Sylius Locales Repository
+     * @param array            $configuration     Splash Sylius Bundle Configuration
      */
     public function __construct(
         Factory $factory,
         Factory $options,
         Factory $values,
-        array $locales,
+        EntityRepository $localesRepository,
         array $configuration
     ) {
         //====================================================================//
@@ -82,7 +83,7 @@ class ProductTranslationsManager
         $this->values = $values;
         //====================================================================//
         // Store List of Locales
-        $this->locales = $locales;
+        $this->locales = $localesRepository->findAll();
         //====================================================================//
         // Store Bundle Configuration
         $this->config = $configuration;

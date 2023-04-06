@@ -71,8 +71,9 @@ services:
             - "@sylius.factory.product_translation"
             - "@sylius.factory.product_option_translation"
             - "@sylius.factory.product_option_value_translation"
-            - "@=service('sylius.repository.locale').findAll()"
-            - "%splash_sylius%"     
+            - "@sylius.repository.locale"
+#            - "@=service('sylius.repository.locale').findAll()"
+            - "%splash_sylius%"
 
     ########################################################################
     # Sylius Products Images Management
