@@ -34,27 +34,27 @@ class ProductTranslationsManager
     /**
      * @var Factory
      */
-    protected $factory;
+    protected Factory $factory;
 
     /**
      * @var Factory
      */
-    protected $options;
+    protected Factory $options;
 
     /**
      * @var Factory
      */
-    protected $values;
+    protected Factory $values;
 
     /**
      * @var array
      */
-    protected $config;
+    protected array $config;
 
     /**
-     * @var array
+     * @var EntityRepository
      */
-    private $locales;
+    private EntityRepository $localesRepository;
 
     /**
      * Service Constructor
@@ -83,7 +83,7 @@ class ProductTranslationsManager
         $this->values = $values;
         //====================================================================//
         // Store List of Locales
-        $this->locales = $localesRepository->findAll();
+        $this->localesRepository = $localesRepository;
         //====================================================================//
         // Store Bundle Configuration
         $this->config = $configuration;
@@ -96,7 +96,11 @@ class ProductTranslationsManager
      */
     public function getLocales(): array
     {
-        return $this->locales;
+        static $locales;
+
+        $locales = $locales ?? $this->localesRepository->findAll();
+
+        return $locales;
     }
 
     /**
