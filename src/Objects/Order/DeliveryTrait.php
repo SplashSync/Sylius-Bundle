@@ -147,9 +147,8 @@ trait DeliveryTrait
                 break;
             case 'complementaryStreet':
                 $this->shippingAddress = $this->object->getShippingAddress();
+                $this->out[$fieldName] = null;
                 if (!$this->shippingAddress) {
-                    $this->out[$fieldName] = null;
-
                     break;
                 }
                 if (method_exists($this->shippingAddress, "getComplementaryStreet")) {
