@@ -92,7 +92,7 @@ trait ImagesTrait
         }
         //====================================================================//
         // Check if List field & Init List Array
-        $fieldId = self::lists()->InitOutput($this->out, "images", $fieldName);
+        $fieldId = self::lists()->initOutput($this->out, "images", $fieldName);
         if (!$fieldId) {
             return;
         }
@@ -129,7 +129,7 @@ trait ImagesTrait
             }
             //====================================================================//
             // Insert Data in List
-            self::lists()->Insert($this->out, "images", $fieldName, $index, $value);
+            self::lists()->insert($this->out, "images", $fieldName, $index, $value);
             $isFirst = false;
         }
         unset($this->in[$key]);

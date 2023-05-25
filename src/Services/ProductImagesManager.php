@@ -145,20 +145,22 @@ class ProductImagesManager
         // Generate Images Base Path
         $imgPath = $this->config["images_folder"];
         //====================================================================//
+        // Safety Check => Image Exists
+        $imgDir = $imgPath.dirname((string) $image->getPath())."/";
+        $imgFile = basename((string) $image->getPath());
+        if (!is_file($imgDir.$imgFile)) {
+            return false;
+        }
+        //====================================================================//
         // Generate Public Url
-        $publicUrl = $this->router->generate(
+        $imgUrl = $this->router->generate(
             "liip_imagine_filter",
             array("filter" => "sylius_large", "path" => $image->getPath()),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
         //====================================================================//
         // Add Image
-        return  self::images()->encode(
-            (string) $image->getType(),
-            basename((string) $image->getPath()),
-            $imgPath.dirname((string) $image->getPath())."/",
-            $publicUrl
-        );
+        return  self::images()->encode((string) $image->getType(), $imgFile, $imgDir, $imgUrl);
     }
 
     /**

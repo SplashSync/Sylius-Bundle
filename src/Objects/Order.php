@@ -65,6 +65,7 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
     use Order\PaymentsTrait;
     use Order\StatusOrderTrait;
     use Order\StatusShippingTrait;
+    use Order\DeliveryTrait;
     use Order\TotalsTrait;
     use Order\ShipmentTrait;
     use Order\ShipmentsTrait;
