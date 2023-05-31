@@ -25,18 +25,18 @@ if [ ! -f /home/db.installed.lock ]; then
 
     echo "Install Sylius Database"
 
-    bin/console about
+    php bin/console about
 
     ################################################################################
     # Check for MySQL
-    until bin/console doctrine:query:sql "select 1" >/dev/null 2>&1; do
+    until php bin/console doctrine:query:sql "select 1" >/dev/null 2>&1; do
         (>&2 echo "Waiting for MySQL to be ready...")
       sleep 1
     done
     ################################################################################
     # Update Database & Load Fixtures
-    bin/console doctrine:migrations:migrate --no-interaction
-    bin/console sylius:fixtures:load --no-interaction -vvv
+    php bin/console doctrine:migrations:migrate --no-interaction
+    php bin/console sylius:fixtures:load --no-interaction -vvv
 
     echo "YEP" > /home/db.installed.lock
 else
