@@ -36,7 +36,7 @@ if [ ! -f /home/db.installed.lock ]; then
     ################################################################################
     # Update Database & Load Fixtures
     bin/console doctrine:migrations:migrate --no-interaction
-    bin/console sylius:fixtures:load --no-interaction
+    bin/console sylius:fixtures:load --no-interaction -vvv
 
     echo "YEP" > /home/db.installed.lock
 else
