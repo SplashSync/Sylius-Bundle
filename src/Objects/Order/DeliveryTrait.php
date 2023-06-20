@@ -66,7 +66,7 @@ trait DeliveryTrait
         //====================================================================//
         // Address Complement
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->identifier("complementaryStreet")
+            ->identifier("streetExtra")
             ->name("[D] Street Extras")
             ->group($groupName)
             ->microData("http://schema.org/PostalAddress", "postOfficeBoxNumber")
@@ -145,18 +145,48 @@ trait DeliveryTrait
                 }
 
                 break;
-            case 'complementaryStreet':
+            default:
+                return;
+        }
+        unset($this->in[$key]);
+    }
+
+    /**
+     * Read requested Field
+     *
+     * @param string $key       Input List Key
+     * @param string $fieldName Field Identifier / Name
+     *
+     * @return void
+     */
+    protected function getDeliveryCustomFields(string $key, string $fieldName): void
+    {
+        //====================================================================//
+        // Custom Customer Address Fields
+        switch ($fieldName) {
+            case 'streetExtra':
                 $this->shippingAddress = $this->object->getShippingAddress();
                 $this->out[$fieldName] = null;
                 if (!$this->shippingAddress) {
                     break;
                 }
+                //==============================================================================
+                // [CUSTOM] Address 2
                 if (method_exists($this->shippingAddress, "getComplementaryStreet")) {
                     $this->out[$fieldName] = $this->shippingAddress->getComplementaryStreet();
                 }
 
                 break;
             case 'shipping_note':
+                //==============================================================================
+                // [CUSTOM] Relay Point Code
+                $this->shippingAddress = $this->object->getShippingAddress();
+                if ($this->shippingAddress && method_exists($this->shippingAddress, "getPickupPointCode")) {
+                    $this->out[$fieldName] = $this->shippingAddress->getPickupPointCode() ?: null;
+
+                    break;
+                }
+
                 $this->out[$fieldName] = $this->object->getNotes();
 
                 break;
@@ -165,6 +195,7 @@ trait DeliveryTrait
         }
         unset($this->in[$key]);
     }
+
     /**
      * Read requested Field
      *
