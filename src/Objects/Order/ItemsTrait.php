@@ -40,7 +40,7 @@ trait ItemsTrait
             ->identifier("sku")
             ->InList("items")
             ->name("Product Sku")
-            ->microData("http://schema.org/partOfInvoice", "name")
+            ->microData("http://schema.org/Product", "sku")
             ->group("Products")
             ->isReadOnly()
         ;

@@ -36,7 +36,7 @@ trait ShipmentTrait
         }
         //====================================================================//
         // First Shipment - Tracking Number
-        $this->fieldsFactory()->create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("tracking_number")
             ->name("Tracking Number")
             ->description("[First Shipment] Tracking Number")
@@ -44,7 +44,7 @@ trait ShipmentTrait
         ;
         //====================================================================//
         // First Shipment - Carrier Code
-        $this->fieldsFactory()->create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("carrier_code")
             ->name("Code")
             ->description("[Shipment] Code")
@@ -53,7 +53,7 @@ trait ShipmentTrait
         ;
         //====================================================================//
         // First Shipment - Carrier Name
-        $this->fieldsFactory()->create(SPL_T_INT)
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("carrier_name")
             ->name("Name")
             ->description("[Shipment] Name")
