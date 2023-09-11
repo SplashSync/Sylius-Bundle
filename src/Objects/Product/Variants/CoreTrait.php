@@ -128,6 +128,7 @@ trait CoreTrait
         if (empty(Splash::input('SPLASH_TRAVIS'))) {
             return true;
         }
+
         //====================================================================//
         // Travis Mode => Skip Current Product Variant
         return ($variant->getId() != $this->object->getId());

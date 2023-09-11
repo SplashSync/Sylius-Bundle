@@ -90,6 +90,7 @@ trait CoverImageTrait
             if (!($image instanceof ProductImageInterface)) {
                 continue;
             }
+
             //====================================================================//
             // Prepare
             return $this->images->getImageField($image) ?: null;

@@ -34,6 +34,7 @@ trait PrimaryTrait
         if (empty($email) || !is_string($email)) {
             return null;
         }
+
         //====================================================================//
         // Find by Email
         try {

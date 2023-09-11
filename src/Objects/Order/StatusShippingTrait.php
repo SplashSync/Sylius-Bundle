@@ -88,6 +88,7 @@ trait StatusShippingTrait
         if ($fieldData == $currentSplash) {
             return;
         }
+
         //====================================================================//
         // Update Shipping State
         try {

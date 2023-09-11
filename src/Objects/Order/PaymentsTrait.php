@@ -185,6 +185,7 @@ trait PaymentsTrait
             }
             $completedPayments[] = $payment;
         }
+
         //====================================================================//
         // Return Completed Order Payments
         return $completedPayments;

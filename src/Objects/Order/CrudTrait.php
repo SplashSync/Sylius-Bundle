@@ -53,6 +53,7 @@ trait CrudTrait
         //====================================================================//
         // Persist New Object
         $this->repository->add($order);
+
         //====================================================================//
         // Return a New Object
         return  $order;

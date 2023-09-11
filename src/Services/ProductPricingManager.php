@@ -102,6 +102,7 @@ class ProductPricingManager
         if ($channelPrice) {
             $price = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
         }
+
         //====================================================================//
         // Encode Splash Price Array
         return self::prices()->encode(

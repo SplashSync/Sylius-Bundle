@@ -34,6 +34,7 @@ trait PrimaryTrait
         if (empty($number) || !is_string($number)) {
             return null;
         }
+
         //====================================================================//
         // Find by Number
         try {

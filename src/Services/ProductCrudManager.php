@@ -164,6 +164,7 @@ class ProductCrudManager
             //====================================================================//
             // Persist New Variant
             $this->entityManager->persist($variant);
+
             //====================================================================//
             // Return New Variant
             return $variant;
@@ -178,6 +179,7 @@ class ProductCrudManager
         //====================================================================//
         // Persist New Product
         $this->entityManager->persist($newProduct);
+
         //====================================================================//
         // Return a Product First Variant
         return  $newProduct->getVariants()->first() ?: null;

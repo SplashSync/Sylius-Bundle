@@ -158,6 +158,7 @@ class ProductImagesManager
             array("filter" => "sylius_large", "path" => $image->getPath()),
             UrlGeneratorInterface::ABSOLUTE_URL
         );
+
         //====================================================================//
         // Add Image
         return  self::images()->encode((string) $image->getType(), $imgFile, $imgDir, $imgUrl);
@@ -405,6 +406,7 @@ class ProductImagesManager
         if (!is_file($imagePath)) {
             return false;
         }
+
         //====================================================================//
         // If CheckSum are Similar
         return (md5_file($imagePath) == $inMd5);

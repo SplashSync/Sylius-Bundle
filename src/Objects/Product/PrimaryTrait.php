@@ -34,6 +34,7 @@ trait PrimaryTrait
         if (empty($variantCode) || !is_string($variantCode)) {
             return null;
         }
+
         //====================================================================//
         // Find by Variant Code
         try {
