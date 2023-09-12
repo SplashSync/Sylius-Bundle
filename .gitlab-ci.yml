@@ -155,16 +155,16 @@ tests:v1.10-php-7.4:
 ## Build Documentation
 #################################################################
 pages:
-  image:      jekyll/minimal
-  stage:      deploy
-  tags:       [ Dedicated-Docker ]
-  ################################################################################
-  # Run Test Script
-  script:
-    - sh scripts/gitlab-pages.sh
-  artifacts:
-    paths:
-      - public
+    image:      jekyll/minimal
+    stage:      deploy
+    tags:       [ Dedicated-Docker ]
+    ################################################################################
+    # Run Test Script
+    script:
+        - wget -qO - https://gitlab.com/badpixxel-robo/jekyll/-/raw/main/scripts/gitlab-pages.sh | sh
+    artifacts:
+        paths:
+            - public
 
 
 #################################################################
