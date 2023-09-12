@@ -1,27 +1,12 @@
 
 splash:
-
-    # Allow Notifications for Generic Users
-    notify: ["ROLE_USER"]
-
     ################################################################################
-    # Configure Splash Bundle Parameters Cache
-    # Cache is Enabled by Default to Store Custom Connectors Configuration
-    # If disabled, configuration must be store in Static, on connections section
+    # List of Available Connector Connections
     ################################################################################
-    cache:
-        enabled: false
-        lifetime: 10
-
-
-################################################################################    
-# List of Available Connector Connections
-################################################################################    
-
     connections:
         
         ########################################################################
-        # Faker Server
+        # Sylius Latest Server
         sylius-latest:
             id:                 ThisIsSyliusWsId
             key:                ThisIsSyliusWsEncryptionKey
