@@ -55,6 +55,7 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
 
     // Common Traits
     use Common\TimestampTrait;
+    use Common\ChannelTrait;
 
     // Order Traits
     use Order\CrudTrait;

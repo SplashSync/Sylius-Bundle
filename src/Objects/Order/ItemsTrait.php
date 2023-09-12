@@ -25,7 +25,7 @@ use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
 
 /**
- * Sylius Customer Order Items & Adjustements Field
+ * Sylius Customer Order Items & Adjustment Field
  */
 trait ItemsTrait
 {
@@ -35,12 +35,24 @@ trait ItemsTrait
     protected function buildItemsFields(): void
     {
         //====================================================================//
-        // Order Line Name
+        // Order Line Product SKU
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("sku")
             ->InList("items")
-            ->name("Product Sku")
+            ->name("All Items Sku")
+            ->description("Sku of all items, including adjustments")
             ->microData("http://schema.org/Product", "sku")
+            ->group("Products")
+            ->isReadOnly()
+        ;
+        //====================================================================//
+        // Order Line Product SKU
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("alternateSku")
+            ->InList("items")
+            ->name("Product Sku")
+            ->description("Sku of all products, without adjustments")
+            ->microData("http://schema.org/Product", "alternateName")
             ->group("Products")
             ->isReadOnly()
         ;
@@ -101,6 +113,8 @@ trait ItemsTrait
      *
      * @param string $key       Input List Key
      * @param string $fieldName Field Identifier / Name
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function getItemsFields(string $key, string $fieldName): void
     {
@@ -117,6 +131,7 @@ trait ItemsTrait
             // READ Fields
             switch ($fieldId) {
                 case 'sku':
+                case 'alternateSku':
                 case 'name':
                 case 'productId':
                 case 'qty':
@@ -166,6 +181,24 @@ trait ItemsTrait
         }
         if ($orderItem instanceof Adjustment) {
             return (string) $orderItem->getType();
+        }
+
+        return "";
+    }
+
+    /**
+     * Get Order Items Only SKU, without adjustments SKUs
+     *
+     * @param Adjustment|object|OrderItemInterface $orderItem
+     *
+     * @throws Exception
+     *
+     * @return string
+     */
+    private function getOrderItemAlternateSku($orderItem): string
+    {
+        if ($orderItem instanceof OrderItemInterface) {
+            return (string) $this->getOrderItemVariant($orderItem)->getCode();
         }
 
         return "";
