@@ -28,9 +28,10 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
+  - deploy
   - quality
   - tests
-  - deploy
+#  - deploy
 
 ################################################################
 # Code Quality Tests
@@ -150,21 +151,37 @@ tests:v1.10-php-7.4:
         SYLIUS_VERSION:   "~1.10.2"
     <<: *core_tests
 
-################################################################
-# Build Documentation
-################################################################
+#################################################################
+## Build Documentation
+#################################################################
 pages:
-    image:    registry.gitlab.com/badpixxel-projects/php-sdk:jekyll
-    stage:    deploy
-    tags:
-        - Dedicated
-    ################################################################################
-    # Run Test Script
-    script:
-        # Run Composer to Build deps
-        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
-        # Build Documentation
-        - php vendor/bin/grumphp run --tasks=build-docs
-    artifacts:
-        paths:
-            - public
+  image:      jekyll/minimal
+  stage:      deploy
+  tags:       [ Dedicated-Docker ]
+  ################################################################################
+  # Run Test Script
+  script:
+    - sh scripts/gitlab-pages.sh
+  artifacts:
+    paths:
+      - public
+
+
+#################################################################
+## Build Documentation
+#################################################################
+#pages:
+#    image:    registry.gitlab.com/badpixxel-projects/php-sdk:jekyll
+#    stage:    deploy
+#    tags:
+#        - Dedicated
+#    ################################################################################
+#    # Run Test Script
+#    script:
+#        # Run Composer to Build deps
+#        - curl -s https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/ci/composer.sh  | bash
+#        # Build Documentation
+#        - php vendor/bin/grumphp run --tasks=build-docs
+#    artifacts:
+#        paths:
+#            - public
