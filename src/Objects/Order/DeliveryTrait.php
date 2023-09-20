@@ -64,15 +64,6 @@ trait DeliveryTrait
             ->isReadOnly()
         ;
         //====================================================================//
-        // Address Complement
-        $this->fieldsFactory()->create(SPL_T_VARCHAR)
-            ->identifier("streetExtra")
-            ->name("[D] Street Extras")
-            ->group($groupName)
-            ->microData("http://schema.org/PostalAddress", "postOfficeBoxNumber")
-            ->isReadOnly()
-        ;
-        //====================================================================//
         // Zip Code
         $this->fieldsFactory()->create(SPL_T_VARCHAR)
             ->identifier("postcode")
@@ -164,19 +155,6 @@ trait DeliveryTrait
         //====================================================================//
         // Custom Customer Address Fields
         switch ($fieldName) {
-            case 'streetExtra':
-                $this->shippingAddress = $this->object->getShippingAddress();
-                $this->out[$fieldName] = null;
-                if (!$this->shippingAddress) {
-                    break;
-                }
-                //==============================================================================
-                // [CUSTOM] Address 2
-                if (method_exists($this->shippingAddress, "getComplementaryStreet")) {
-                    $this->out[$fieldName] = $this->shippingAddress->getComplementaryStreet();
-                }
-
-                break;
             case 'shipping_note':
                 //==============================================================================
                 // [CUSTOM] Relay Point Code
