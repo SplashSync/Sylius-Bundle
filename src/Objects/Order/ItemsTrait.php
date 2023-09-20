@@ -246,7 +246,7 @@ trait ItemsTrait
         if ($orderItem instanceof OrderItemInterface) {
             return self::objects()->encode(
                 "Product",
-                $this->getOrderItemProduct($orderItem)->getId()
+                $this->getOrderItemVariant($orderItem)->getId()
             );
         }
 
