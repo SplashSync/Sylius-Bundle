@@ -94,7 +94,7 @@ trait TotalsTrait
                 break;
             case 'price_discount':
                 $this->out[$fieldName] = self::prices()->encode(
-                    (double) ($this->object->getOrderPromotionTotal() / 100),
+                    (double) abs($this->object->getOrderPromotionTotal() / 100),
                     0.0,
                     null,
                     $this->object->getCurrencyCode() ?? "USD",
