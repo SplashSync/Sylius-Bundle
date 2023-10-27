@@ -24,11 +24,6 @@
             "Test\\Splash\\SyliusSplashPlugin\\":     "tests/"
         }
     },
-    "autoload-dev": {
-        "files":    [
-            "vendor/splash/phpcore/inc/Splash.Inc.php"
-        ]
-    },
 
     "require": {
         "php":                                          "^7.4|^8.0",
