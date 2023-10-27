@@ -16,14 +16,17 @@
 namespace   Splash\SyliusSplashPlugin\Services;
 
 use Doctrine\ORM\EntityManagerInterface as Manager;
-use Splash\Core\SplashCore      as Splash;
+use Exception;
 use Splash\Models\Objects\PricesTrait;
 use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
+use Splash\SyliusSplashPlugin\Helpers\PriceBuilder;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
 use Sylius\Component\Core\Model\ChannelInterface as Channel;
 use Sylius\Component\Core\Model\ChannelPricingInterface as ChannelPricing;
 use Sylius\Component\Core\Model\ProductVariantInterface as Variant;
 use Sylius\Component\Resource\Factory\Factory;
+use Sylius\Component\Taxation\Model\TaxRateInterface;
+use Sylius\Component\Taxation\Resolver\TaxRateResolverInterface;
 
 /**
  * Product Pricing Manager
@@ -52,15 +55,31 @@ class ProductPricingManager
     protected array $config;
 
     /**
-     * Service Constructor
-     *
-     * @param ChannelRepository $channels
-     * @param Manager           $manager
-     * @param Factory           $factory
-     * @param array             $configuration
+     * @var TaxRateResolverInterface
      */
-    public function __construct(ChannelRepository $channels, Manager $manager, Factory $factory, array $configuration)
-    {
+    private TaxRateResolverInterface $rateResolver;
+
+    /**
+     * @var TaxManager
+     */
+    private TaxManager $taxManager;
+
+    /**
+     * Product was Updated
+     */
+    private bool $updated = false;
+
+    /**
+     * Service Constructor
+     */
+    public function __construct(
+        ChannelRepository $channels,
+        Manager $manager,
+        Factory $factory,
+        array $configuration,
+        TaxRateResolverInterface $rateResolver,
+        TaxManager $taxManager
+    ) {
         //====================================================================//
         // Sylius Channels Pricing manager
         $this->entityManager = $manager;
@@ -73,28 +92,30 @@ class ProductPricingManager
         //====================================================================//
         // Setup Sylius Channels Repository
         $this->setChannelsRepository($channels, $configuration);
+        //====================================================================//
+        // Store Sylius Rate Resolver
+        $this->rateResolver = $rateResolver;
+        //====================================================================//
+        // Link to Splash Tax Manager
+        $this->taxManager = $taxManager;
+    }
+
+    /**
+     * Get Product Default Tax Rate for Channel
+     */
+    public function getDefaultRate(Variant $variant): ?TaxRateInterface
+    {
+        return $this->rateResolver->resolve($variant);
     }
 
     /**
      * Get Product Price on a Channel
-     *
-     * @param Variant $variant
-     * @param Channel $channel
-     * @param bool    $original
-     *
-     * @return null|array
      */
-    public function getChannelPrice(Variant $variant, Channel $channel, bool $original)
+    public function getChannelPrice(Variant $variant, Channel $channel, bool $original): ?array
     {
         //====================================================================//
         // Retrieve Price Currency
         $currency = $channel->getBaseCurrency();
-        //====================================================================//
-        // TODO : Select Default TaxZone in Parameters
-        // Retrieve Price TAX Percentile
-        $taxCategory = $variant->getTaxCategory();
-        $taxCategoryRate = $taxCategory ? $taxCategory->getRates()->first() : null;
-        $taxRate = $taxCategoryRate ? $taxCategoryRate->getAmount() * 100 : 0.0;
         //====================================================================//
         // Identify Default Channel Price
         $price = 0;
@@ -105,29 +126,24 @@ class ProductPricingManager
 
         //====================================================================//
         // Encode Splash Price Array
-        return self::prices()->encode(
-            doubleval($price / 100),
-            $taxRate,
-            null,
+        return PriceBuilder::toPrice(
+            (int) $price,
             $currency ? (string) $currency->getCode() : "",
-            $currency ? (string) $currency->getCode() : "",
-            $currency ? (string) $currency->getName() : ""
+            $this->getDefaultRate($variant),
         );
     }
 
     /**
      * Update Variant Channel Price
      *
-     * @param Variant    $variant
-     * @param Channel    $channel
-     * @param bool       $original
-     * @param null|array $fieldData
+     * @throws Exception
      *
-     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function setChannelPrice(Variant $variant, Channel $channel, bool $original, ?array $fieldData): bool
     {
-        $updated = false;
+        $this->updated = false;
         if (!is_iterable($fieldData) || !isset($fieldData["ht"])) {
             return false;
         }
@@ -140,35 +156,78 @@ class ProductPricingManager
         //====================================================================//
         // Create Channel Price if Not Defined
         if (!$channelPrice) {
-            //====================================================================//
-            // Create New Channel Pricing from Factory
-            /** @var ChannelPricing $channelPrice */
-            $channelPrice = $this->factory->createNew();
-            $channelPrice->setChannelCode($channel->getCode());
-            $channelPrice->setProductVariant($variant);
-            $channelPrice->setPrice(0);
-            $channelPrice->setOriginalPrice(0);
-            $variant->addChannelPricing($channelPrice);
-            $this->entityManager->persist($channelPrice);
-            $updated = true;
+            $channelPrice = $this->createChannelPrice($variant, $channel);
+            $this->updated = true;
         }
         //====================================================================//
+        // Update Tax Category
+        $taxRate = $this->updateTaxCategory($variant, $fieldData);
+        //====================================================================//
         // Init Channel Price
-        $newPrice = (int) (round($fieldData["ht"] * 100, 0, PHP_ROUND_HALF_UP));
+        $newPrice = ($taxRate && $taxRate->isIncludedInPrice())
+            ? (int) (round($fieldData["ttc"] * 100))
+            : (int) (round($fieldData["ht"] * 100))
+        ;
         //====================================================================//
         // Get Current Price
         $currentPrice = $original ? $channelPrice->getOriginalPrice() : $channelPrice->getPrice();
         //====================================================================//
         // Compare Channel Price
         if ($newPrice == $currentPrice) {
-            return $updated;
+            return $this->updated;
         }
         //====================================================================//
         // Update Product Price
         $original
             ? $channelPrice->setOriginalPrice($newPrice)
-            : $channelPrice->setPrice($newPrice);
+            : $channelPrice->setPrice($newPrice)
+        ;
 
         return true;
+    }
+
+    /**
+     * Create a new Variant Channel Price
+     */
+    private function createChannelPrice(Variant $variant, Channel $channel): ChannelPricing
+    {
+        //====================================================================//
+        // Create New Channel Pricing from Factory
+        /** @var ChannelPricing $channelPrice */
+        $channelPrice = $this->factory->createNew();
+        $channelPrice->setChannelCode($channel->getCode());
+        $channelPrice->setProductVariant($variant);
+        $channelPrice->setPrice(0);
+        $channelPrice->setOriginalPrice(0);
+        $variant->addChannelPricing($channelPrice);
+        $this->entityManager->persist($channelPrice);
+
+        return $channelPrice;
+    }
+
+    /**
+     * Get Product Closest Tax Rate for Default Channel
+     *
+     * @throws Exception
+     */
+    private function updateTaxCategory(Variant $variant, array $fieldData): ?TaxRateInterface
+    {
+        //====================================================================//
+        // Identify Best Tax Rate
+        $taxRate = $this->taxManager->getClosestTaxRate($variant, $fieldData["vat"] ?? null);
+        //====================================================================//
+        // No Tax Rate
+        if (!$taxRate && !empty($variant->getTaxCategory())) {
+            $variant->setTaxCategory(null);
+            $this->updated = true;
+        }
+        //====================================================================//
+        // Tax Rate Changed
+        if ($taxRate && ($taxRate->getCategory() !== $variant->getTaxCategory())) {
+            $variant->setTaxCategory($taxRate->getCategory());
+            $this->updated = true;
+        }
+
+        return $taxRate;
     }
 }

@@ -16,12 +16,12 @@
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
 use Exception;
+use Splash\SyliusSplashPlugin\Helpers\PriceBuilder;
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
-use Sylius\Component\Order\Model\Adjustment;
 use Sylius\Component\Product\Model\ProductTranslationInterface;
 
 /**
@@ -97,6 +97,16 @@ trait ItemsTrait
             ->isReadOnly()
         ;
         //====================================================================//
+        // Order Line Tax Name
+        $this->fieldsFactory()->create(SPL_T_VARCHAR)
+            ->identifier("taxName")
+            ->inList("items")
+            ->name("Tax Name")
+            ->microData("http://schema.org/PriceSpecification", "valueAddedTaxName")
+            ->group("Products")
+            ->isReadOnly()
+        ;
+        //====================================================================//
         // Order Line Discount
         $this->fieldsFactory()->create(SPL_T_DOUBLE)
             ->identifier("discount")
@@ -136,6 +146,7 @@ trait ItemsTrait
                 case 'productId':
                 case 'qty':
                 case 'price':
+                case 'taxName':
                 case 'discount':
                     $value = $this->{'getOrderItem'.ucfirst($fieldId)}($orderItem);
 
@@ -161,14 +172,15 @@ trait ItemsTrait
         // Return Order Items
         return array_merge(
             $this->object->getItems()->toArray(),
-            $this->object->getAdjustments()->toArray()
+            $this->object->getAdjustments(AdjustmentInterface::SHIPPING_ADJUSTMENT)->toArray(),
+            $this->object->getAdjustments(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT)->toArray(),
         );
     }
 
     /**
      * Get Order Item Sku
      *
-     * @param Adjustment|object|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|object|OrderItemInterface $orderItem
      *
      * @throws Exception
      *
@@ -179,7 +191,7 @@ trait ItemsTrait
         if ($orderItem instanceof OrderItemInterface) {
             return (string) $this->getOrderItemVariant($orderItem)->getCode();
         }
-        if ($orderItem instanceof Adjustment) {
+        if ($orderItem instanceof AdjustmentInterface) {
             return (string) $orderItem->getType();
         }
 
@@ -189,7 +201,7 @@ trait ItemsTrait
     /**
      * Get Order Items Only SKU, without adjustments SKUs
      *
-     * @param Adjustment|object|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|object|OrderItemInterface $orderItem
      *
      * @throws Exception
      *
@@ -207,7 +219,7 @@ trait ItemsTrait
     /**
      * Get Order Item Name
      *
-     * @param Adjustment|object|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|object|OrderItemInterface $orderItem
      *
      * @throws Exception
      *
@@ -225,7 +237,7 @@ trait ItemsTrait
 
             return $translation ? (string) $translation->getName() : "";
         }
-        if ($orderItem instanceof Adjustment) {
+        if ($orderItem instanceof AdjustmentInterface) {
             return (string) $orderItem->getLabel();
         }
 
@@ -235,7 +247,7 @@ trait ItemsTrait
     /**
      * Get Order Item Product Id
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|OrderItemInterface $orderItem
      *
      * @throws Exception
      *
@@ -256,7 +268,7 @@ trait ItemsTrait
     /**
      * Get Order Item Quantity
      *
-     * @param Adjustment|object|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|object|OrderItemInterface $orderItem
      *
      * @return int
      */
@@ -265,7 +277,7 @@ trait ItemsTrait
         if ($orderItem instanceof OrderItemInterface) {
             return $orderItem->getQuantity();
         }
-        if ($orderItem instanceof Adjustment) {
+        if ($orderItem instanceof AdjustmentInterface) {
             return 1;
         }
 
@@ -273,9 +285,9 @@ trait ItemsTrait
     }
 
     /**
-     * Get Order Item Quantity
+     * Get Order Item Unit Price
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|OrderItemInterface $orderItem
      *
      * @throws Exception
      *
@@ -283,56 +295,71 @@ trait ItemsTrait
      */
     private function getOrderItemPrice($orderItem): ?array
     {
-        $taxRate = 0.0;
-        $unitPrice = 0.0;
+        $unitPrice = 0;
         if ($orderItem instanceof OrderItemInterface) {
-            $taxCategory = $this->getOrderItemVariant($orderItem)->getTaxCategory();
-            if ($taxCategory) {
-                $taxCategoryRate = $taxCategory->getRates()->first();
-                $taxRate = $taxCategoryRate ? $taxCategoryRate->getAmount() * 100 : 0.0;
-            }
             $unitPrice = $orderItem->getUnitPrice();
         }
-        if ($orderItem instanceof Adjustment) {
+        if ($orderItem instanceof AdjustmentInterface) {
             $unitPrice = $orderItem->getAmount();
         }
 
         //====================================================================//
         // Encode Splash Price Array
-        $price = self::prices()->encode(
-            doubleval($unitPrice / 100),           // No TAX Price
-            $taxRate,                                   // TAX Percent
-            null,
+        return PriceBuilder::toPrice(
+            $unitPrice,
             (string) $this->object->getCurrencyCode(),
-            (string) $this->object->getCurrencyCode(),
-            (string) $this->object->getCurrencyCode()
+            $this->taxManager->getOrderItemTaxRate($orderItem),
         );
-
-        return is_array($price) ? $price : null;
     }
 
     /**
-     * Get Order Item Quantity
+     * Get Order Item Unit Price
      *
-     * @param Adjustment|OrderItemInterface $orderItem
+     * @param AdjustmentInterface|OrderItemInterface $orderItem
+     *
+     * @throws Exception
+     *
+     * @return null|string
+     */
+    private function getOrderItemTaxName($orderItem): ?string
+    {
+        $taxRate = $this->taxManager->getOrderItemTaxRate($orderItem);
+        if ($taxRate) {
+            return $taxRate->getCode();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get Order Item Discount Percentile
+     *
+     * @param AdjustmentInterface|OrderItemInterface $orderItem
      *
      * @return float
      */
     private function getOrderItemDiscount($orderItem): float
     {
-        if (!($orderItem instanceof OrderItemInterface)) {
+        $unitPrice = 0.0;
+        $adjustable = null;
+        if ($orderItem instanceof OrderItemInterface) {
+            $unitPrice = $orderItem->getUnitPrice();
+            $adjustable = $orderItem->getUnits()->first();
+        }
+        if ($orderItem instanceof AdjustmentInterface) {
+            $unitPrice = $orderItem->getAmount();
+            $adjustable = $orderItem->getAdjustable();
+        }
+        if (!$adjustable) {
             return 0.0;
         }
-        $firstUnit = $orderItem->getUnits()->first();
-        if (!$firstUnit) {
-            return 0.0;
-        }
-        $discount = $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT);
-        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT);
-        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
-        $discount += $firstUnit->getAdjustmentsTotal(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
 
-        return doubleval(round(-100 * $discount / $orderItem->getUnitPrice(), 1, PHP_ROUND_HALF_UP));
+        $discount = $adjustable->getAdjustmentsTotal(AdjustmentInterface::ORDER_ITEM_PROMOTION_ADJUSTMENT);
+        $discount += $adjustable->getAdjustmentsTotal(AdjustmentInterface::ORDER_PROMOTION_ADJUSTMENT);
+        $discount += $adjustable->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
+        $discount += $adjustable->getAdjustmentsTotal(AdjustmentInterface::ORDER_UNIT_PROMOTION_ADJUSTMENT);
+
+        return doubleval(round(-100 * $discount / $unitPrice, 1, PHP_ROUND_HALF_UP));
     }
 
     /**

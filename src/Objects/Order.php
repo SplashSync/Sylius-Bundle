@@ -28,6 +28,7 @@ use Splash\Models\Objects\SimpleFieldsTrait;
 use Splash\SyliusSplashPlugin\Helpers\AddressAwareTrait;
 use Splash\SyliusSplashPlugin\Helpers\ChannelsAwareTrait;
 use Splash\SyliusSplashPlugin\Helpers\CustomersAwareTrait;
+use Splash\SyliusSplashPlugin\Services\TaxManager;
 use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository as Channels;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\AddressRepository as Addresses;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\CustomerRepository as Customers;
@@ -120,6 +121,11 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
      */
     private SmFactory $stateMachine;
 
+    /**
+     * @var TaxManager
+     */
+    private TaxManager $taxManager;
+
     //====================================================================//
     // Service Constructor
     //====================================================================//
@@ -144,7 +150,8 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
         Manager $manager,
         FactoryInterface $factory,
         SmFactory $stateMachine,
-        array $configuration
+        array $configuration,
+        TaxManager $taxManager
     ) {
         //====================================================================//
         // Link to Orders Repository
@@ -167,6 +174,9 @@ class Order extends AbstractStandaloneObject implements PrimaryKeysAwareInterfac
         //====================================================================//
         // Link to Customers Factory
         $this->factory = $factory;
+        //====================================================================//
+        // Link to Splash Tax Manager
+        $this->taxManager = $taxManager;
     }
 
     /**

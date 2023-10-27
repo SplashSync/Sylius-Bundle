@@ -50,6 +50,7 @@ class Product extends AbstractStandaloneObject implements PrimaryKeysAwareInterf
     use Product\ShippingTrait;
     use Product\DescriptionsTrait;
     use Product\PricingTrait;
+    use Product\TaxesTrait;
     use Product\StocksTrait;
     use Product\CoverImageTrait;
     use Product\ImagesTrait;

@@ -137,11 +137,8 @@ trait ImagesTrait
 
     /**
      * Write Given Fields
-     *
-     * @param string  $fieldName Field Identifier / Name
-     * @param array[] $fieldData Field Data
      */
-    private function setImagesFields(string $fieldName, array $fieldData): void
+    private function setImagesFields(string $fieldName, ?array $fieldData): void
     {
         //====================================================================//
         // WRITE Field
@@ -150,7 +147,7 @@ trait ImagesTrait
             // PRODUCT IMAGES
             //====================================================================//
             case 'images':
-                $this->images->setImages($this->object, $fieldData);
+                $this->images->setImages($this->object, $fieldData ?? array());
                 $images = $this->product->getImages();
                 if (!($images instanceof PersistentCollection) || $images->isDirty()) {
                     $this->needUpdate("product");

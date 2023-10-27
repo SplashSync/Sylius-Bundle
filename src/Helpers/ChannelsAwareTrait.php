@@ -16,7 +16,7 @@
 namespace Splash\SyliusSplashPlugin\Helpers;
 
 use Exception;
-use Sylius\Bundle\ChannelBundle\Doctrine\ORM\ChannelRepository;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
 
 /**
@@ -25,9 +25,9 @@ use Sylius\Component\Core\Model\ChannelInterface;
 trait ChannelsAwareTrait
 {
     /**
-     * @var ChannelRepository
+     * @var ChannelRepositoryInterface
      */
-    private ChannelRepository $channels;
+    private ChannelRepositoryInterface $channels;
 
     /**
      * @var string
@@ -125,12 +125,12 @@ trait ChannelsAwareTrait
     /**
      * Setup Channels Repository
      *
-     * @param ChannelRepository $channels
-     * @param array             $configuration
+     * @param ChannelRepositoryInterface $channels
+     * @param array                      $configuration
      *
      * @return $this
      */
-    protected function setChannelsRepository(ChannelRepository $channels, array $configuration): self
+    protected function setChannelsRepository(ChannelRepositoryInterface $channels, array $configuration): self
     {
         //====================================================================//
         // Store link to Channels Repository

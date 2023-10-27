@@ -72,7 +72,6 @@ services:
             - "@sylius.factory.product_option_translation"
             - "@sylius.factory.product_option_value_translation"
             - "@sylius.repository.locale"
-#            - "@=service('sylius.repository.locale').findAll()"
             - "%splash_sylius%"
 
     ########################################################################
@@ -144,7 +143,15 @@ services:
         tags:
             # Register as Standalone Connector Object           
             - { name: "splash.standalone.object", type : "Invoice" }  
-            
+
+    ########################################################################
+    # Sylius Tax Manager for Splash
+    Splash\SyliusSplashPlugin\Services\TaxManager:
+        arguments:
+            - "%splash_sylius%"
+            - "@sylius.repository.channel"
+            - "@sylius.repository.tax_rate"
+
     ########################################################################
     # Sylius Additional Object Event Listener
     # This Listener is Triggered on Any Object changes don't on ORM
