@@ -15,7 +15,7 @@
 
 namespace Splash\SyliusSplashPlugin\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Exception;
 use Splash\Bundle\Connectors\Standalone;
 use Splash\Bundle\Models\AbstractConnector;
@@ -130,8 +130,8 @@ class ObjectEventListener
             $this->doCommit($this->getLocalClass()->getConnector(), $objectType, $objectIds, SPL_A_UPDATE);
             //====================================================================//
             // After Updates on Product
-            if (is_a($eventArgs->getEntity(), ProductInterface::class)) {
-                Splash::object('Product')->lock('Base-'.$eventArgs->getEntity()->getId());
+            if (is_a($object = $eventArgs->getObject(), ProductInterface::class)) {
+                Splash::object('Product')->lock('Base-'.$object->getId());
             }
         }
         //====================================================================//
@@ -141,8 +141,6 @@ class ObjectEventListener
 
     /**
      * On Entity Before Deleted Doctrine Event
-     *
-     * @param LifecycleEventArgs $eventArgs
      *
      * @throws Exception
      */
@@ -235,11 +233,11 @@ class ObjectEventListener
     {
         //====================================================================//
         // Touch Impacted Entity
-        $entity = $eventArgs->getEntity();
+        $entity = $eventArgs->getObject();
         //====================================================================//
         // Walk on Managed Entities
         foreach (self::MANAGED_ENTITIES as $entityClass => $objectType) {
-            if (is_a($entity, $entityClass)) {
+            if (is_a($entity, $entityClass) && !$this->isFiltered($objectType, $entity)) {
                 return $objectType;
             }
         }
@@ -269,7 +267,7 @@ class ObjectEventListener
     {
         //====================================================================//
         // Get Impacted Object Id
-        $entity = $eventArgs->getEntity();
+        $entity = $eventArgs->getObject();
         //====================================================================//
         // Safety Check
         if (!method_exists($entity, "getId")) {
@@ -293,7 +291,7 @@ class ObjectEventListener
     {
         //====================================================================//
         // Get Impacted Object
-        $entity = $eventArgs->getEntity();
+        $entity = $eventArgs->getObject();
         //====================================================================//
         // Get Impacted Object Id
         $objectIds = array($this->getEventEntityId($eventArgs));
@@ -338,6 +336,27 @@ class ObjectEventListener
     {
         /** @phpstan-ignore-next-line  */
         return Splash::local();
+    }
+
+    /**
+     * Check if Object Should be Filtered
+     *
+     * @param string $objectType
+     * @param object $object
+     *
+     * @return bool
+     */
+    private function isFiltered(string $objectType, object $object): bool
+    {
+        //====================================================================//
+        // Disable Commits for Drafts Order
+        if (('Order' == $objectType) && ($object instanceof OrderInterface)) {
+            if (OrderInterface::STATE_CART == $object->getState()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
