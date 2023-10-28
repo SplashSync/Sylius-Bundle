@@ -16,6 +16,11 @@
 ################################################################################
 
 ################################################################
+# Include Pipeline Templates
+include:
+  - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/pages.yaml'
+
+################################################################
 # Set any variables we need
 variables:
     # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
@@ -28,9 +33,10 @@ variables:
 ################################################################
 # Defined Pipeline Stages
 stages:
+  - Builds
   - quality
   - tests
-  - deploy
+#  - Builds
 
 ################################################################
 # Code Quality Tests
@@ -149,18 +155,3 @@ tests:v1.10-php-7.4:
     variables:
         SYLIUS_VERSION:   "~1.10.2"
     <<: *core_tests
-
-#################################################################
-## Build Documentation
-#################################################################
-pages:
-    image:      jekyll/minimal
-    stage:      deploy
-    tags:       [ Dedicated-Docker ]
-    ################################################################################
-    # Run Test Script
-    script:
-        - wget -qO - https://gitlab.com/badpixxel-robo/jekyll/-/raw/main/scripts/gitlab-pages.sh | sh
-    artifacts:
-        paths:
-            - public
