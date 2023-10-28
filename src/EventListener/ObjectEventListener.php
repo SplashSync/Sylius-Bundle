@@ -349,6 +349,11 @@ class ObjectEventListener
     private function isFiltered(string $objectType, object $object): bool
     {
         //====================================================================//
+        // No Filtering on CI/CD Testing
+        if (Splash::isTravisMode()) {
+            return false;
+        }
+        //====================================================================//
         // Disable Commits for Drafts Order
         if (('Order' == $objectType) && ($object instanceof OrderInterface)) {
             if (OrderInterface::STATE_CART == $object->getState()) {
