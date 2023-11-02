@@ -38,6 +38,11 @@ class Configuration implements ConfigurationInterface
             ->cannotBeEmpty()
             ->info('Default Channel for association with new Products.')
             ->end()
+            ->arrayNode('units')->addDefaultsIfNotSet()
+            ->children()
+            ->scalarNode('weights')->defaultValue("kg")->end()
+            ->scalarNode('dimensions')->defaultValue("m")->end()
+            ->end()
             ->end()
         ;
 

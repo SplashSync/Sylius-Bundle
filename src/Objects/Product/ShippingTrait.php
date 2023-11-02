@@ -73,10 +73,19 @@ trait ShippingTrait
             //====================================================================//
             // Variant Readings
             case 'weight':
+                $this->out[$fieldName] = $this->unitsManager->normalizeWeight($this->object->getWeight());
+
+                break;
             case 'height':
+                $this->out[$fieldName] = $this->unitsManager->normalizeLength($this->object->getHeight());
+
+                break;
             case 'depth':
+                $this->out[$fieldName] = $this->unitsManager->normalizeLength($this->object->getDepth());
+
+                break;
             case 'width':
-                $this->getGeneric($fieldName);
+                $this->out[$fieldName] = $this->unitsManager->normalizeLength($this->object->getWidth());
 
                 break;
             default:
@@ -97,10 +106,17 @@ trait ShippingTrait
             //====================================================================//
             // Variant Readings
             case 'weight':
+                if (is_null($fieldData) || is_numeric($fieldData)) {
+                    $this->setGeneric($fieldName, $this->unitsManager->convertWeight((float) $fieldData));
+                }
+
+                break;
             case 'height':
             case 'depth':
             case 'width':
-                $this->setGeneric($fieldName, $fieldData);
+                if (is_null($fieldData) || is_numeric($fieldData)) {
+                    $this->setGeneric($fieldName, $this->unitsManager->convertLength((float) $fieldData));
+                }
 
                 break;
             default:

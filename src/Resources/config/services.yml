@@ -153,6 +153,12 @@ services:
             - "@sylius.repository.tax_rate"
 
     ########################################################################
+    # Sylius Units Manager for Splash
+    Splash\SyliusSplashPlugin\Services\UnitsManager:
+        arguments:
+            - "%splash_sylius%"
+
+    ########################################################################
     # Sylius Additional Object Event Listener
     # This Listener is Triggered on Any Object changes don't on ORM
     # It will detect impacted Splash Objects and Dispatch Commits to Splash Server

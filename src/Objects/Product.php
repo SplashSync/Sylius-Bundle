@@ -26,6 +26,7 @@ use Splash\SyliusSplashPlugin\Services\ProductCrudManager as Crud;
 use Splash\SyliusSplashPlugin\Services\ProductImagesManager as Images;
 use Splash\SyliusSplashPlugin\Services\ProductPricingManager as Pricing;
 use Splash\SyliusSplashPlugin\Services\ProductTranslationsManager as Translations;
+use Splash\SyliusSplashPlugin\Services\UnitsManager;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductVariantRepository as Variants;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
@@ -127,6 +128,11 @@ class Product extends AbstractStandaloneObject implements PrimaryKeysAwareInterf
      */
     protected Factory $factory;
 
+    /**
+     * @var UnitsManager
+     */
+    protected UnitsManager $unitsManager;
+
     //====================================================================//
     // Service Constructor
     //====================================================================//
@@ -147,7 +153,8 @@ class Product extends AbstractStandaloneObject implements PrimaryKeysAwareInterf
         Translations $translations,
         Images $images,
         Pricing $pricing,
-        Attributes $attributes
+        Attributes $attributes,
+        UnitsManager $unitsManager
     ) {
         //====================================================================//
         // Link to Product Variants Repository
@@ -167,5 +174,8 @@ class Product extends AbstractStandaloneObject implements PrimaryKeysAwareInterf
         //====================================================================//
         // Link to Splash Sylius Products Attributes Manager
         $this->attributes = $attributes;
+        //====================================================================//
+        // Link to Splash Units Manager
+        $this->unitsManager = $unitsManager;
     }
 }
