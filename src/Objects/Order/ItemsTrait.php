@@ -350,7 +350,7 @@ trait ItemsTrait
             $unitPrice = $orderItem->getAmount();
             $adjustable = $orderItem->getAdjustable();
         }
-        if (!$adjustable) {
+        if (!$adjustable || empty($unitPrice)) {
             return 0.0;
         }
 
