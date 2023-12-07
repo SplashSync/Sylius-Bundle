@@ -105,6 +105,8 @@ trait StatusShippingTrait
      * @param string $new     New Splash Shipping Status
      *
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function updateShippingStatus(string $current, string $new): void
     {
@@ -143,10 +145,17 @@ trait StatusShippingTrait
         //====================================================================//
         // Ready => Shipped
         if (OrderStatus::isShipped($new) || OrderStatus::isDelivered($new)) {
-            $stateMachine->apply(OrderShippingTransitions::TRANSITION_SHIP);
+            //====================================================================//
+            // Only if Order not Already Shipped (OrderInTransit is OrderDelivered there...)
+            if (!OrderStatus::isDelivered((string) $current)) {
+                $stateMachine->apply(OrderShippingTransitions::TRANSITION_SHIP);
+            }
             //====================================================================//
             // Force Set First Shipment State to Ready
-            if ($shipment = $this->getFirstShipment()) {
+            // Only if Shipment not Already Shipped (OrderInTransit is OrderDelivered there...)
+            if (($shipment = $this->getFirstShipment())
+                && (ShipmentInterface::STATE_SHIPPED != $shipment->getState())
+            ) {
                 $shipment->setState(ShipmentInterface::STATE_SHIPPED);
                 $shipment->setShippedAt(new \DateTime());
             }
