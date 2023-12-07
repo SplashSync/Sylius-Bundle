@@ -15,6 +15,8 @@
 
 namespace Splash\SyliusSplashPlugin\Objects\Order;
 
+use Doctrine\ORM\QueryBuilder;
+use Splash\Bundle\Helpers\Doctrine\ObjectsListHelperTrait;
 use Sylius\Component\Core\Model\OrderInterface;
 
 /**
@@ -22,7 +24,30 @@ use Sylius\Component\Core\Model\OrderInterface;
  */
 trait ObjectsListTrait
 {
-    use \Splash\Bundle\Helpers\Doctrine\ObjectsListHelperTrait;
+    use ObjectsListHelperTrait;
+
+    /**
+     * Configure List Query Builder
+     */
+    protected function configureObjectListQueryBuilder(QueryBuilder $queryBuilder): void
+    {
+        //====================================================================//
+        // Change Sort Order to See Last orders First
+        $queryBuilder->addOrderBy('c.createdAt', "DESC");
+    }
+
+    /**
+     * Configure List Query Builder Filters
+     */
+    protected function setObjectListFilter(QueryBuilder $queryBuilder, string $filter): void
+    {
+        $orx = $queryBuilder->expr()->orX();
+        $orx->add($queryBuilder->expr()->like('c.createdAt', ":textFilter"));
+        $orx->add($queryBuilder->expr()->like('c.checkoutCompletedAt', ":textFilter"));
+        $orx->add($queryBuilder->expr()->eq('c.number', $filter));
+        $queryBuilder->andWhere($orx);
+        $queryBuilder->setParameter('textFilter', "%".$filter."%");
+    }
 
     /**
      * Transform Order To List Array Data
