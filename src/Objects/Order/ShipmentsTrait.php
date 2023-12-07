@@ -102,6 +102,7 @@ trait ShipmentsTrait
         if (!$fieldId) {
             return;
         }
+        unset($this->in[$key]);
         //====================================================================//
         // Verify List is Not Empty
         /** @var ShipmentInterface[] $shipments */
@@ -144,7 +145,5 @@ trait ShipmentsTrait
             // Insert Data in List
             self::lists()->insert($this->out, self::$shipmentsList, $fieldName, $index, $value);
         }
-
-        unset($this->in[$key]);
     }
 }
