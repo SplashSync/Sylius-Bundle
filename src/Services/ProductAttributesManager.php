@@ -57,7 +57,7 @@ class ProductAttributesManager
     /**
      * @var Translations
      */
-    protected ProductTranslationsManager $translations;
+    protected Translations $translations;
 
     /**
      * @var array
