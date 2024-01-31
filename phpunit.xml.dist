@@ -10,7 +10,7 @@
     convertWarningsToExceptions = "true"
     processIsolation            = "false"
     stopOnFailure               = "true"
-    bootstrap                   = "vendor/splash/sylius-splash-plugin/tests/bootstrap.php"
+    bootstrap                   = "vendor/autoload.php"
     verbose                     = "true"
     timeoutForLargeTests        = "10"  
 >
