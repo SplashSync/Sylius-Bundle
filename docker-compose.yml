@@ -29,8 +29,7 @@
 #
 ################################################################################
 
-
-version: '3'
+name: 'splash-sylius'
 
 services:
     
@@ -69,9 +68,9 @@ services:
     ################################################################################
     # Splash Toolkit Container
     toolkit:
-        image: 'splashsync/toolkit'
-        container_name: toolkit.sylius.local
-        logging: { driver: "none" }
+        image:              'splashsync/toolkit:3.0'
+        container_name:     toolkit.sylius.local
+        logging:            { driver: "none" }
         volumes:
             # Specify Local Configuration File
             - './docker/toolkit/splash.yaml:/app/config/packages/splash.yaml:ro'

@@ -16,11 +16,6 @@
 ################################################################################
 
 ################################################################
-# Include Pipeline Templates
-include:
-  - remote: 'https://raw.githubusercontent.com/BadPixxel/Php-Sdk/main/gitlab/pages.yaml'
-
-################################################################
 # Set any variables we need
 variables:
     # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)

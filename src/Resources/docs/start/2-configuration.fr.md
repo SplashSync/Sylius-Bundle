@@ -1,14 +1,18 @@
 ---
-lang: en
+lang: fr
 permalink: start/configure
 title: Configuration
-description: Reference configuration of the Splash Sylius Plugin.
+description: Configuration de référence du plugin Splash pour Sylius.
 updated: 2026-09-28
+translation:
+    from:        en
+    source_hash: a734e61d
+    mode:        llm
 ---
 
-### Configuration reference
+### Configuration de référence
 
-Here is the reference configuration for Splash Sylius Plugin:
+Voici la configuration de référence du plugin Splash pour Sylius :
 
 ```yaml
 splash:

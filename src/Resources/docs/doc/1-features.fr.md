@@ -1,12 +1,18 @@
 ---
-lang: en
-permalink: docs/features
+lang: fr
+permalink: doc/features
 title: Synchronisez vos applications avec Sylius
+description: Partagez les clients, produits, stocks, commandes et factures Sylius avec toutes vos applications.
+updated: 2026-09-28
+translation:
+    from:        en
+    source_hash: ff5cf235
+    mode:        human
 ---
 
-## Sylius, le premier framework de solutions eCommerce sur-mesure
+### Sylius, le premier framework de solutions eCommerce sur-mesure
 
-Sylius est une technologie de commerce électronique qui vous donne toute liberté pour créer une expérience client exceptionnelle. 
+Sylius est une technologie de commerce électronique qui vous donne toute liberté pour créer une expérience client exceptionnelle.
 Il s'intègre à vos systèmes existants et garantit une mise sur le marché rapide.
 
 Le plugin Splash pour Sylius donne accès à toutes les données E-Commerce : données Clients, Produits, Commandes & Factures.
